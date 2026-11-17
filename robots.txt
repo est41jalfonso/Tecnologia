@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portal-estudiantil.ponchoramirez173.chatgpt.site/sitemap.xml
