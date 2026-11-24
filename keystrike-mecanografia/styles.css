@@ -1,0 +1,248 @@
+/* KeyStrike EST 41 - Tema Claro de Alto Contraste (Portal Educativo EST 41) */
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #F8FAFC;
+    color: #0F172A;
+    overscroll-behavior: none;
+  }
+}
+
+/* Scrollbar accesible */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0284C7;
+}
+
+/* Fondo con cuadrícula accesible del Portal EST 41 */
+.accessible-grid-bg {
+  background-color: #F8FAFC;
+  background-size: 24px 24px;
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.14) 1px, transparent 1px);
+}
+
+/* Foco visible de alto contraste para accesibilidad */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #1D4ED8 !important;
+  outline-offset: 2px !important;
+}
+
+.clip-cyber {
+  border-radius: 0.75rem;
+}
+
+.clip-cyber-sm {
+  border-radius: 0.5rem;
+}
+
+.clip-hex {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* Teclas del teclado mecánico en pantalla (Alto Contraste Claro/Oscuro) */
+.kb-key {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+  border: 1.5px solid #94A3B8;
+  border-bottom-width: 4px;
+  border-bottom-color: #64748B;
+  border-radius: 8px;
+  color: #0F172A;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 14px;
+  height: 48px;
+  user-select: none;
+  transition: transform 0.06s ease, box-shadow 0.08s ease, background 0.08s ease, border-color 0.08s ease;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.kb-key .finger-bar {
+  position: absolute;
+  bottom: 2px;
+  left: 16%;
+  right: 16%;
+  height: 3.5px;
+  border-radius: 2px;
+  opacity: 0.95;
+  transition: opacity 0.15s ease;
+}
+
+body.hide-finger-guide .kb-key .finger-bar {
+  opacity: 0;
+}
+
+/* Colores por dedo (alto contraste sobre tecla blanca) */
+.finger-pinky  { background-color: #E11D48; }
+.finger-ring   { background-color: #D97706; }
+.finger-middle { background-color: #16A34A; }
+.finger-index  { background-color: #0284C7; }
+.finger-thumb  { background-color: #7C3AED; }
+
+/* Marca táctil en F y J */
+.kb-key.home-key::after {
+  content: '';
+  position: absolute;
+  bottom: 9px;
+  width: 14px;
+  height: 2.5px;
+  background: #0284C7;
+  border-radius: 2px;
+}
+
+/* Tecla sugerida (siguiente a presionar) */
+.kb-key.key-target {
+  background: #E0F2FE;
+  border-color: #0284C7;
+  border-bottom-color: #0369A1;
+  color: #0369A1;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25);
+}
+
+/* Tecla presionada (activo) */
+.kb-key.key-active {
+  transform: translateY(2px);
+  background: linear-gradient(180deg, #0284C7 0%, #0369A1 100%);
+  color: #FFFFFF !important;
+  border-color: #075985;
+  border-bottom-width: 1.5px;
+  box-shadow: 0 0 14px rgba(2, 132, 199, 0.45);
+  z-index: 5;
+}
+
+/* Tecla correcta (acierto) */
+.kb-key.key-hit {
+  transform: translateY(2px);
+  background: linear-gradient(180deg, #16A34A 0%, #15803D 100%);
+  color: #FFFFFF !important;
+  border-color: #166534;
+  border-bottom-width: 1.5px;
+  box-shadow: 0 0 16px rgba(22, 163, 74, 0.55);
+  z-index: 6;
+}
+
+/* Tecla con error (señal roja de alto contraste) */
+.kb-key.key-error {
+  transform: translateY(2px);
+  background: linear-gradient(180deg, #DC2626 0%, #B91C1C 100%);
+  color: #FFFFFF !important;
+  border-color: #991B1B;
+  border-bottom-width: 1.5px;
+  box-shadow: 0 0 18px rgba(220, 38, 38, 0.65);
+  animation: key-shake 0.22s ease-in-out;
+  z-index: 7;
+}
+
+@keyframes key-shake {
+  0%, 100% { transform: translate(0, 2px); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(3px, 2px); }
+  75% { transform: translate(-2px, 2px); }
+}
+
+/* Señal roja de error en la arena */
+.arena-error-flash {
+  animation: arena-red-pulse 0.38s ease-out;
+}
+
+@keyframes arena-red-pulse {
+  0% {
+    box-shadow: inset 0 0 36px rgba(220, 38, 38, 0.45), 0 0 18px rgba(220, 38, 38, 0.45);
+    border-color: #DC2626;
+  }
+  100% {
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border-color: #CBD5E1;
+  }
+}
+
+/* Fichas de letras en movimiento (alto contraste oscuro sobre blanco) */
+.letter-tile {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 78px;
+  background: #FFFFFF;
+  border: 2px solid #94A3B8;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  pointer-events: none;
+}
+
+.letter-tile.is-next {
+  background: #E0F2FE;
+  border-color: #0284C7;
+  border-width: 2.5px;
+  box-shadow: 0 8px 22px rgba(2, 132, 199, 0.28);
+}
+
+.letter-tile.is-danger {
+  background: #FEE2E2;
+  border-color: #DC2626;
+  box-shadow: 0 8px 22px rgba(220, 38, 38, 0.28);
+}
+
+/* Cursor de párrafo de alto contraste */
+.para-char-current {
+  background-color: #0284C7;
+  color: #FFFFFF;
+  padding: 0 2px;
+  border-radius: 3px;
+  font-weight: 800;
+}
+
+.para-char-current.is-error {
+  background-color: #DC2626;
+  color: #FFFFFF;
+}
+
+.para-char-done {
+  color: #15803D;
+  font-weight: 700;
+}
+
+.para-char-pending {
+  color: #334155;
+}
+
+/* Texto flotante de impacto */
+@keyframes float-up-fade {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(0.95); }
+  25% { opacity: 1; transform: translate(-50%, -14px) scale(1.08); }
+  100% { opacity: 0; transform: translate(-50%, -42px) scale(0.95); }
+}
+
+.floating-feedback {
+  position: absolute;
+  pointer-events: none;
+  animation: float-up-fade 0.85s ease-out forwards;
+  z-index: 30;
+}

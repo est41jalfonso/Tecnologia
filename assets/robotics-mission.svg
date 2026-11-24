@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Estudiantes de secundaria programando un robot educativo con sensores y energía solar">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <linearGradient id="bot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <circle cx="680" cy="90" r="55" fill="#FDE68A"/>
+  <rect x="60" y="340" width="680" height="40" rx="12" fill="#93C5FD"/>
+  <!-- Robot central -->
+  <rect x="330" y="150" width="140" height="120" rx="22" fill="url(#bot)"/>
+  <rect x="355" y="175" width="90" height="44" rx="10" fill="#0F172A"/>
+  <circle cx="380" cy="197" r="9" fill="#38BDF8"/>
+  <circle cx="420" cy="197" r="9" fill="#38BDF8"/>
+  <line x1="400" y1="150" x2="400" y2="115" stroke="#1E40AF" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="400" cy="108" r="12" fill="#10B981"/>
+  <rect x="355" y="270" width="28" height="70" rx="8" fill="#1E3A8A"/>
+  <rect x="417" y="270" width="28" height="70" rx="8" fill="#1E3A8A"/>
+  <!-- Panel solar -->
+  <polygon points="550,240 670,210 695,280 575,310" fill="#1D4ED8" stroke="#0F172A" stroke-width="4"/>
+  <line x1="590" y1="230" x2="615" y2="300" stroke="#93C5FD" stroke-width="3"/>
+  <line x1="630" y1="220" x2="655" y2="290" stroke="#93C5FD" stroke-width="3"/>
+  <!-- Badges XP -->
+  <rect x="95" y="110" width="165" height="52" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="3"/>
+  <text x="177" y="143" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="800" fill="#1E3A8A">+350 XP</text>
+  <rect x="540" y="340" width="180" height="44" rx="12" fill="#059669"/>
+  <text x="630" y="368" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#FFFFFF">ROBÓTICA NEM</text>
+</svg>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<title>Portal Educativo — Secundaria Técnica 41 y Primaria Teodoro Olivares</title>
+<meta name="description" content="Portal educativo interactivo en tema claro accesible para alumnos de la Escuela Secundaria Técnica N° 41 (Aguascalientes) y Escuela Primaria Teodoro Olivares 3° A (Pabellón de Arteaga), con zona para docentes."/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: "#0284C7",
+              navy: "#0F172A",
+              royal: "#2563EB",
+              emerald: "#059669",
+              purple: "#7C3AED",
+            }
+          },
+          fontFamily: {
+            heading: ["Space Grotesk", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    /* Patrón sutil y nítido para fondo accesible */
+    .bg-grid-pattern {
+      background-color: #F8FAFC;
+      background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+<link rel="stylesheet" href="./assets/portal.css"/>
+<script src="./assets/portal.js" defer></script>
+</head>
+<body class="bg-grid-pattern text-slate-800 font-body antialiased min-h-screen flex flex-col selection:bg-sky-200 selection:text-sky-900 transition-[font-size] duration-150" id="app-body">
+<a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+<!-- ============================================================== -->
+<!-- BARRA SUPERIOR (HEADER / NAVBAR) - TEMA CLARO WCAG AAA -->
+<!-- ============================================================== -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+<!-- LOGO Y SUBTÍTULO REGIONAL -->
+<a class="flex items-center gap-3 shrink-0 group focus:outline-none focus:ring-2 focus:ring-sky-500 rounded-lg p-1" href="index.html">
+<div class="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center text-white shadow-md shadow-sky-600/20 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">rocket_launch</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-heading font-extrabold text-slate-900 tracking-tight text-lg sm:text-xl uppercase">PORTAL EDUCATIVO</span>
+<span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-bold tracking-wider uppercase border border-sky-200">
+              AGUASCALIENTES &amp; PABELLÓN
+            </span>
+</div>
+<span class="text-xs font-semibold text-slate-600">Comunidad Educativa Digital • NEM</span>
+</div>
+</a>
+<!-- MENÚ DE NAVEGACIÓN COMPLETO -->
+<nav aria-label="Navegación Principal" class="hidden xl:flex items-center gap-1.5">
+<a aria-current="page" class="px-3.5 py-2 rounded-lg bg-sky-600 text-white font-heading font-bold text-sm tracking-wide shadow-sm shadow-sky-600/20 flex items-center gap-1" href="index.html">
+<span class="material-symbols-outlined text-[18px]">home</span>
+          Inicio
+        </a>
+<a class="px-3 py-2 rounded-lg text-slate-700 hover:text-sky-700 hover:bg-slate-100 font-heading font-bold text-sm tracking-wide transition-colors" href="#secundaria-41">
+          Secundaria Técnica 41
+        </a>
+<a class="px-3 py-2 rounded-lg text-slate-700 hover:text-emerald-700 hover:bg-slate-100 font-heading font-bold text-sm tracking-wide transition-colors" href="#primaria-teodoro">
+          Primaria Teodoro Olivares
+        </a>
+<!-- ¡NUEVO ENLACE OBLIGATORIO: MATERIALES DOCENTES! -->
+<a class="px-3 py-2 rounded-lg text-purple-700 bg-purple-50 border border-purple-200 hover:bg-purple-100 font-heading font-bold text-sm tracking-wide transition-colors flex items-center gap-1" href="#materiales-docentes">
+<span class="material-symbols-outlined text-[18px]">folder_special</span>
+          Materiales Docentes
+        </a>
+<a class="px-3 py-2 rounded-lg text-slate-700 hover:text-sky-700 hover:bg-slate-100 font-heading font-bold text-sm tracking-wide transition-colors" href="#zona-docente">
+          Google para Docentes
+        </a>
+<a class="px-3 py-2 rounded-lg text-slate-700 hover:text-purple-700 hover:bg-slate-100 font-heading font-bold text-sm tracking-wide transition-colors" href="#zona-docente">
+          IA para Docentes
+        </a>
+</nav>
+<!-- HERRAMIENTAS DE ACCESIBILIDAD, NIVEL Y PERFIL -->
+<div class="flex items-center gap-3 shrink-0">
+<!-- CONTROL VISIBLE DE ACCESIBILIDAD (A- / A+ TAMAÑO DE TEXTO) -->
+<div aria-label="Ajuste de tamaño de texto para accesibilidad" class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-300 shadow-inner" role="group">
+<span class="material-symbols-outlined text-slate-700 text-[18px] ml-1.5 mr-1" title="Accesibilidad de lectura">format_size</span>
+<button aria-label="Disminuir tamaño de letra" class="w-8 h-7 rounded-lg bg-white text-slate-800 border border-slate-200 hover:bg-sky-50 hover:text-sky-700 font-heading font-bold text-xs flex items-center justify-center transition shadow-sm active:scale-95" id="btn-font-decrease" title="Disminuir texto (A-)" type="button">
+            A-
+          </button>
+<button aria-label="Restablecer tamaño normal" class="px-1.5 h-7 text-slate-600 hover:text-slate-900 text-xs font-semibold" id="btn-font-reset" title="Tamaño predeterminado" type="button">
+            100%
+          </button>
+<button aria-label="Aumentar tamaño de letra" class="w-8 h-7 rounded-lg bg-white text-slate-800 border border-slate-200 hover:bg-sky-50 hover:text-sky-700 font-heading font-bold text-xs flex items-center justify-center transition shadow-sm active:scale-95" id="btn-font-increase" title="Aumentar texto (A+)" type="button">
+            A+
+          </button>
+</div>
+<!-- INDICADOR GAMER EN MODO CLARO -->
+<div class="hidden sm:flex items-center gap-2 bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-sky-600 text-[20px]">military_tech</span>
+<div class="flex flex-col leading-tight">
+<span class="font-heading font-extrabold text-xs text-sky-900 tracking-wider">NIVEL 12</span>
+<span class="text-[11px] font-bold text-emerald-700">2,450 XP</span>
+</div>
+</div>
+<!-- AVATAR USUARIO -->
+<button aria-label="Perfil de estudiante" class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-md hover:bg-sky-700 transition-colors focus:ring-2 focus:ring-sky-500" type="button">
+<span class="material-symbols-outlined text-[22px]">person</span>
+</button>
+</div>
+</div>
+</header>
+<main id="main-content" tabindex="-1" class="flex-1 w-full">
+<!-- ============================================================== -->
+<!-- 4. HERO SECTION CLARA, ESPACIOSA Y MOTIVADORA -->
+<!-- ============================================================== -->
+<section class="relative w-full py-12 lg:py-20 overflow-hidden border-b border-slate-200 bg-white">
+<!-- Acentos decorativos luminosos suaves -->
+<div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-sky-100/70 blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 -right-24 w-96 h-96 rounded-full bg-emerald-100/60 blur-3xl pointer-events-none"></div>
+<div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center text-center">
+<!-- BADGE TEMPORADA ESCOLAR CLARO -->
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-800 shadow-sm mb-6">
+<span class="material-symbols-outlined text-sky-600 text-[18px]">verified</span>
+<span class="font-heading text-xs font-bold uppercase tracking-wider">Temporada Escolar 2026-2027</span>
+<span class="text-slate-400">•</span>
+<span class="text-xs font-bold text-slate-700">Aguascalientes &amp; Pabellón</span>
+</div>
+<!-- TÍTULO PRINCIPAL DE ALTO CONTRASTE -->
+<h1 class="font-heading font-extrabold text-slate-900 text-3xl sm:text-5xl lg:text-6xl tracking-tight max-w-5xl uppercase mb-5 leading-tight">
+          ¡Tu Aventura del Aprendizaje <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-blue-600 to-purple-600">Comienza Aquí!</span>
+</h1>
+<!-- SUBTÍTULO BREVE Y DIRECTO -->
+<p class="text-slate-700 text-lg sm:text-xl font-medium max-w-2xl mb-8 leading-relaxed">
+          Elige tu escuela, supera misiones y gana medallas en Aguascalientes y Pabellón de Arteaga.
+        </p>
+<!-- BOTONES DE ACCIÓN DIRECTOS Y GRANDES -->
+<div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-10">
+<a class="w-full sm:w-auto px-8 py-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-heading font-extrabold text-base sm:text-lg tracking-wide uppercase shadow-lg shadow-sky-600/25 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 border border-sky-500" href="#secundaria-41">
+<span class="material-symbols-outlined text-[24px]">bolt</span>
+<span>⚡ Entrar a Secundaria Técnica 41</span>
+</a>
+<a class="w-full sm:w-auto px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-extrabold text-base sm:text-lg tracking-wide uppercase shadow-lg shadow-emerald-600/25 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 border border-emerald-500" href="#primaria-teodoro">
+<span class="material-symbols-outlined text-[24px]">stars</span>
+<span>🌟 Explorar Primaria 3° A</span>
+</a>
+</div>
+<!-- INDICADORES RÁPIDOS EN PÍLDORAS BLANCAS CON BORDE NÍTIDO -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-3xl">
+<div class="bg-white border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-center gap-3 shadow-sm hover:border-sky-300 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[22px]">groups</span>
+</div>
+<div class="text-left">
+<span class="font-heading font-extrabold text-slate-900 text-xl block leading-tight">1,200+</span>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-600">Alumnos Activos</span>
+</div>
+</div>
+<div class="bg-white border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-center gap-3 shadow-sm hover:border-purple-300 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[22px]">military_tech</span>
+</div>
+<div class="text-left">
+<span class="font-heading font-extrabold text-slate-900 text-xl block leading-tight">48</span>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-600">Misiones Tecnológicas</span>
+</div>
+</div>
+<div class="bg-white border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-center gap-3 shadow-sm hover:border-emerald-300 transition-colors">
+<div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[22px]">verified_user</span>
+</div>
+<div class="text-left">
+<span class="font-heading font-extrabold text-slate-900 text-xl block leading-tight">100%</span>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-600">Retos Comunitarios NEM</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- 5. SECCIÓN 'ELIGE TU MUNDO' CON LAS 2 ESCUELAS E IMÁGENES LUMINOSAS -->
+<!-- ============================================================== -->
+<section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16" id="elige-tu-mundo">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<div class="inline-flex items-center gap-2 text-sky-800 font-heading text-xs font-extrabold tracking-wider uppercase mb-1">
+<span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
+            Aulas Virtuales Interactivas
+          </div>
+<h2 class="font-heading font-extrabold text-slate-900 text-2xl sm:text-4xl uppercase tracking-tight">
+            ELIGE TU MUNDO DE APRENDIZAJE
+          </h2>
+<p class="text-slate-700 font-medium text-base mt-1">
+            Ingresa a tu escuela correspondiente para iniciar tus retos gamificados del día.
+          </p>
+</div>
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold self-start md:self-auto">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          Conexión Escolar Segura &amp; Libre
+        </div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+<!-- TARJETA 1: SECUNDARIA TÉCNICA 41 -->
+<article class="bg-white border-2 border-slate-200 hover:border-sky-400 rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col group" id="secundaria-41">
+<!-- IMAGEN DE CABECERA LUMINOSA: IMAGE_16 -->
+<div class="relative h-72 sm:h-80 w-full overflow-hidden bg-slate-100">
+<img alt="Ilustración estilo anime y tecnología de estudiantes en aula de cómputo y robótica de la Secundaria Técnica 41" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="./assets/est41-taller-anime.jpg" loading="lazy" decoding="async"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-sky-900 font-heading font-extrabold text-xs uppercase tracking-wider shadow-md border border-slate-200 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-sky-600"></span>
+                Nivel Secundaria • Robótica &amp; Código
+              </span>
+</div>
+<div class="absolute bottom-4 right-4">
+<span class="px-3 py-1 rounded-xl bg-white/95 backdrop-blur-md text-slate-800 font-bold text-xs shadow-md border border-slate-200 flex items-center gap-1">
+<span class="material-symbols-outlined text-sky-600 text-[16px]">sensors</span>
+                Terminal 41 Activa
+              </span>
+</div>
+</div>
+<!-- CONTENIDO TARJETA 1 -->
+<div class="p-6 sm:p-8 flex flex-col flex-1 justify-between gap-6">
+<div>
+<div class="flex items-center gap-1.5 text-slate-600 font-semibold text-xs sm:text-sm mb-2">
+<span class="material-symbols-outlined text-sky-600 text-[18px]">location_on</span>
+<span>Villas de Nuestra Señora de la Asunción, Aguascalientes</span>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-2xl group-hover:text-sky-700 transition-colors uppercase">
+                Escuela Secundaria Técnica N° 41
+              </h3>
+<!-- ENFOQUE & MENTOR -->
+<div class="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-3">
+<div>
+<span class="text-xs font-bold text-sky-700 uppercase tracking-wider block">Enfoque Pedagógico NEM</span>
+<p class="font-heading font-bold text-slate-900 text-base">Tecnología con énfasis en Informática</p>
+<p class="text-xs text-slate-600 font-medium">Campo formativo: De lo humano y lo comunitario</p>
+</div>
+<div class="pt-2 border-t border-slate-200 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<div>
+<span class="text-[11px] font-bold text-slate-500 uppercase block">Docente Mentor Responsable</span>
+<span class="font-heading font-bold text-slate-900 text-sm">🛡️ Mtro. José Alfonso Ruvalcaba Andrade</span>
+</div>
+</div>
+</div>
+<!-- TAGS ACCESIBLES -->
+<div class="flex flex-wrap gap-2 mt-5">
+<span class="px-3 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-200 font-semibold text-xs">Python</span>
+<span class="px-3 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-200 font-semibold text-xs">Algoritmos</span>
+<span class="px-3 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-200 font-semibold text-xs">Robótica</span>
+<span class="px-3 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-200 font-semibold text-xs">Ciberseguridad</span>
+</div>
+</div>
+<!-- BOTÓN GRANDE -->
+<a class="w-full py-3.5 px-6 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-heading font-extrabold text-base uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all group-hover:scale-[1.01]" href="secundaria-est41.html">
+<span>Explorar EST 41</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- TARJETA 2: PRIMARIA TEODORO OLIVARES -->
+<article class="bg-white border-2 border-slate-200 hover:border-emerald-400 rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col group" id="primaria-teodoro">
+<!-- IMAGEN DE CABECERA LUMINOSA: IMAGE_17 -->
+<div class="relative h-72 sm:h-80 w-full overflow-hidden bg-slate-100">
+<img alt="Estudiantes explorando mundo voxel brillante y alegre bajo el sol con robot guía en Primaria Teodoro Olivares" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIGbgGISwoF-hGiZL4TF53R_SIH4tRgjB-rvncNh85kZXCcOdsiuyldkFmZQYrWcw4lkFXGkbhIwO0MSseDbuOgi86KoXFBDXuBlWIQrm5Q9qUyaSFg0WmBwv-5_O7_IA6Ggd3c3XIaKJvZ_7BNrxTO5aiK4pR31tFupl74FhvZDsXaFgQ-lfTOzUU3bGqBWn-Aoft9Qf0jzFll60ExRaAgX-SL48GPl8V7gvM3O5aO7nbqgFiMeg7JGxNH0D0SwayaERuPGv09I4"/ loading="lazy" decoding="async">
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-emerald-900 font-heading font-extrabold text-xs uppercase tracking-wider shadow-md border border-slate-200 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                Nivel Primaria • Voxel Adventure
+              </span>
+</div>
+<div class="absolute bottom-4 right-4">
+<span class="px-3 py-1 rounded-xl bg-white/95 backdrop-blur-md text-slate-800 font-bold text-xs shadow-md border border-slate-200 flex items-center gap-1">
+<span class="material-symbols-outlined text-emerald-600 text-[16px]">videogame_asset</span>
+                Aventura 3° A Activa
+              </span>
+</div>
+</div>
+<!-- CONTENIDO TARJETA 2 -->
+<div class="p-6 sm:p-8 flex flex-col flex-1 justify-between gap-6">
+<div>
+<div class="flex items-center gap-1.5 text-slate-600 font-semibold text-xs sm:text-sm mb-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">location_on</span>
+<span>Pabellón de Arteaga, Aguascalientes</span>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-2xl group-hover:text-emerald-700 transition-colors uppercase">
+                Escuela Primaria Teodoro Olivares
+              </h3>
+<!-- ENFOQUE & GUÍA DOCENTE -->
+<div class="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-3">
+<div>
+<span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Enfoque Pedagógico NEM</span>
+<p class="font-heading font-bold text-slate-900 text-base">Grupo 3° A — Aventura de Aprendizaje Integral</p>
+<p class="text-xs text-slate-600 font-medium">Lectoescritura, Lógica Lúdica y Exploración Comunitaria</p>
+</div>
+<div class="pt-2 border-t border-slate-200 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">auto_stories</span>
+</div>
+<div>
+<span class="text-[11px] font-bold text-slate-500 uppercase block">Guía Docente Responsable</span>
+<span class="font-heading font-bold text-slate-900 text-sm">🌟 Mtra. Claudia Ramírez Guzmán</span>
+</div>
+</div>
+</div>
+<!-- TAGS ACCESIBLES -->
+<div class="flex flex-wrap gap-2 mt-5">
+<span class="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold text-xs">Lectoescritura</span>
+<span class="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold text-xs">Lógica Voxel</span>
+<span class="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold text-xs">Retos Matemáticos</span>
+<span class="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold text-xs">Comunidad</span>
+</div>
+</div>
+<!-- BOTÓN GRANDE -->
+<a class="w-full py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-extrabold text-base uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all group-hover:scale-[1.01]" href="primaria-teodoro-olivares.html">
+<span>Explorar 3° A</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+</div>
+</article>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- 6. MISIONES DE LA SEMANA & RECOMPENSAS (WCAG AAA CLARO) -->
+<!-- ============================================================== -->
+<section class="w-full bg-slate-100/70 border-y border-slate-200 py-16" id="misiones-semanales">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<div class="inline-flex items-center gap-2 text-purple-700 font-heading text-xs font-extrabold tracking-wider uppercase mb-1">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+              Desafíos Semanales Gamificados
+            </div>
+<h2 class="font-heading font-extrabold text-slate-900 text-2xl sm:text-4xl uppercase tracking-tight">
+              MISIONES DE LA SEMANA &amp; RECOMPENSAS XP
+            </h2>
+<p class="text-slate-700 font-medium text-base mt-1">
+              Supera retos formativos, colabora con tu salón y acumula puntos para tu casa.
+            </p>
+</div>
+<div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 shadow-sm">
+<span>Temporada 2 • Fase 1</span>
+<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 uppercase">Activa</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- COLUMNA IZQUIERDA: 3 MISIONES FORMATIVAS -->
+<div class="lg:col-span-8 flex flex-col gap-5">
+<!-- MISIÓN 1: SECUNDARIA -->
+<div class="p-6 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-300 shadow-sm hover:shadow-md transition-all flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-800 font-heading font-bold text-xs uppercase tracking-wider">
+                    Secundaria Técnica 41 • Informática
+                  </span>
+<span class="text-xs text-slate-600 font-semibold">Dificultad: Intermedio</span>
+</div>
+<div class="inline-flex items-center gap-1 text-sky-800 font-heading font-extrabold text-sm bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
+<span class="material-symbols-outlined text-[18px] text-sky-600">stars</span>
+<span>+350 XP RECOMPENSA</span>
+</div>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-xl">
+                Desafío Código: El Laberinto Cibernético
+              </h3>
+<p class="text-slate-700 text-sm leading-relaxed font-medium">
+                Programa un algoritmo de búsqueda para guiar al bot a través de nodos de red encriptados usando condicionales y bucles mientras optimizas la memoria.
+              </p>
+<!-- Barra de Progreso Accesible -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+<span>Progreso Global de Alumnos</span>
+<span class="text-sky-700">65% Completado</span>
+</div>
+<div class="w-full h-3 rounded-full bg-slate-100 border border-slate-300 overflow-hidden">
+<div class="h-full bg-sky-600 rounded-full transition-all" style="width: 65%;"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-xs font-semibold text-slate-600">42 Estudiantes participando hoy</span>
+<button class="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors shadow-sm" type="button">
+                  Iniciar Misión
+                </button>
+</div>
+</div>
+<!-- MISIÓN 2: PRIMARIA -->
+<div class="p-6 rounded-2xl bg-white border-2 border-slate-200 hover:border-emerald-300 shadow-sm hover:shadow-md transition-all flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 font-heading font-bold text-xs uppercase tracking-wider">
+                    Primaria Teodoro Olivares • 3° A
+                  </span>
+<span class="text-xs text-slate-600 font-semibold">Dificultad: Principiante</span>
+</div>
+<div class="inline-flex items-center gap-1 text-emerald-800 font-heading font-extrabold text-sm bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+<span class="material-symbols-outlined text-[18px] text-emerald-600">verified</span>
+<span>+250 XP RECOMPENSA</span>
+</div>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-xl">
+                Exploradores Voxel: El Reino de las Palabras
+              </h3>
+<p class="text-slate-700 text-sm leading-relaxed font-medium">
+                Descifra acertijos gramaticales en la isla flotante para desbloquear cofres con gemas léxicas y armar el gran códice del aula.
+              </p>
+<!-- Barra de Progreso Accesible -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+<span>Progreso Global de Alumnos</span>
+<span class="text-emerald-700">90% Completado</span>
+</div>
+<div class="w-full h-3 rounded-full bg-slate-100 border border-slate-300 overflow-hidden">
+<div class="h-full bg-emerald-600 rounded-full transition-all" style="width: 90%;"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-100">
+<span class="text-xs font-semibold text-slate-600">28 Exploradores en línea</span>
+<button class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors shadow-sm" type="button">
+                  Iniciar Misión
+                </button>
+</div>
+</div>
+<!-- MISIÓN 3: TORNEO INTERESCOLAR -->
+<div class="p-6 rounded-2xl bg-white border-2 border-purple-200 hover:border-purple-300 shadow-sm hover:shadow-md transition-all flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 rounded-md bg-purple-100 text-purple-800 font-heading font-bold text-xs uppercase tracking-wider">
+                    Torneo Interescolar NEM Aguascalientes
+                  </span>
+<span class="text-xs text-slate-600 font-semibold">Dificultad: Avanzado</span>
+</div>
+<div class="inline-flex items-center gap-1 text-purple-800 font-heading font-extrabold text-sm bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200">
+<span class="material-symbols-outlined text-[18px] text-purple-600">emoji_events</span>
+<span>TROFEO ÉPICO + 500 XP</span>
+</div>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-xl">
+                Torneo de Habilidades Digitales &amp; Lógica Comunitaria
+              </h3>
+<p class="text-slate-700 text-sm leading-relaxed font-medium">
+                Competencia colaborativa en vivo entre equipos de Aguascalientes y Pabellón de Arteaga resolviendo desafíos comunitarios.
+              </p>
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+<div class="flex items-center gap-1.5 text-xs font-bold text-rose-700">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Fecha límite: Este Viernes 18:00 hrs</span>
+</div>
+<button class="px-5 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors shadow-sm" type="button">
+                  Registrar Escuadrón
+                </button>
+</div>
+</div>
+</div>
+<!-- COLUMNA DERECHA: LEADERBOARD DE CASAS -->
+<div class="lg:col-span-4">
+<div class="p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between pb-3 border-b border-slate-200">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-purple-700 text-[24px]">leaderboard</span>
+<h3 class="font-heading font-extrabold text-slate-900 text-lg uppercase tracking-tight">LEADERBOARD CASAS</h3>
+</div>
+<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-bold text-xs">SEM 14</span>
+</div>
+<!-- ITEMS LEADERBOARD CON ALTO CONTRASTE -->
+<div class="flex flex-col gap-3">
+<!-- RANK 1 -->
+<div class="p-3.5 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-sky-600 text-white font-heading font-extrabold text-sm flex items-center justify-center shadow-sm">1</span>
+<div>
+<span class="font-heading font-extrabold text-slate-900 text-sm block">Cyber-Dragones</span>
+<span class="text-xs text-sky-800 font-bold">Secundaria Técnica 41</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-heading font-extrabold text-sky-800 text-base">14,850</span>
+<span class="block text-[10px] font-bold text-slate-500 uppercase">XP TOTAL</span>
+</div>
+</div>
+<!-- RANK 2 -->
+<div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-heading font-extrabold text-sm flex items-center justify-center shadow-sm">2</span>
+<div>
+<span class="font-heading font-extrabold text-slate-900 text-sm block">Voxel-Knights</span>
+<span class="text-xs text-emerald-800 font-bold">Primaria Teodoro Ol.</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-heading font-extrabold text-emerald-800 text-base">12,420</span>
+<span class="block text-[10px] font-bold text-slate-500 uppercase">XP TOTAL</span>
+</div>
+</div>
+<!-- RANK 3 -->
+<div class="p-3.5 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-purple-600 text-white font-heading font-extrabold text-sm flex items-center justify-center shadow-sm">3</span>
+<div>
+<span class="font-heading font-extrabold text-slate-900 text-sm block">Byte-Rangers</span>
+<span class="text-xs text-purple-800 font-bold">Alianza Mixta NEM</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-heading font-extrabold text-purple-800 text-base">10,980</span>
+<span class="block text-[10px] font-bold text-slate-500 uppercase">XP TOTAL</span>
+</div>
+</div>
+</div>
+<div class="mt-2 p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-sky-600 text-[20px] shrink-0 mt-0.5">tips_and_updates</span>
+<p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  ¡Completa 2 misiones más hoy para sumar <strong class="text-emerald-700 font-bold">+100 XP extras</strong> a tu escuela!
+                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ============================================================== -->
+<!-- 7. ZONA DOCENTE (POWER-UPS PARA MAESTROS) - 3 TARJETAS CLARAS -->
+<!-- ============================================================== -->
+<section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16" id="zona-docente">
+<div class="flex flex-col gap-2 mb-10">
+<div class="inline-flex items-center gap-2 text-sky-800 font-heading text-xs font-extrabold tracking-wider uppercase">
+<span class="px-2.5 py-0.5 rounded-full bg-sky-100 border border-sky-200">Espacio de Desarrollo Magisterial</span>
+</div>
+<h2 class="font-heading font-extrabold text-slate-900 text-2xl sm:text-4xl uppercase tracking-tight">
+          ⚡ ZONA DOCENTE: POWER-UPS PARA MAESTROS
+        </h2>
+<p class="text-slate-700 font-medium text-base max-w-3xl">
+          Herramientas prácticas, inteligencia artificial y recursos curriculares para transformar tu aula bajo el modelo formativo de la NEM.
+        </p>
+</div>
+<!-- GRID DE 3 TARJETAS EXPLICATIVAS (GOOGLE + IA + MATERIALES DESCARGABLES) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+<!-- TARJETA 1: GOOGLE PARA DOCENTES -->
+<article class="p-6 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-300 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">apps</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-sky-50 text-sky-800 font-bold text-xs border border-sky-200">
+                Workspace
+              </span>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-xl uppercase mb-2">
+              Aplicaciones de Google para Docentes
+            </h3>
+<p class="text-slate-700 text-sm font-medium leading-relaxed mb-4">
+              Guías prácticas para optimizar clases, diseñar rúbricas automatizadas y evaluaciones formativas con las herramientas que ya utilizas en tu jornada.
+            </p>
+<div class="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 mb-5 text-xs font-bold text-slate-700">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sky-600 text-[18px]">school</span> Classroom</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sky-600 text-[18px]">add_to_drive</span> Drive</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sky-600 text-[18px]">description</span> Docs/Slides</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sky-600 text-[18px]">quiz</span> Forms</span>
+</div>
+</div>
+<a class="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-sky-600 hover:text-white text-sky-800 font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-slate-200 transition-colors" href="google-docentes.html">
+<span>Ver Consejos Google</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</article>
+<!-- TARJETA 2: INTELIGENCIA ARTIFICIAL PARA DOCENTES -->
+<article class="p-6 rounded-2xl bg-white border-2 border-slate-200 hover:border-purple-300 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">psychology</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 font-bold text-xs border border-purple-200">
+                IA Generativa
+              </span>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-xl uppercase mb-2">
+              Inteligencia Artificial para Docentes
+            </h3>
+<p class="text-slate-700 text-sm font-medium leading-relaxed mb-4">
+              Estrategias y herramientas de IA generativa para planificar secuencias didácticas, personalizar actividades y facilitar la labor magisterial.
+            </p>
+<div class="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 mb-5 text-xs font-bold text-slate-700">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-purple-600 text-[18px]">auto_awesome</span> Prompts NEM</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-purple-600 text-[18px]">alt_route</span> Secuencias</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-purple-600 text-[18px]">grading</span> Rúbricas</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-purple-600 text-[18px]">magic_button</span> Materiales</span>
+</div>
+</div>
+<a class="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-purple-600 hover:text-white text-purple-800 font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-slate-200 transition-colors" href="ia-docentes.html">
+<span>Explorar IA Docente</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</article>
+<!-- TARJETA 3: MATERIALES Y FORMATOS DESCARGABLES -->
+<article class="p-6 rounded-2xl bg-white border-2 border-emerald-200 hover:border-emerald-300 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between" id="materiales-docentes">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">folder_zip</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-xs border border-emerald-200">
+                PDF &amp; Docs
+              </span>
+</div>
+<h3 class="font-heading font-extrabold text-slate-900 text-xl uppercase mb-2">
+              Materiales y Formatos Descargables
+            </h3>
+<p class="text-slate-700 text-sm font-medium leading-relaxed mb-4">
+              Repositorio de libre acceso con guías curriculares oficiales NEM, bitácoras de campo, planeaciones analíticas y rúbricas listas para imprimir.
+            </p>
+<div class="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 mb-5 text-xs font-bold text-slate-700">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-emerald-600 text-[18px]">picture_as_pdf</span> Guías NEM</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-emerald-600 text-[18px]">table_chart</span> Bitácoras</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-emerald-600 text-[18px]">assignment_turned_in</span> Rúbricas</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-emerald-600 text-[18px]">download</span> Formatos</span>
+</div>
+</div>
+<a class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-colors" href="materiales-docentes.html">
+<span>Descargar Materiales</span>
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+</a>
+</article>
+</div>
+</section>
+</main>
+<!-- ============================================================== -->
+<!-- 8. FOOTER CLARO, LIMPIO Y ACCESIBLE -->
+<!-- ============================================================== -->
+<footer class="w-full bg-slate-100 border-t border-slate-300 py-12">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-300">
+<!-- COL 1: IDENTIDAD -->
+<div class="md:col-span-5 flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="font-heading font-extrabold text-slate-900 text-lg uppercase tracking-tight">PORTAL EDUCATIVO</span>
+<span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[10px] font-bold uppercase tracking-wider border border-sky-200">
+              TEMPORADA ESCOLAR 2026-2027
+            </span>
+</div>
+<p class="text-slate-600 text-sm font-medium max-w-md leading-relaxed">
+            Plataforma comunitaria de aprendizaje interactivo y gamificado alineada a la Nueva Escuela Mexicana (NEM). Potenciando el talento digital de alumnos y profesores.
+          </p>
+</div>
+<!-- COL 2: ESCUELAS VINCULADAS -->
+<div class="md:col-span-4 flex flex-col gap-2">
+<span class="font-heading font-bold text-slate-900 text-xs uppercase tracking-wider">
+            Comunidades Educativas Base
+          </span>
+<div class="flex flex-col gap-2 text-xs font-medium text-slate-700">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sky-700 text-[18px] shrink-0">school</span>
+<span><strong>Escuela Secundaria Técnica N° 41</strong> (Villas de Nuestra Señora de la Asunción, Aguascalientes)</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-emerald-700 text-[18px] shrink-0">local_library</span>
+<span><strong>Escuela Primaria Teodoro Olivares</strong> (Pabellón de Arteaga, Aguascalientes)</span>
+</div>
+</div>
+</div>
+<!-- COL 3: ENLACES Y SERVIDORES -->
+<div class="md:col-span-3 flex flex-col gap-2 md:items-end">
+<span class="font-heading font-bold text-slate-900 text-xs uppercase tracking-wider">
+            Canales del Gremio
+          </span>
+<div class="flex items-center gap-2">
+<a aria-label="Comunidad Escolar" class="w-9 h-9 rounded-xl bg-white border border-slate-300 text-slate-700 hover:text-sky-700 hover:border-sky-400 flex items-center justify-center transition shadow-sm" href="materiales-docentes.html">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+</a>
+<a aria-label="Torneo Digital" class="w-9 h-9 rounded-xl bg-white border border-slate-300 text-slate-700 hover:text-sky-700 hover:border-sky-400 flex items-center justify-center transition shadow-sm" href="materiales-docentes.html">
+<span class="material-symbols-outlined text-[18px]">sports_esports</span>
+</a>
+<a aria-label="Biblioteca de Recursos" class="w-9 h-9 rounded-xl bg-white border border-slate-300 text-slate-700 hover:text-sky-700 hover:border-sky-400 flex items-center justify-center transition shadow-sm" href="materiales-docentes.html">
+<span class="material-symbols-outlined text-[18px]">library_books</span>
+</a>
+</div>
+</div>
+</div>
+<!-- COPYRIGHT Y SERVIDOR -->
+<div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-600">
+<p>© 2026 PORTAL EDUCATIVO. Aguascalientes &amp; Pabellón de Arteaga. Todos los derechos reservados.</p>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-emerald-800 font-bold">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            Servidor Regional: Activo (Aguascalientes)
+          </span>
+<span class="text-slate-300">|</span>
+<span>NEM Digital v2.5 Accesible</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- ============================================================== -->
+<!-- SCRIPT DE ACCESIBILIDAD INTERACTIVA (A- / A+ TAMAÑO DE TEXTO) -->
+<!-- ============================================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const body = document.getElementById('app-body');
+      const btnDecrease = document.getElementById('btn-font-decrease');
+      const btnIncrease = document.getElementById('btn-font-increase');
+      const btnReset = document.getElementById('btn-font-reset');
+
+      let currentScale = 100; // porcentaje
+
+      function applyScale(scale) {
+        currentScale = Math.min(Math.max(scale, 85), 130);
+        body.style.fontSize = `${currentScale}%`;
+        btnReset.textContent = `${currentScale}%`;
+      }
+
+      btnDecrease.addEventListener('click', () => {
+        applyScale(currentScale - 5);
+      });
+
+      btnIncrease.addEventListener('click', () => {
+        applyScale(currentScale + 5);
+      });
+
+      btnReset.addEventListener('click', () => {
+        applyScale(100);
+      });
+    });
+  </script>
+</body></html>

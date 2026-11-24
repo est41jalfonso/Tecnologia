@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="Ejemplo concreto generado por IA para el Prompt 01: Secuencia didáctica Club de Lectura Escolar">
+  <rect width="960" height="600" rx="20" fill="#ecfeff"/>
+  <rect x="24" y="20" width="912" height="560" rx="16" fill="#ffffff" stroke="#67e8f9" stroke-width="2"/>
+  <rect x="24" y="20" width="912" height="58" rx="16" fill="#0e7490"/>
+  <rect x="24" y="60" width="912" height="18" fill="#0e7490"/>
+  <circle cx="54" cy="49" r="10" fill="#a5f3fc"/>
+  <text x="76" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">Ejemplo de Respuesta IA • Secuencia Didáctica NEM (3.º Primaria · Lenguajes)</text>
+
+  <!-- Propósito y PDA -->
+  <rect x="46" y="94" width="868" height="92" rx="12" fill="#f0fdfa" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="64" y="118" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#0f766e">Problemática: Falta de hábitos de lectura y comunicación en la escuela</text>
+  <text x="64" y="142" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" fill="#1e293b"><tspan font-weight="700">Propósito:</tspan> Fomentar el gusto por la lectura compartida mediante un Club de Lectura Escolar en 3 sesiones.</text>
+  <text x="64" y="166" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" fill="#1e293b"><tspan font-weight="700">PDA:</tspan> Comenta y recomienda textos literarios de su interés explicando por qué eligió la historia.</text>
+
+  <!-- 3 Fases / Sesiones -->
+  <rect x="46" y="202" width="276" height="278" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="46" y="202" width="276" height="38" rx="10" fill="#cffafe"/>
+  <text x="62" y="226" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#155e75">Sesión 1 · Fase 1: Planeación</text>
+  <text x="62" y="264" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0e7490">Actividades (en infinitivo):</text>
+  <text x="62" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">1. Explorar cuentos y fábulas de la</text>
+  <text x="76" y="310" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">biblioteca del aula.</text>
+  <text x="62" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">2. Entrevistar a 3 compañeros sobre</text>
+  <text x="76" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">sus temas favoritos.</text>
+  <text x="62" y="388" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">3. Acordar el nombre y las reglas</text>
+  <text x="76" y="406" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">del Club de Lectura.</text>
+  <text x="62" y="454" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#475569">Producto: Lista de gustos lectores</text>
+
+  <rect x="342" y="202" width="276" height="278" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="342" y="202" width="276" height="38" rx="10" fill="#cffafe"/>
+  <text x="358" y="226" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#155e75">Sesión 2 · Fase 2: Acción</text>
+  <text x="358" y="264" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0e7490">Actividades (en infinitivo):</text>
+  <text x="358" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">1. Organizar estaciones de lectura</text>
+  <text x="372" y="310" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">en voz alta por equipos.</text>
+  <text x="358" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">2. Redactar una tarjeta ilustrada</text>
+  <text x="372" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">recomendando un libro.</text>
+  <text x="358" y="388" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">3. Revisar ortografía y claridad</text>
+  <text x="372" y="406" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">con apoyo del docente.</text>
+  <text x="358" y="454" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#475569">Producto: Tarjetas de recomendación</text>
+
+  <rect x="638" y="202" width="276" height="278" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="638" y="202" width="276" height="38" rx="10" fill="#cffafe"/>
+  <text x="654" y="226" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#155e75">Sesión 3 · Fase 3: Intervención</text>
+  <text x="654" y="264" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0e7490">Actividades (en infinitivo):</text>
+  <text x="654" y="292" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">1. Instalar el mural "Libros que</text>
+  <text x="668" y="310" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">viajan" en el patio escolar.</text>
+  <text x="654" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">2. Presentar oralmente su reseña</text>
+  <text x="668" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">ante alumnos de 2.º grado.</text>
+  <text x="654" y="388" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">3. Reflexionar en círculo sobre</text>
+  <text x="668" y="406" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">qué libros desean leer después.</text>
+  <text x="654" y="454" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#475569">Producto: Mural lector comunitario</text>
+
+  <!-- Evaluación Formativa -->
+  <rect x="46" y="496" width="868" height="64" rx="10" fill="#ecfeff" stroke="#67e8f9" stroke-width="1.5"/>
+  <text x="64" y="521" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#0e7490">Criterios sencillos de evaluación formativa:</text>
+  <text x="64" y="544" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">✓ Expresa con claridad por qué recomienda el texto   ✓ Escucha con respeto a sus compañeros   ✓ Redacta su tarjeta legible</text>
+</svg>

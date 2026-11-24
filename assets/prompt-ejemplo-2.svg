@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="Ejemplo concreto generado por IA para el Prompt 02: Misión gamificada Fracciones en la Cocina Escolar">
+  <rect width="960" height="600" rx="20" fill="#f0fdfa"/>
+  <rect x="24" y="20" width="912" height="560" rx="16" fill="#ffffff" stroke="#5eead4" stroke-width="2"/>
+  <rect x="24" y="20" width="912" height="58" rx="16" fill="#0f766e"/>
+  <rect x="24" y="60" width="912" height="18" fill="#0f766e"/>
+  <circle cx="54" cy="49" r="10" fill="#99f6e4"/>
+  <text x="76" y="55" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">Ejemplo de Respuesta IA • Guía Gamificada (3.º Primaria · Saberes y Pensamiento Científico)</text>
+
+  <!-- 1) PDA, Objetivo y Materiales + 2) Narrativa -->
+  <rect x="46" y="92" width="868" height="114" rx="12" fill="#f0fdfa" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="64" y="116" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#0f766e">1) Tema: Fracciones simples (1/2, 1/4, 1/8) • Materiales accesibles: Hojas de colores, tijeras sin punta, dados y cuaderno</text>
+  <text x="64" y="140" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b"><tspan font-weight="700">PDA y Objetivo:</tspan> Representar e interpretar fracciones de uso cotidiano mediante el reparto equitativo en situaciones reales.</text>
+  <text x="64" y="166" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0f172a">2) Misión: "Los Chefs Científicos y la Receta Perdida"</text>
+  <text x="64" y="188" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#334155">Narrativa: El recetario de la cooperativa escolar perdió las medidas exactas; cada equipo debe superar 3 retos para reconstruirlo.</text>
+
+  <!-- 3) Tres retos con XP -->
+  <rect x="46" y="220" width="276" height="232" rx="12" fill="#f8fafc" stroke="#99f6e4" stroke-width="1.5"/>
+  <rect x="46" y="220" width="276" height="38" rx="10" fill="#ccfbf1"/>
+  <text x="62" y="244" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#115e59">Reto 1 · +50 XP (Medios)</text>
+  <text x="62" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">• Doblar círculos de papel para</text>
+  <text x="74" y="298" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">dividir pizzas en 1/2 y 1/4.</text>
+  <text x="62" y="328" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">• Identificar cuántas partes</text>
+  <text x="74" y="346" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">forman un entero completo.</text>
+  <text x="62" y="424" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0f766e">Desbloquea: Sello Cuchara Plata</text>
+
+  <rect x="342" y="220" width="276" height="232" rx="12" fill="#f8fafc" stroke="#99f6e4" stroke-width="1.5"/>
+  <rect x="342" y="220" width="276" height="38" rx="10" fill="#ccfbf1"/>
+  <text x="358" y="244" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#115e59">Reto 2 · +100 XP (Equivalencias)</text>
+  <text x="358" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">• Comparar 1/2 taza con dos</text>
+  <text x="370" y="298" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">porciones de 1/4 en tarjetas.</text>
+  <text x="358" y="328" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">• Ordenar de menor a mayor</text>
+  <text x="370" y="346" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">las fracciones de la receta.</text>
+  <text x="358" y="424" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0f766e">Desbloquea: Llave del Sabor</text>
+
+  <rect x="638" y="220" width="276" height="232" rx="12" fill="#f8fafc" stroke="#99f6e4" stroke-width="1.5"/>
+  <rect x="638" y="220" width="276" height="38" rx="10" fill="#ccfbf1"/>
+  <text x="654" y="244" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#115e59">Reto 3 · +150 XP (Reparto)</text>
+  <text x="654" y="280" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">• Resolver cómo repartir 3 barras</text>
+  <text x="666" y="298" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">de amaranto entre 4 alumnos.</text>
+  <text x="654" y="328" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">• Explicar en voz alta el dibujo</text>
+  <text x="666" y="346" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1e293b">de su solución matemática.</text>
+  <text x="654" y="424" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0f766e">Desbloquea: Pase al Jefe Final</text>
+
+  <!-- 4) Jefe Final Colaborativo -->
+  <rect x="46" y="468" width="868" height="92" rx="12" fill="#0f172a"/>
+  <text x="64" y="496" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#5eead4">4) Jefe Final Colaborativo (+300 XP): "El Gran Banquete Saludable"</text>
+  <text x="64" y="520" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#f8fafc">Integrar en equipo de 4 una receta completa usando medios, cuartos y octavos sin que sobre ni falte ingrediente.</text>
+  <text x="64" y="544" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#99f6e4">Evaluación formativa: Verificar reparto exacto + explicar estrategia al grupo + colaborar respetando turnos.</text>
+</svg>

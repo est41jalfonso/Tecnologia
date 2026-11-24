@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<title>Inteligencia Artificial para Docentes — Estrategias y Canales | Portal Educativo</title>
+<meta name="description" content="Herramientas de Inteligencia Artificial, prompts para la Nueva Escuela Mexicana, decálogo ético y canales de YouTube recomendados para docentes."/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Lexend:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f8fafc",
+            "surface-card": "#ffffff",
+            "border-clean": "#e2e8f0",
+            "text-main": "#0f172a",
+            "text-muted": "#334155",
+            "text-subtle": "#64748b",
+            "primary": "#0284c7",
+            "primary-dark": "#0369a1",
+            "primary-light": "#e0f2fe",
+            "secondary": "#0d9488",
+            "tertiary": "#4f46e5",
+            "brand-red": "#dc2626"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "display": ["Space Grotesk", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+<link rel="stylesheet" href="./assets/portal.css"/>
+<script src="./assets/portal.js" defer></script>
+</head>
+<body class="bg-[#f8fafc] font-body text-slate-900 antialiased selection:bg-cyan-100 selection:text-cyan-900">
+<a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+<!-- TOP NAVIGATION BAR (Consistente, accesible WCAG AAA) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+<!-- Brand Identidad -->
+<div class="flex items-center gap-3 shrink-0">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-700 flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[24px]">school</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-lg text-slate-900 tracking-tight">PORTAL EDUCATIVO</span>
+<span class="hidden sm:inline-flex px-2 py-0.5 rounded-full bg-cyan-50 border border-cyan-300 text-cyan-800 text-[11px] font-bold tracking-wide uppercase">
+              AGUASCALIENTES &amp; PABELLÓN
+            </span>
+</div>
+<span class="text-xs text-slate-600 font-medium">Comunidad Docente de Transformación Digital</span>
+</div>
+</div>
+<!-- Links de Navegación -->
+<nav aria-label="Navegación principal" class="hidden xl:flex items-center gap-1.5">
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 hover:text-cyan-700 hover:bg-slate-100 transition-colors" href="index.html">Inicio</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 hover:text-cyan-700 hover:bg-slate-100 transition-colors" href="secundaria-est41.html">Secundaria Técnica 41</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 hover:text-cyan-700 hover:bg-slate-100 transition-colors" href="primaria-teodoro-olivares.html">Primaria Teodoro Olivares</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 hover:text-cyan-700 hover:bg-slate-100 transition-colors" href="materiales-docentes.html">Materiales Docentes</a>
+<a class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 hover:text-cyan-700 hover:bg-slate-100 transition-colors" href="google-docentes.html">Google para Docentes</a>
+<a aria-current="page" class="px-4 py-1.5 rounded-full bg-cyan-700 text-white font-bold text-sm shadow-sm hover:bg-cyan-800 transition-colors flex items-center gap-1.5" href="ia-docentes.html">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+          IA para Docentes
+        </a>
+</nav>
+<!-- Controles de Accesibilidad -->
+<div class="flex items-center gap-3 shrink-0">
+<!-- Interactive Font Size Widget -->
+<div class="hidden sm:flex items-center bg-slate-50 border border-slate-300 rounded-full px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm">
+<button aria-label="Disminuir tamaño de fuente" class="px-1.5 hover:text-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded" type="button">A-</button>
+<span class="text-slate-400 px-1 font-normal">|</span>
+<span class="px-1 font-bold text-slate-900">100%</span>
+<span class="text-slate-400 px-1 font-normal">|</span>
+<button aria-label="Aumentar tamaño de fuente" class="px-1.5 hover:text-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded" type="button">A+</button>
+</div>
+<!-- WCAG Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-bold shadow-xs">
+<span class="material-symbols-outlined text-emerald-700 text-[16px]">verified</span>
+<span>✓ WCAG 2.1 AAA</span>
+</div>
+</div>
+</div>
+</header>
+<main id="main-content" tabindex="-1" class="w-full pt-20">
+<div class="flex flex-col w-full">
+<!-- SUB-BARRA DE CONTEXTO EDUCATIVO -->
+<section class="w-full bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-2.5">
+<div class="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+<div class="flex flex-wrap items-center gap-2 font-semibold">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-teal-50 border border-teal-200 text-teal-800">
+<span class="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
+              MODO DOCENTE // AGUASCALIENTES &amp; PABELLÓN DE ARTEAGA
+            </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+<span class="material-symbols-outlined text-[15px] text-cyan-700">school</span>
+              Primaria Teodoro Olivares • Secundaria Técnica 41
+            </span>
+</div>
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-800 font-bold tracking-wide">
+<span class="material-symbols-outlined text-[16px] text-cyan-700">bolt</span>
+            POWER-UP PEDAGÓGICO DE IA • TEMPORADA ESCOLAR 2026-2027
+          </div>
+</div>
+</section>
+<!-- HERO SECTION LUMINOSA Y ACCESIBLE -->
+<section class="w-full px-4 sm:px-6 lg:px-8 py-10 lg:py-14 bg-gradient-to-b from-sky-50/70 via-slate-50 to-[#f8fafc] border-b border-slate-200">
+<div class="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+<!-- Columna Texto Hero -->
+<div class="lg:col-span-7 flex flex-col gap-5">
+<div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-cyan-100 border border-cyan-300 text-cyan-900 font-headline font-bold text-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px] text-cyan-800">psychology</span>
+              INTELIGENCIA ARTIFICIAL EDUCATIVA // GUÍA PRÁCTICA NEM
+            </div>
+<h1 class="font-headline font-bold text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-tight">
+              Inteligencia Artificial para Docentes: <span class="text-cyan-700">Potencia tu labor educativa</span>
+</h1>
+<p class="font-body text-base sm:text-lg text-slate-700 leading-relaxed max-w-2xl font-normal">
+              Estrategias prácticas, herramientas verificadas y recursos audiovisuales para la Nueva Escuela Mexicana en Aguascalientes y Pabellón de Arteaga.
+            </p>
+<!-- Botones de Acción Accesibles -->
+<div class="flex flex-wrap items-center gap-3 pt-2">
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-cyan-700 text-white font-headline font-bold text-sm tracking-wide uppercase shadow hover:bg-cyan-800 focus:ring-4 focus:ring-cyan-200 transition-all" href="#banco-prompts">
+<span class="material-symbols-outlined text-[20px]">content_paste</span>
+                Copiar Banco de Prompts
+              </a>
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white border-2 border-slate-300 text-slate-800 font-headline font-bold text-sm tracking-wide uppercase hover:bg-slate-50 hover:border-slate-400 focus:ring-4 focus:ring-slate-200 transition-all" href="#etica-seguridad">
+<span class="material-symbols-outlined text-[20px] text-teal-700">verified_user</span>
+                Ver Guía Ética y Seguridad
+              </a>
+</div>
+<!-- Chips de Estadísticas Accesibles -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
+<div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col">
+<span class="font-headline font-bold text-xl text-cyan-700">4 Campos</span>
+<span class="text-xs text-slate-600 font-medium">Formativos NEM</span>
+</div>
+<div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col">
+<span class="font-headline font-bold text-xl text-teal-700">+65% Tiempo</span>
+<span class="text-xs text-slate-600 font-medium">Ahorrado en Planeación</span>
+</div>
+<div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col">
+<span class="font-headline font-bold text-xl text-indigo-700">100% Real</span>
+<span class="text-xs text-slate-600 font-medium">Contextualizado Ags</span>
+</div>
+<div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col">
+<span class="font-headline font-bold text-xl text-emerald-700">Ética</span>
+<span class="text-xs text-slate-600 font-medium">Privacidad Blindada</span>
+</div>
+</div>
+</div>
+<!-- Columna Imagen Hero Visual -->
+<div class="lg:col-span-5">
+<div class="relative rounded-2xl bg-white p-3 border border-slate-200 shadow-lg">
+<div class="relative w-full h-[320px] sm:h-[360px] rounded-xl overflow-hidden bg-slate-100">
+<img alt="Ilustración estilo anime y tecnología de docentes y estudiantes colaborando con herramientas digitales e inteligencia artificial" class="w-full h-full object-cover" src="./assets/ws-thumb-gmail.jpg" decoding="async"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+<span class="px-3 py-1.5 rounded-lg bg-white/95 text-slate-900 font-bold text-xs tracking-wide shadow-md flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-cyan-700">groups</span>
+                    Docentes de Aguascalientes innovando con IA
+                  </span>
+<span class="px-2.5 py-1 rounded bg-slate-900/80 text-white font-mono text-[11px] font-semibold">
+                    TEMPORADA ESCOLAR 2026-2027
+                  </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SÍNTESIS DE HERRAMIENTAS DE IA PARA EL AULA (4 Cards claras y legibles) -->
+<section class="w-full px-4 sm:px-6 lg:px-8 py-12 bg-white border-b border-slate-200">
+<div class="max-w-[1440px] mx-auto flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">grid_view</span>
+                ARSENAL PEDAGÓGICO DE IA
+              </div>
+<h2 class="font-headline font-bold text-2xl sm:text-3xl text-slate-900 mt-2">
+                Ecosistema de Herramientas de IA para el Aula
+              </h2>
+<p class="text-slate-600 text-sm sm:text-base mt-1 max-w-2xl">
+                Selección de asistentes de Inteligencia Artificial para enriquecer la dinámica didáctica y optimizar tareas administrativas en primaria y secundaria técnica.
+              </p>
+</div>
+<div class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 self-start md:self-auto">
+              ✓ RECURSOS VERIFICADOS NEM
+            </div>
+</div>
+<!-- Cuadrícula 4 Tarjetas -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Tarjeta 1: Texto y Planeación -->
+<div class="rounded-xl p-6 bg-[#f8fafc] border border-slate-200 shadow-xs flex flex-col justify-between gap-5 hover:border-cyan-400 hover:shadow-md transition-all">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<div class="w-12 h-12 rounded-xl bg-cyan-100 text-cyan-800 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[26px]">edit_note</span>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">ChatGPT</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Claude</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Gemini</span>
+</div>
+</div>
+<h3 class="font-headline font-bold text-xl text-slate-900">Texto y Planeación Didáctica</h3>
+<p class="text-sm text-slate-700 leading-relaxed">
+                  Creación ágil de secuencias didácticas integradas a los 4 campos formativos de la NEM, diseño de proyectos por indagación STEAM y rúbricas analíticas estructuradas.
+                </p>
+<div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-600">
+<strong class="text-cyan-800">Uso en aula:</strong> Redacción de situaciones de aprendizaje situadas en el contexto agropecuario y tecnológico de Aguascalientes.
+                </div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200 text-xs text-slate-600">
+<span class="font-semibold text-cyan-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">check_circle</span> Ahorro: 3h semanales
+                </span>
+<a class="font-bold text-slate-800 hover:text-cyan-700 underline" href="#banco-prompts">Ver prompts listos →</a>
+</div>
+</div>
+<!-- Tarjeta 2: Creación Visual & Presentaciones -->
+<div class="rounded-xl p-6 bg-[#f8fafc] border border-slate-200 shadow-xs flex flex-col justify-between gap-5 hover:border-teal-400 hover:shadow-md transition-all">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[26px]">palette</span>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Gamma</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Canva Magic</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Midjourney</span>
+</div>
+</div>
+<h3 class="font-headline font-bold text-xl text-slate-900">Creación Visual &amp; Presentaciones</h3>
+<p class="text-sm text-slate-700 leading-relaxed">
+                  Generación instantánea de infografías didácticas, diapositivas claras y mapas ilustrados para clases que captan la atención de los estudiantes.
+                </p>
+<div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-600">
+<strong class="text-teal-800">Uso en aula:</strong> Material visual interactivo para talleres técnicos de la EST 41 y láminas ilustradas para 3° de primaria.
+                </div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200 text-xs text-slate-600">
+<span class="font-semibold text-teal-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">check_circle</span> Formato accesible
+                </span>
+<span class="font-bold text-slate-800">Gráficos pedagógicos</span>
+</div>
+</div>
+<!-- Tarjeta 3: Evaluación y Gamificación -->
+<div class="rounded-xl p-6 bg-[#f8fafc] border border-slate-200 shadow-xs flex flex-col justify-between gap-5 hover:border-indigo-400 hover:shadow-md transition-all">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[26px]">sports_esports</span>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Quizizz AI</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Kahoot</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Curipod</span>
+</div>
+</div>
+<h3 class="font-headline font-bold text-xl text-slate-900">Evaluación Formativa &amp; Gamificación</h3>
+<p class="text-sm text-slate-700 leading-relaxed">
+                  Cuestionarios dinámicos y reactivos diagnósticos con retroalimentación automática que promueven la autoevaluación y el compromiso en equipo.
+                </p>
+<div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-600">
+<strong class="text-indigo-800">Uso en aula:</strong> Retos interactivos de inicio de clase con puntuación formativa en la Primaria Teodoro Olivares.
+                </div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200 text-xs text-slate-600">
+<span class="font-semibold text-indigo-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">check_circle</span> Diagnóstico rápido
+                </span>
+<span class="font-bold text-slate-800">Retroalimentación inmediata</span>
+</div>
+</div>
+<!-- Tarjeta 4: Diferenciación & Accesibilidad -->
+<div class="rounded-xl p-6 bg-[#f8fafc] border border-slate-200 shadow-xs flex flex-col justify-between gap-5 hover:border-emerald-400 hover:shadow-md transition-all">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[26px]">accessibility_new</span>
+</div>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Diffit</span>
+<span class="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-slate-800 font-semibold text-xs">Goblin.tools</span>
+</div>
+</div>
+<h3 class="font-headline font-bold text-xl text-slate-900">Diferenciación &amp; Accesibilidad</h3>
+<p class="text-sm text-slate-700 leading-relaxed">
+                  Adaptación de lecturas a distintos ritmos de aprendizaje e inclusión visual, descomponiendo tareas complejas en pasos manejables y claros.
+                </p>
+<div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-600">
+<strong class="text-emerald-800">Uso en aula:</strong> Ajuste de lecturas de historia y ciencias con glosarios de apoyo para estudiantes con rezago.
+                </div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-200 text-xs text-slate-600">
+<span class="font-semibold text-emerald-800 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">check_circle</span> Inclusión garantizada
+                </span>
+<span class="font-bold text-slate-800">Adaptabilidad total</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- NUEVA SECCIÓN DESTACADA: CANALES DE YOUTUBE RECOMENDADOS SOBRE IA PARA DOCENTES -->
+<section class="w-full px-4 sm:px-6 lg:px-8 py-12 bg-[#f8fafc] border-b border-slate-200" id="youtube-docentes">
+<div class="max-w-[1440px] mx-auto flex flex-col gap-8">
+<!-- Banner Superior Collage de los 4 Canales de YouTube -->
+<figure class="w-full rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-950 shadow-md">
+  <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+    <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-center gap-3 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950 text-white">
+      <span class="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full bg-red-600 text-white font-headline text-xs font-bold uppercase tracking-wider">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">play_circle</span>
+        USO RESPONSABLE DE LA IA
+      </span>
+      <h3 class="font-headline font-bold text-2xl sm:text-3xl text-white leading-tight">
+        Collage de Canales Sugeridos para Maestros
+      </h3>
+      <p class="text-sm text-slate-200 leading-relaxed">
+        Cuatro referentes en YouTube sobre modelos de inteligencia artificial, productividad y aplicación ética y responsable en el ámbito educativo y profesional.
+      </p>
+      <div class="flex flex-wrap gap-1.5 pt-1 text-[11px] font-bold">
+        <span class="px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-cyan-200">@XavierMitjana</span>
+        <span class="px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-emerald-200">@joaquinbarberaaledo</span>
+        <span class="px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-purple-200">@alejavirivera</span>
+        <span class="px-2.5 py-1 rounded-md bg-white/10 border border-white/20 text-amber-200">@JosephGooding</span>
+      </div>
+    </div>
+    <div class="lg:col-span-7 p-4 sm:p-5 bg-slate-900 grid grid-cols-2 gap-3 items-center">
+      <a href="https://www.youtube.com/@XavierMitjana" target="_blank" rel="noopener noreferrer" class="group relative rounded-xl overflow-hidden border-2 border-cyan-500/50 shadow-lg aspect-video bg-slate-950">
+        <img src="./assets/yt-xavier.jpg" alt="Canal Xavier Mitjana en YouTube sobre IA responsable" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex items-end p-2.5">
+          <span class="text-xs font-extrabold text-white drop-shadow">Xavier Mitjana • @XavierMitjana</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@joaquinbarberaaledo" target="_blank" rel="noopener noreferrer" class="group relative rounded-xl overflow-hidden border-2 border-emerald-500/50 shadow-lg aspect-video bg-slate-950">
+        <img src="./assets/yt-joaquin.jpg" alt="Canal Joaquín Barberá Aledo en YouTube sobre IA educativa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex items-end p-2.5">
+          <span class="text-xs font-extrabold text-white drop-shadow">Joaquín Barberá • @joaquinbarberaaledo</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@alejavirivera" target="_blank" rel="noopener noreferrer" class="group relative rounded-xl overflow-hidden border-2 border-purple-500/50 shadow-lg aspect-video bg-slate-950">
+        <img src="./assets/yt-alejavi.jpg" alt="Canal Alejavi Rivera en YouTube sobre asistentes de IA" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex items-end p-2.5">
+          <span class="text-xs font-extrabold text-white drop-shadow">Alejavi Rivera • @alejavirivera</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@JosephGooding" target="_blank" rel="noopener noreferrer" class="group relative rounded-xl overflow-hidden border-2 border-amber-500/50 shadow-lg aspect-video bg-slate-950">
+        <img src="./assets/yt-joseph.jpg" alt="Canal Joseph Gooding en YouTube sobre modelos de IA" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex items-end p-2.5">
+          <span class="text-xs font-extrabold text-white drop-shadow">Joseph Gooding • @JosephGooding</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <figcaption class="bg-slate-100 border-t border-slate-200 px-5 py-3 text-xs text-slate-700 leading-relaxed">
+    <strong>Aviso de Responsabilidad y Copyright:</strong> La información, opiniones y contenidos audiovisuales son responsabilidad exclusiva de sus creadores (<strong>@XavierMitjana</strong>, <strong>@joaquinbarberaaledo</strong>, <strong>@alejavirivera</strong> y <strong>@JosephGooding</strong>). Se respetan íntegramente los derechos de autor (copyright) de cada uno de los canales en YouTube.
+  </figcaption>
+</figure>
+<!-- Encabezado de Sección -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="text-2xl">📺</span>
+<h2 class="font-headline font-bold text-2xl sm:text-3xl text-slate-900">
+                Canales Sugeridos de IA y Últimos Videos sobre Modelos
+              </h2>
+</div>
+<p class="text-slate-700 text-sm sm:text-base max-w-3xl leading-relaxed">
+              Cuatro canales especializados en inteligencia artificial recomendados para docentes y actividades profesionales. Visualiza aquí su video más reciente sobre los nuevos modelos de IA o visita directamente cada canal en YouTube.
+            </p>
+</div>
+<!-- Cuadrícula 4 Canales de YouTube con Reproductor Embebido -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Canal 1: Xavier Mitjana -->
+<article class="rounded-2xl bg-white border-2 border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-cyan-400 transition-all">
+  <div>
+    <div class="relative aspect-video bg-slate-950 border-b border-slate-200">
+      <iframe class="w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/vqE6pZ84Jq4?rel=0" title="Xavier Mitjana: OpenAI lanza su MEJOR IA (y sorprende)" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="p-5 flex flex-col gap-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-700 font-bold text-[11px]">IA Generativa y Productividad</span>
+        <span class="text-xs text-slate-500 font-semibold">@XavierMitjana</span>
+      </div>
+      <h3 class="font-headline font-bold text-xl text-slate-900">Xavier Mitjana</h3>
+      <p class="text-xs font-bold text-cyan-800">Último video: OpenAI lanza su MEJOR IA (y sorprende)</p>
+      <p class="text-sm text-slate-700 leading-relaxed">
+        Cursos, guías prácticas y tutoriales en español sobre inteligencia artificial generativa, productividad y automatización.
+      </p>
+    </div>
+  </div>
+  <div class="p-5 pt-0 space-y-2.5">
+    <div class="grid grid-cols-2 gap-2.5">
+      <button type="button" data-video-id="vqE6pZ84Jq4" data-video-title="Xavier Mitjana — OpenAI lanza su MEJOR IA (y sorprende)" data-video-url="https://www.youtube.com/@XavierMitjana" class="py-2.5 px-3 rounded-lg bg-cyan-700 hover:bg-cyan-800 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_full</span>
+        <span>Ampliar video</span>
+      </button>
+      <a class="py-2.5 px-3 rounded-lg bg-slate-900 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-red-700 transition-colors text-center" href="https://www.youtube.com/@XavierMitjana" rel="noopener noreferrer" target="_blank">
+        <span>Visitar canal ↗</span>
+      </a>
+    </div>
+    <p class="text-[11px] text-slate-600 border-t border-slate-200 pt-2">
+      <strong>© Derechos de autor:</strong> Contenido original de <strong>Xavier Mitjana</strong> en YouTube.
+    </p>
+  </div>
+</article>
+
+<!-- Canal 2: Joaquín Barberá Aledo -->
+<article class="rounded-2xl bg-white border-2 border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-cyan-400 transition-all">
+  <div>
+    <div class="relative aspect-video bg-slate-950 border-b border-slate-200">
+      <iframe class="w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/H_1h8m1tXj8?rel=0" title="Joaquín Barberá Aledo: Configura GEMINI NOTEBOOK SKILLS para DOMINAR ChatGPT, Gemini y Claude" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="p-5 flex flex-col gap-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 font-bold text-[11px]">IA Educativa y Creación</span>
+        <span class="text-xs text-slate-500 font-semibold">@joaquinbarberaaledo</span>
+      </div>
+      <h3 class="font-headline font-bold text-xl text-slate-900">Joaquín Barberá Aledo</h3>
+      <p class="text-xs font-bold text-cyan-800">Último video: Configura "GEMINI NOTEBOOK SKILLS" para DOMINAR: ChatGPT, Gemini y Claude</p>
+      <p class="text-sm text-slate-700 leading-relaxed">
+        Contenidos educativos sobre inteligencia artificial, herramientas digitales y su aplicación práctica para aprender y crear.
+      </p>
+    </div>
+  </div>
+  <div class="p-5 pt-0 space-y-2.5">
+    <div class="grid grid-cols-2 gap-2.5">
+      <button type="button" data-video-id="H_1h8m1tXj8" data-video-title="Joaquín Barberá Aledo — Gemini Notebook Skills" data-video-url="https://www.youtube.com/@joaquinbarberaaledo" class="py-2.5 px-3 rounded-lg bg-cyan-700 hover:bg-cyan-800 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_full</span>
+        <span>Ampliar video</span>
+      </button>
+      <a class="py-2.5 px-3 rounded-lg bg-slate-900 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-cyan-700 transition-colors text-center" href="https://www.youtube.com/@joaquinbarberaaledo" rel="noopener noreferrer" target="_blank">
+        <span>Visitar canal ↗</span>
+      </a>
+    </div>
+    <p class="text-[11px] text-slate-600 border-t border-slate-200 pt-2">
+      <strong>© Derechos de autor:</strong> Contenido original de <strong>Joaquín Barberá Aledo</strong> en YouTube.
+    </p>
+  </div>
+</article>
+
+<!-- Canal 3: Alejavi Rivera -->
+<article class="rounded-2xl bg-white border-2 border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-purple-400 transition-all">
+  <div>
+    <div class="relative aspect-video bg-slate-950 border-b border-slate-200">
+      <iframe class="w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/rnpsuTgfMT0?rel=0" title="Alejavi Rivera: Cómo usar DeepSeek Mejor que el 99% de las personas" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="p-5 flex flex-col gap-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-200 text-purple-800 font-bold text-[11px]">Asistentes y Flujos Digitales</span>
+        <span class="text-xs text-slate-500 font-semibold">@alejavirivera</span>
+      </div>
+      <h3 class="font-headline font-bold text-xl text-slate-900">Alejavi Rivera</h3>
+      <p class="text-xs font-bold text-purple-800">Último video: Cómo usar DeepSeek Mejor que el 99% de las personas (GRATIS)</p>
+      <p class="text-sm text-slate-700 leading-relaxed">
+        Tutoriales claros sobre herramientas de inteligencia artificial, asistentes y flujos de trabajo digitales.
+      </p>
+    </div>
+  </div>
+  <div class="p-5 pt-0 space-y-2.5">
+    <div class="grid grid-cols-2 gap-2.5">
+      <button type="button" data-video-id="rnpsuTgfMT0" data-video-title="Alejavi Rivera — Cómo usar DeepSeek (GRATIS)" data-video-url="https://www.youtube.com/@alejavirivera" class="py-2.5 px-3 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_full</span>
+        <span>Ampliar video</span>
+      </button>
+      <a class="py-2.5 px-3 rounded-lg bg-slate-900 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-purple-700 transition-colors text-center" href="https://www.youtube.com/@alejavirivera" rel="noopener noreferrer" target="_blank">
+        <span>Visitar canal ↗</span>
+      </a>
+    </div>
+    <p class="text-[11px] text-slate-600 border-t border-slate-200 pt-2">
+      <strong>© Derechos de autor:</strong> Contenido original de <strong>Alejavi Rivera</strong> en YouTube.
+    </p>
+  </div>
+</article>
+
+<!-- Canal 4: Joseph Gooding -->
+<article class="rounded-2xl bg-white border-2 border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-emerald-400 transition-all">
+  <div>
+    <div class="relative aspect-video bg-slate-950 border-b border-slate-200">
+      <iframe class="w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/B-O7Aq3R08Y?rel=0" title="Joseph Gooding: Le Di a GPT-6 Astra UNA SOLA INSTRUCCIÓN y Creó TODO el Video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="p-5 flex flex-col gap-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold text-[11px]">Modelos y Tecnologías Emergentes</span>
+        <span class="text-xs text-slate-500 font-semibold">@JosephGooding</span>
+      </div>
+      <h3 class="font-headline font-bold text-xl text-slate-900">Joseph Gooding</h3>
+      <p class="text-xs font-bold text-emerald-800">Último video sobre modelos IA: Le Di a GPT-6 Astra UNA SOLA INSTRUCCIÓN… y Creó TODO el Video</p>
+      <p class="text-sm text-slate-700 leading-relaxed">
+        Recursos y videos sobre inteligencia artificial, programación y tecnologías emergentes.
+      </p>
+    </div>
+  </div>
+  <div class="p-5 pt-0 space-y-2.5">
+    <div class="grid grid-cols-2 gap-2.5">
+      <button type="button" data-video-id="B-O7Aq3R08Y" data-video-title="Joseph Gooding — GPT-6 Astra" data-video-url="https://www.youtube.com/@JosephGooding" class="py-2.5 px-3 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">open_in_full</span>
+        <span>Ampliar video</span>
+      </button>
+      <a class="py-2.5 px-3 rounded-lg bg-slate-900 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-emerald-700 transition-colors text-center" href="https://www.youtube.com/@JosephGooding" rel="noopener noreferrer" target="_blank">
+        <span>Visitar canal ↗</span>
+      </a>
+    </div>
+    <p class="text-[11px] text-slate-600 border-t border-slate-200 pt-2">
+      <strong>© Derechos de autor:</strong> Contenido original de <strong>Joseph Gooding</strong> en YouTube.
+    </p>
+  </div>
+</article>
+</div>
+</div>
+</section>
+<!-- BANCO DE PROMPTS CORTOS COPIABLES (Visual, sintetizado, alta legibilidad) -->
+<section class="w-full px-4 sm:px-6 lg:px-8 py-12 bg-white border-b border-slate-200" id="banco-prompts">
+<div class="max-w-[1440px] mx-auto flex flex-col gap-8">
+<div class="flex flex-col gap-2">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-bold uppercase tracking-wider self-start">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+              PLANTILLAS LISTAS PARA COPIAR Y USAR
+            </div>
+<h2 class="font-headline font-bold text-2xl sm:text-3xl text-slate-900">
+              Banco de Prompts Pedagógicos NEM Verificados
+            </h2>
+<p class="text-slate-700 text-sm sm:text-base max-w-2xl leading-relaxed">
+              Estructuras optimizadas con un solo clic. Solo sustituye los campos entre corchetes con los datos de tu grado escolar.
+            </p>
+</div>
+<!-- Cuadrícula 3 Prompts -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Prompt 1 -->
+<div class="p-6 rounded-xl bg-[#f8fafc] border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-800 font-bold text-xs">
+                    PROMPT 01 // PLANEACIÓN NEM
+                  </span>
+<span class="material-symbols-outlined text-slate-400 text-[18px]">bookmark</span>
+</div>
+<h3 class="font-headline font-bold text-lg text-slate-900">Secuencia Didáctica Vinculada a Problemática</h3>
+<p class="text-xs text-slate-600">Ideal para vincular campos formativos con situaciones de la comunidad local.</p>
+<div class="p-3.5 rounded-lg bg-white border border-slate-200 font-mono text-xs text-slate-800 leading-relaxed shadow-2xs">
+<code class="block select-all whitespace-pre-wrap text-cyan-900" id="prompt-code-1">Actúa como asesor pedagógico. Diseña una secuencia didáctica breve de 3 sesiones para alumnos de 3.º de primaria, enfocada en el Campo Formativo de Lenguajes y vinculada a la problemática comunitaria de [falta de hábitos de lectura / comunicación en la escuela]. Respeta la metodología de enseñanza y los principios de la Nueva Escuela Mexicana (NEM), redactando todas las actividades y acciones con verbos en infinitivo. Incluye propósito, PDA, las 3 fases del proyecto comunitario y criterios sencillos de evaluación formativa.</code>
+</div>
+<button type="button" data-zoom-image="./assets/prompt-ejemplo-1.svg" data-zoom-title="Ejemplo de resultado en IA — Prompt 01: Secuencia Didáctica NEM" class="w-full text-left rounded-lg overflow-hidden border border-cyan-200 bg-white hover:border-cyan-500 hover:shadow-md transition-all cursor-zoom-in group" aria-label="Ampliar ejemplo de resultado del Prompt 01">
+  <div class="px-3 py-1.5 bg-cyan-50 border-b border-cyan-200 flex items-center justify-between text-[11px] font-bold text-cyan-900">
+    <span>Ejemplo concreto en IA:</span>
+    <span class="inline-flex items-center gap-1 text-cyan-700 group-hover:underline"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">zoom_in</span>Ampliar</span>
+  </div>
+  <img src="./assets/prompt-ejemplo-1.svg" alt="Ejemplo visual del resultado generado por IA para el Prompt 01 de secuencia didáctica NEM" class="w-full h-auto block" loading="lazy" decoding="async"/>
+</button>
+</div>
+<button type="button" data-copy-target="prompt-code-1" class="w-full py-2.5 px-4 rounded-lg bg-cyan-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-cyan-800 transition-colors shadow-xs cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Copiar Prompt 01</span>
+</button>
+</div>
+<!-- Prompt 2 -->
+<div class="p-6 rounded-xl bg-[#f8fafc] border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800 font-bold text-xs">
+                    PROMPT 02 // GAMIFICACIÓN
+                  </span>
+<span class="material-symbols-outlined text-slate-400 text-[18px]">sports_esports</span>
+</div>
+<h3 class="font-headline font-bold text-lg text-slate-900">Misión Temática Estilo Videojuego</h3>
+<p class="text-xs text-slate-600">Convierte temas teóricos en retos por niveles con recompensas y trabajo colaborativo.</p>
+<div class="p-3.5 rounded-lg bg-white border border-slate-200 font-mono text-xs text-slate-800 leading-relaxed shadow-2xs">
+<code class="block select-all whitespace-pre-wrap text-teal-900" id="prompt-code-2">Actúa como diseñador instruccional y asesor pedagógico de la Nueva Escuela Mexicana (NEM). Convierte el tema [Tema o contenido de clase] en una guía para elaborar un material didáctico gamificado estilo videojuego dirigido a alumnos de 3.º de primaria, del Campo Formativo [Lenguajes / Saberes y Pensamiento Científico]. Redacta todas las instrucciones y acciones con verbos en infinitivo y estructura el desafío con: 1) PDA, objetivo y lista de materiales accesibles; 2) Título de la misión y narrativa inicial; 3) Tres retos o acertijos desbloqueables con recompensas de XP; y 4) Un jefe final colaborativo que requiera trabajo en equipo e incluya criterios sencillos de evaluación formativa.</code>
+</div>
+<button type="button" data-zoom-image="./assets/prompt-ejemplo-2.svg" data-zoom-title="Ejemplo de resultado en IA — Prompt 02: Misión Gamificada NEM" class="w-full text-left rounded-lg overflow-hidden border border-teal-200 bg-white hover:border-teal-500 hover:shadow-md transition-all cursor-zoom-in group" aria-label="Ampliar ejemplo de resultado del Prompt 02">
+  <div class="px-3 py-1.5 bg-teal-50 border-b border-teal-200 flex items-center justify-between text-[11px] font-bold text-teal-900">
+    <span>Ejemplo concreto en IA:</span>
+    <span class="inline-flex items-center gap-1 text-teal-700 group-hover:underline"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">zoom_in</span>Ampliar</span>
+  </div>
+  <img src="./assets/prompt-ejemplo-2.svg" alt="Ejemplo visual del resultado generado por IA para el Prompt 02 de misión gamificada" class="w-full h-auto block" loading="lazy" decoding="async"/>
+</button>
+</div>
+<button type="button" data-copy-target="prompt-code-2" class="w-full py-2.5 px-4 rounded-lg bg-teal-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-teal-800 transition-colors shadow-xs cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Copiar Prompt 02</span>
+</button>
+</div>
+<!-- Prompt 3 -->
+<div class="p-6 rounded-xl bg-[#f8fafc] border border-slate-200 shadow-sm flex flex-col justify-between gap-5">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xs">
+                    PROMPT 03 // EVALUACIÓN
+                  </span>
+<span class="material-symbols-outlined text-slate-400 text-[18px]">assignment_turned_in</span>
+</div>
+<h3 class="font-headline font-bold text-lg text-slate-900">Rúbrica Analítica Formativa</h3>
+<p class="text-xs text-slate-600">Generación de escalas claras con énfasis en impacto social y pensamiento crítico.</p>
+<div class="p-3.5 rounded-lg bg-white border border-slate-200 font-mono text-xs text-slate-800 leading-relaxed shadow-2xs">
+<code class="block select-all whitespace-pre-wrap text-indigo-900" id="prompt-code-3">Actúa como asesor pedagógico experto en evaluación formativa de la Nueva Escuela Mexicana (NEM). Diseña un instrumento de evaluación tipo [Rúbrica analítica / Lista de cotejo / Escala estimativa] presentado en tabla para evaluar [Proyecto, producto o actividad] en alumnos de [Grado y nivel educativo], del Campo Formativo [Lenguajes / Saberes y Pensamiento Científico / Ética, Naturaleza y Sociedades / De lo Humano y lo Comunitario]. Redacta todos los indicadores y descriptores con verbos en infinitivo o acciones observables alineadas al PDA. Define 4 niveles de desempeño (Requiere apoyo, En desarrollo, Logrado, Sobresaliente) considerando criterios de [aprendizaje esperado, impacto comunitario y trabajo colaborativo], e incluye un espacio breve para retroalimentación cualitativa.</code>
+</div>
+<button type="button" data-zoom-image="./assets/prompt-ejemplo-3.svg" data-zoom-title="Ejemplo de resultado en IA — Prompt 03: Rúbrica Analítica NEM" class="w-full text-left rounded-lg overflow-hidden border border-indigo-200 bg-white hover:border-indigo-500 hover:shadow-md transition-all cursor-zoom-in group" aria-label="Ampliar ejemplo de resultado del Prompt 03">
+  <div class="px-3 py-1.5 bg-indigo-50 border-b border-indigo-200 flex items-center justify-between text-[11px] font-bold text-indigo-900">
+    <span>Ejemplo concreto en IA:</span>
+    <span class="inline-flex items-center gap-1 text-indigo-700 group-hover:underline"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">zoom_in</span>Ampliar</span>
+  </div>
+  <img src="./assets/prompt-ejemplo-3.svg" alt="Ejemplo visual del resultado generado por IA para el Prompt 03 de rúbrica analítica formativa" class="w-full h-auto block" loading="lazy" decoding="async"/>
+</button>
+</div>
+<button type="button" data-copy-target="prompt-code-3" class="w-full py-2.5 px-4 rounded-lg bg-indigo-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-indigo-800 transition-colors shadow-xs cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span>Copiar Prompt 03</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- DECÁLOGO ÉTICO RESUMIDO (High-Contrast White Cards) -->
+<section class="w-full px-4 sm:px-6 lg:px-8 py-12 bg-[#f8fafc] border-b border-slate-200" id="etica-seguridad">
+<div class="max-w-[1440px] mx-auto flex flex-col gap-8">
+<div class="flex flex-col gap-2">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider self-start">
+<span class="material-symbols-outlined text-[16px]">shield</span>
+              MARCO DE CIUDADANÍA DIGITAL // ÉTICA &amp; SEGURIDAD
+            </div>
+<h2 class="font-headline font-bold text-2xl sm:text-3xl text-slate-900">
+              Decálogo del Uso Responsable de la IA Educativa
+            </h2>
+<p class="text-slate-700 text-sm sm:text-base max-w-2xl leading-relaxed">
+              Principios rectores para docentes de Aguascalientes: innovación pedagógica protegida por el rigor ético y la privacidad escolar.
+            </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+<!-- Pilar 1 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-cyan-100 text-cyan-800 font-headline font-bold text-base flex items-center justify-center">
+                01
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Privacidad y Protección</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                No ingresar nombres reales, CURP, fotos ni expedientes privados de estudiantes en modelos públicos de IA generativa.
+              </p>
+</div>
+<!-- Pilar 2 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-800 font-headline font-bold text-base flex items-center justify-center">
+                02
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Supervisión Crítica</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                La IA es copiloto; el docente es el estratega. Validar siempre fuentes, verificar sesgos y comprobar rigor antes de llevar al aula.
+              </p>
+</div>
+<!-- Pilar 3 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-800 font-headline font-bold text-base flex items-center justify-center">
+                03
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Transparencia Total</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Promover que los estudiantes reconozcan y citen el apoyo de asistentes de IA, estimulando el pensamiento crítico activo.
+              </p>
+</div>
+<!-- Pilar 4 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 font-headline font-bold text-base flex items-center justify-center">
+                04
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Equidad e Inclusión</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Usar la IA para nivelar oportunidades pedagógicas, diseñando alternativas para quienes no poseen conectividad continua en casa.
+              </p>
+</div>
+<!-- Pilar 5 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 font-headline font-bold text-base flex items-center justify-center">
+                05
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Autoría y Copyright</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Respetar la propiedad intelectual en textos, imágenes y videos, fomentando el parafraseo y la creación genuina del alumnado.
+              </p>
+</div>
+<!-- Pilar 6 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-800 font-headline font-bold text-base flex items-center justify-center">
+                06
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Pertinencia Pedagógica</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Integrar la IA solo cuando aporte valor real al PDA y al proyecto comunitario NEM, sin sustituir el diálogo ni el trabajo en aula.
+              </p>
+</div>
+<!-- Pilar 7 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-800 font-headline font-bold text-base flex items-center justify-center">
+                07
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Contraste de Fuentes</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Verificar posibles errores o datos inventados contrastando las respuestas de la IA con libros de texto gratuitos y fuentes oficiales.
+              </p>
+</div>
+<!-- Pilar 8 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-800 font-headline font-bold text-base flex items-center justify-center">
+                08
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Autonomía Cognitiva</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Diseñar retos donde el estudiante analice, cuestione y mejore lo generado por la IA en lugar de copiar resultados de forma pasiva.
+              </p>
+</div>
+<!-- Pilar 9 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-800 font-headline font-bold text-base flex items-center justify-center">
+                09
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Seguridad por Edad</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Supervisar las herramientas empleadas en primaria y secundaria, evitando plataformas con registros inseguros o contenido inadecuado.
+              </p>
+</div>
+<!-- Pilar 10 -->
+<div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col gap-3 hover:border-slate-300 transition-all">
+<div class="w-10 h-10 rounded-lg bg-slate-200 text-slate-800 font-headline font-bold text-base flex items-center justify-center">
+                10
+              </div>
+<h3 class="font-headline font-bold text-base text-slate-900">Comunidad y Mejora</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Compartir buenas prácticas, prompts validados y aprendizajes éticos con el colectivo docente para fortalecer la escuela.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- INTERCONEXIÓN NEXUS -->
+<section class="w-full px-4 sm:px-6 lg:px-8 py-10 bg-white border-b border-slate-200">
+<div class="max-w-[1440px] mx-auto rounded-2xl p-6 sm:p-8 bg-gradient-to-r from-sky-50 via-cyan-50 to-teal-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+<div class="flex flex-col gap-1 max-w-xl text-center md:text-left">
+<span class="text-cyan-800 font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center md:justify-start gap-1">
+<span class="material-symbols-outlined text-[16px]">hub</span>
+              EXPLORA EL NEXO COMPLETO
+            </span>
+<h2 class="font-headline font-bold text-xl sm:text-2xl text-slate-900">
+              Potencia tu Estrategia Escolar
+            </h2>
+<p class="text-slate-700 text-sm leading-relaxed">
+              Navega hacia los hubs específicos de nuestras escuelas o descarga formatos pedagógicos oficiales.
+            </p>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-2.5 w-full md:w-auto">
+<a class="px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-800 font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:bg-slate-50 hover:border-slate-400 transition-all shadow-xs" href="google-docentes.html">
+<span class="material-symbols-outlined text-[16px] text-cyan-700">devices</span>
+              Google para Docentes
+            </a>
+<a class="px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-800 font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:bg-slate-50 hover:border-slate-400 transition-all shadow-xs" href="secundaria-est41.html">
+<span class="material-symbols-outlined text-[16px] text-teal-700">precision_manufacturing</span>
+              Secundaria Técnica 41
+            </a>
+<a class="px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-800 font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:bg-slate-50 hover:border-slate-400 transition-all shadow-xs" href="primaria-teodoro-olivares.html">
+<span class="material-symbols-outlined text-[16px] text-indigo-700">school</span>
+              Primaria Teodoro Olivares
+            </a>
+<a class="px-4 py-2 rounded-lg bg-cyan-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:bg-cyan-800 transition-all shadow-xs" href="materiales-docentes.html">
+<span class="material-symbols-outlined text-[16px]">folder_open</span>
+              Materiales y Formatos
+            </a>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FOOTER INSTITUCIONAL ACCESIBLE (WCAG AAA) -->
+<footer class="w-full bg-slate-900 text-slate-300 py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-[1440px] mx-auto flex flex-col gap-8">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pb-8 border-b border-slate-800">
+<!-- Columna 1 -->
+<div class="md:col-span-5 flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<span class="font-headline font-bold text-lg text-white tracking-tight uppercase">PORTAL EDUCATIVO</span>
+<span class="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300 text-[11px] font-bold">2026-2027</span>
+</div>
+<p class="text-xs sm:text-sm text-slate-400 max-w-md leading-relaxed">
+            Plataforma docente para el fomento de la innovación educativa y la alfabetización en Inteligencia Artificial en apego a los principios de la Nueva Escuela Mexicana.
+          </p>
+</div>
+<!-- Columna 2 -->
+<div class="md:col-span-4 flex flex-col gap-2">
+<span class="font-headline font-bold text-xs text-white uppercase tracking-wider">Comunidades Educativas Base</span>
+<div class="flex flex-col gap-1.5 text-xs text-slate-400">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-[16px]">school</span>
+              Escuela Secundaria Técnica N° 41 (Aguascalientes)
+            </span>
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-teal-400 text-[16px]">domain</span>
+              Escuela Primaria Teodoro Olivares (Pabellón de Arteaga)
+            </span>
+</div>
+</div>
+<!-- Columna 3 -->
+<div class="md:col-span-3 flex flex-col gap-2 md:items-end">
+<span class="font-headline font-bold text-xs text-white uppercase tracking-wider">Cumplimiento y Calidad</span>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-950 border border-emerald-800 text-emerald-300 text-xs font-bold">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+            Cumple norma WCAG 2.1 AAA
+          </div>
+<span class="text-[11px] text-slate-400">Alto contraste y tipografía accesible</span>
+</div>
+</div>
+<!-- Barra Inferior -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+<p>© 2026 PORTAL EDUCATIVO. Aguascalientes &amp; Pabellón de Arteaga. Todos los derechos reservados.</p>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5 text-emerald-400">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Plataforma en línea
+          </span>
+<span class="text-slate-700">|</span>
+<span>NEM Digital v3.0 Accesible</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- SCRIPT PARA COPIA DE PROMPTS -->
+<script>
+    function copyPrompt(elementId, buttonElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalContent = buttonElement.innerHTML;
+        buttonElement.innerHTML = `
+          <span class="material-symbols-outlined text-[16px]">check_circle</span>
+          <span>¡COPIADO AL PORTAPAPELES!</span>
+        `;
+        buttonElement.classList.replace("bg-cyan-700", "bg-emerald-700");
+        buttonElement.classList.replace("bg-teal-700", "bg-emerald-700");
+        buttonElement.classList.replace("bg-indigo-700", "bg-emerald-700");
+        
+        setTimeout(() => {
+          buttonElement.innerHTML = originalContent;
+          buttonElement.classList.remove("bg-emerald-700");
+          if (elementId === 'prompt-code-1') buttonElement.classList.add("bg-cyan-700");
+          if (elementId === 'prompt-code-2') buttonElement.classList.add("bg-teal-700");
+          if (elementId === 'prompt-code-3') buttonElement.classList.add("bg-indigo-700");
+        }, 2200);
+      }).catch(err => {
+        console.error('Error al copiar el texto: ', err);
+      });
+    }
+  </script>
+</body></html>

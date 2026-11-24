@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Panel ejecutivo formal de productividad docente con Google Workspace: atajos rápidos, Classroom, modo sin conexión y formularios seguros">
+  <defs>
+    <linearGradient id="execBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" rx="20" fill="url(#execBg)"/>
+
+  <!-- Marco ejecutivo estilo tablero corporativo -->
+  <rect x="34" y="30" width="732" height="440" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="34" y="30" width="732" height="62" rx="16" fill="#f8fafc"/>
+  <rect x="34" y="76" width="732" height="16" fill="#f8fafc"/>
+  <line x1="34" y1="92" x2="766" y2="92" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Indicadores de ventana formal -->
+  <circle cx="64" cy="61" r="7" fill="#0284c7"/>
+  <circle cx="86" cy="61" r="7" fill="#0d9488"/>
+  <circle cx="108" cy="61" r="7" fill="#64748b"/>
+  <text x="132" y="67" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#0f172a">Suite Ejecutiva Docente • Google Workspace</text>
+  <rect x="590" y="45" width="154" height="32" rx="16" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="612" y="66" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0369a1">+2h / semana ahorradas</text>
+
+  <!-- Tarjeta 1: Atajos directos -->
+  <rect x="58" y="114" width="332" height="148" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="76" y="132" width="44" height="44" rx="10" fill="#e0f2fe"/>
+  <text x="88" y="160" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#0284c7">⚡</text>
+  <text x="134" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="15.5" font-weight="700" fill="#0f172a">Atajos de Navegador</text>
+  <text x="134" y="170" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#475569">Creación inmediata en 1 clic</text>
+  <rect x="76" y="192" width="90" height="32" rx="6" fill="#0f172a"/>
+  <text x="92" y="213" font-family="Consolas, monospace" font-size="13" font-weight="700" fill="#38bdf8">doc.new</text>
+  <rect x="176" y="192" width="96" height="32" rx="6" fill="#0f172a"/>
+  <text x="187" y="213" font-family="Consolas, monospace" font-size="13" font-weight="700" fill="#34d399">sheet.new</text>
+  <rect x="282" y="192" width="90" height="32" rx="6" fill="#0f172a"/>
+  <text x="293" y="213" font-family="Consolas, monospace" font-size="13" font-weight="700" fill="#c084fc">form.new</text>
+
+  <!-- Tarjeta 2: Banco de Comentarios Classroom -->
+  <rect x="410" y="114" width="332" height="148" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="428" y="132" width="44" height="44" rx="10" fill="#dcfce7"/>
+  <text x="441" y="161" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#059669">✓</text>
+  <text x="486" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="15.5" font-weight="700" fill="#0f172a">Banco en Classroom</text>
+  <text x="486" y="170" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#475569">Retroalimentación ágil y formal</text>
+  <rect x="428" y="190" width="296" height="52" rx="8" fill="#ffffff" stroke="#bbf7d0"/>
+  <text x="442" y="212" font-family="Consolas, monospace" font-size="12.5" font-weight="700" fill="#047857">#CriterioLogrado</text>
+  <text x="442" y="230" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#334155">"Excelente análisis y claridad en tu proyecto."</text>
+
+  <!-- Tarjeta 3: Modo sin conexión -->
+  <rect x="58" y="282" width="332" height="148" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="76" y="300" width="44" height="44" rx="10" fill="#fef3c7"/>
+  <text x="89" y="329" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#d97706">☁</text>
+  <text x="134" y="318" font-family="Segoe UI, Arial, sans-serif" font-size="15.5" font-weight="700" fill="#0f172a">Trabajo Sin Conexión</text>
+  <text x="134" y="338" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#475569">Continuidad operativa en el plantel</text>
+  <rect x="76" y="362" width="296" height="46" rx="8" fill="#ffffff" stroke="#fde68a"/>
+  <rect x="92" y="379" width="180" height="10" rx="5" fill="#e2e8f0"/>
+  <rect x="92" y="379" width="150" height="10" rx="5" fill="#0284c7"/>
+  <text x="284" y="389" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" fill="#0369a1">Sincronizado</text>
+
+  <!-- Tarjeta 4: Modo de bloqueo en Formularios -->
+  <rect x="410" y="282" width="332" height="148" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="428" y="300" width="44" height="44" rx="10" fill="#f3e8ff"/>
+  <text x="441" y="329" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#7c3aed">🔒</text>
+  <text x="486" y="318" font-family="Segoe UI, Arial, sans-serif" font-size="15.5" font-weight="700" fill="#0f172a">Evaluación Controlada</text>
+  <text x="486" y="338" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" fill="#475569">Modo de bloqueo en Formularios</text>
+  <rect x="428" y="362" width="296" height="46" rx="8" fill="#ffffff" stroke="#e9d5ff"/>
+  <text x="442" y="390" font-family="Segoe UI, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#6d28d9">• Pestañas restringidas durante examen</text>
+</svg>

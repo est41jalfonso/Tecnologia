@@ -1,0 +1,8 @@
+# Archivos privados de contraseñas (no publicar en repositorio público)
+*.xlsx
+*.csv
+Claves_Cortas_Dashboard_Evaluacion_EST41.xlsx
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
