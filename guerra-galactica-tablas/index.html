@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guerra Galáctica de las Tablas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="game-shell">
+    <!-- HUD Superior -->
+    <header class="hud-top">
+      <div class="hud-left">
+        <div class="pilot-pill" id="hudPilot" title="Alumno actual">👤 Sin piloto</div>
+
+        <div class="telemetry-pill" title="Estaciones Espaciales a defender">
+          <span class="telemetry-label">ESTACIONES</span>
+          <div class="shields-row" aria-label="Estaciones activas">
+            <svg class="shield-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
+            <svg class="shield-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
+            <svg class="shield-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
+            <svg class="shield-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
+          </div>
+        </div>
+
+        <div class="telemetry-pill">
+          <span class="telemetry-label">PUNTOS</span>
+          <span class="telemetry-value" id="hudScore">0</span>
+        </div>
+
+        <div class="combo-badge inactive" id="hudCombo">RACHA x0</div>
+      </div>
+
+      <!-- Visor central de operación -->
+      <div class="hud-center">
+        <span class="mission-tag" id="hudMissionTag">NIVEL 1 • TABLA DEL 2</span>
+        <div class="equation-display" id="hudEquation">2 × 1 = ?</div>
+        <span class="speed-timer" id="hudTimer">⏱ 0.0s • +150 PTS MÁX</span>
+      </div>
+
+      <!-- Controles, pantalla completa y salir -->
+      <div class="hud-right">
+        <select id="sectionSelect" class="hud-select" aria-label="Seleccionar sección">
+          <option value="MUL">✖ Tablas</option>
+          <option value="ADD">➕ Sumas</option>
+          <option value="SUB">➖ Restas</option>
+          <option value="DIV">➗ Divisiones</option>
+        </select>
+        <select id="levelSelect" class="hud-select" aria-label="Seleccionar nivel"></select>
+        <button id="btnHudHangar" class="hud-btn" type="button" title="Cambiar nave o temática">🛸 Hangar</button>
+        <button id="btnSound" class="hud-btn" type="button">🔊 Sonido</button>
+        <button id="btnFullscreen" class="hud-btn" type="button">⛶ Pantalla Completa</button>
+        <button id="btnPause" class="hud-btn" type="button">⏸ Pausa</button>
+        <button id="btnExitSave" class="hud-btn danger" type="button" title="Terminar partida y guardar calificación">🚪 Salir y Guardar</button>
+        <a href="../primaria-teodoro-olivares.html" class="hud-btn" style="text-decoration:none;display:inline-flex;align-items:center;" title="Regresar a Primaria Teodoro Olivares">⬅ Primaria</a>
+      </div>
+    </header>
+
+    <!-- Arena de combate espacial -->
+    <main class="arena-wrapper">
+      <canvas id="gameCanvas"></canvas>
+    </main>
+
+    <!-- HUD Inferior -->
+    <footer class="hud-bottom">
+      <div class="controls-hint">
+        <span><span class="keycap">←</span> <span class="keycap">→</span> o <span class="keycap">RATÓN</span> Mover</span>
+        <span><span class="keycap">ESPACIO</span> o <span class="keycap">CLIC</span> Disparar</span>
+        <span><span class="keycap">F</span> Pantalla Completa</span>
+      </div>
+
+      <div class="progress-box">
+        <span class="telemetry-label" id="progressText">0 / 12 NAVES</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="commander-msg" id="commanderMsg">
+        ¡Prepárate para despegar, piloto!
+      </div>
+    </footer>
+
+    <!-- Modal de Inicio -->
+    <section id="modalStart" class="modal-overlay">
+      <div class="modal-card">
+        <span class="modal-badge">MISIÓN ESTELAR EDUCATIVA</span>
+        <h1 class="modal-title">Guerra Galáctica de las Tablas</h1>
+        <p class="modal-subtitle">
+          Selecciona tu nombre de la lista del grupo, elige el nivel y registra tu calificación en cada tabla de multiplicar.
+        </p>
+
+        <div class="student-picker-box">
+          <label for="studentSelect" class="telemetry-label">SELECCIONA TU NOMBRE (LISTA DE ASISTENCIA)</label>
+          <select id="studentSelect" class="student-select">
+            <option value="">Cargando lista de alumnos...</option>
+          </select>
+        </div>
+
+        <div class="rules-grid">
+          <div class="rule-box ok">
+            <strong>✔ DISPARO CORRECTO</strong>
+            Si disparas a la nave con el resultado correcto, explota y desaparece al instante.
+          </div>
+          <div class="rule-box shield">
+            <strong>🛡 DISPARO INCORRECTO</strong>
+            Si el resultado es incorrecto, su escudo deflector rebota el láser sin causarle daño.
+          </div>
+        </div>
+
+        <div style="text-align:left; margin-bottom:0.45rem;">
+          <span class="telemetry-label">SECCIÓN DE ENTRENAMIENTO</span>
+        </div>
+        <div id="sectionTabs" class="section-tabs">
+          <button type="button" class="section-tab active" data-section="MUL">✖ Tablas</button>
+          <button type="button" class="section-tab" data-section="ADD">➕ Sumas (2-3C)</button>
+          <button type="button" class="section-tab" data-section="SUB">➖ Restas (1-3C)</button>
+          <button type="button" class="section-tab" data-section="DIV">➗ Divisiones</button>
+        </div>
+
+        <div style="text-align:left; margin-bottom:0.5rem;">
+          <span class="telemetry-label" id="startLevelLabel">ELIGE NIVEL DE INICIO (POR DEFECTO: TABLA DEL 2)</span>
+        </div>
+        <div id="startLevelChips" class="level-selector-grid"></div>
+
+        <div class="modal-actions">
+          <button id="btnStartGame" class="btn-primary-sci" type="button">🚀 Iniciar Misión</button>
+          <button id="btnStartFullscreen" class="btn-secondary-sci" type="button">⛶ Pantalla Completa</button>
+          <button id="btnOpenHangar" class="hud-btn" type="button">🛸 Hangar (Naves y Fondo)</button>
+          <button id="btnConfigSheet" class="hud-btn" type="button" title="Configurar conexión con Google Sheets">⚙ Configurar Hoja</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal de Nivel Completado -->
+    <section id="modalLevelUp" class="modal-overlay hidden">
+      <div class="modal-card">
+        <span class="modal-badge" id="lvlUpBadge">NIVEL COMPLETADO</span>
+        <h2 class="modal-title" id="lvlUpTitle">¡Sector Despejado!</h2>
+        <p class="modal-subtitle" id="lvlUpSubtitle">Preparando salto al hiperespacio...</p>
+
+        <div class="stats-summary">
+          <div class="stat-card">
+            <div class="val" id="lvlUpScore">0</div>
+            <div class="lbl">Puntos Totales</div>
+          </div>
+          <div class="stat-card">
+            <div class="val" id="lvlUpStreak">x0</div>
+            <div class="lbl">Mejor Racha</div>
+          </div>
+          <div class="stat-card">
+            <div class="val" id="lvlUpNextTable">Tabla 3</div>
+            <div class="lbl">Siguiente Nivel</div>
+          </div>
+        </div>
+
+        <div class="switch-mission-box">
+          <span class="telemetry-label">O CAMBIA A OTRO TIPO DE MISIÓN (CONSERVANDO TU AVANCE)</span>
+          <div id="lvlUpOtherMissions" class="switch-mission-row"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="btnNextLevel" class="btn-primary-sci" type="button">⚡ Saltar al Siguiente Nivel</button>
+          <button id="btnExitFromLevelUp" class="btn-secondary-sci" type="button">🚪 Salir y Guardar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal de Pausa -->
+    <section id="modalPause" class="modal-overlay hidden">
+      <div class="modal-card">
+        <span class="modal-badge">SISTEMAS EN ESPERA</span>
+        <h2 class="modal-title">Combate en Pausa</h2>
+        <p class="modal-subtitle">Toma un respiro o finaliza tu partida para registrar tu avance.</p>
+        <div class="modal-actions">
+          <button id="btnResume" class="btn-primary-sci" type="button">▶ Reanudar</button>
+          <button id="btnExitFromPause" class="btn-secondary-sci" type="button">🚪 Salir y Guardar Calificación</button>
+          <button id="btnRestartFromPause" class="hud-btn" type="button">↺ Reiniciar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal de Cierre / Resumen de Calificaciones -->
+    <section id="modalGameOver" class="modal-overlay hidden">
+      <div class="modal-card">
+        <span class="modal-badge" id="goBadge">REGISTRO DE MISIÓN</span>
+        <h2 class="modal-title" id="goTitle">Reporte de Calificación</h2>
+        <p class="modal-subtitle" id="goSubtitle">Resumen del alumno</p>
+
+        <div class="stats-summary">
+          <div class="stat-card">
+            <div class="val" id="goGrade">0.0</div>
+            <div class="lbl">Calificación (0-10)</div>
+          </div>
+          <div class="stat-card">
+            <div class="val" id="goScore">0</div>
+            <div class="lbl">Puntos</div>
+          </div>
+          <div class="stat-card">
+            <div class="val" id="goDateTime">--:--</div>
+            <div class="lbl">Fecha y Hora</div>
+          </div>
+        </div>
+
+        <div id="goTableGrades" class="table-grades-grid"></div>
+        <div id="goSyncStatus" class="sync-status">Preparando envío a Google Sheets...</div>
+
+        <div class="modal-actions">
+          <button id="btnRetryLevel" class="btn-primary-sci" type="button">🔄 Seguir Jugando</button>
+          <button id="btnRestartAll" class="btn-secondary-sci" type="button">👤 Cambiar Alumno / Inicio</button>
+          <button id="btnDownloadCsv" class="hud-btn" type="button">📥 Descargar CSV</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Hangar (Selección de Nave y Temática de Fondo) -->
+    <section id="modalHangar" class="modal-overlay hidden">
+      <div class="modal-card">
+        <span class="modal-badge">CONFIGURACIÓN DEL PILOTO</span>
+        <h2 class="modal-title">Hangar Espacial</h2>
+        <p class="modal-subtitle">Elige la nave que quieres tripular y la temática del espacio para tus misiones.</p>
+
+        <div class="hangar-preview-row">
+          <div class="ship-preview-box">
+            <canvas id="shipPreviewCanvas" width="220" height="120"></canvas>
+            <span class="telemetry-label" id="previewShipName">Ala-X Rebelde</span>
+          </div>
+          <div class="ship-colors-box">
+            <span class="telemetry-label">PERSONALIZA LOS COLORES</span>
+            <label class="color-picker-row">
+              <span>Color Principal (Alas y Láser)</span>
+              <input id="inputShipPrimary" type="color" value="#00f0ff" />
+            </label>
+            <label class="color-picker-row">
+              <span>Color de Cabina y Detalles</span>
+              <input id="inputShipAccent" type="color" value="#7df4ff" />
+            </label>
+            <button id="btnResetShipColors" class="hud-btn" type="button">↺ Restaurar Color Original</button>
+          </div>
+        </div>
+
+        <div style="text-align:left;">
+          <span class="telemetry-label">ELIGE TU NAVE ESTELAR (7 MODELOS)</span>
+        </div>
+        <div id="hangarShipsGrid" class="hangar-grid"></div>
+
+        <div style="text-align:left;">
+          <span class="telemetry-label">TEMÁTICA DEL FONDO ESPACIAL</span>
+        </div>
+        <div id="hangarThemesRow" class="theme-chips"></div>
+
+        <div class="modal-actions">
+          <button id="btnCloseHangar" class="btn-primary-sci" type="button">✔ Listo para Volar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Configuración de Google Sheets -->
+    <section id="modalConfig" class="modal-overlay hidden">
+      <div class="modal-card">
+        <span class="modal-badge">CONEXIÓN CON GOOGLE SHEETS</span>
+        <h2 class="modal-title">URL de Apps Script</h2>
+        <p class="modal-subtitle">
+          Pega aquí la URL de tu Aplicación Web generada en <strong>Extensiones → Apps Script</strong> dentro de tu hoja de cálculo para que las calificaciones se guarden automáticamente.
+        </p>
+        <input id="inputScriptUrl" class="config-input" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+        <div class="modal-actions">
+          <button id="btnSaveConfig" class="btn-primary-sci" type="button">💾 Guardar URL</button>
+          <button id="btnCloseConfig" class="btn-secondary-sci" type="button">Cancelar</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
