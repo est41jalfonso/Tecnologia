@@ -246,3 +246,110 @@ body.hide-finger-guide .kb-key .finger-bar {
   animation: float-up-fade 0.85s ease-out forwards;
   z-index: 30;
 }
+
+/* ========================================================= */
+/* ADAPTACIÓN COMPACTA EXCLUSIVA PARA CELULAR (<= 768px)     */
+/* (La versión de computadora >= 769px permanece intacta)    */
+/* ========================================================= */
+@media (max-width: 768px) {
+  header > div {
+    min-height: 0 !important;
+    padding: 0.4rem 0.65rem !important;
+    gap: 0.4rem !important;
+  }
+  header .w-11.h-11 {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  header .text-xs.text-slate-600 {
+    display: none !important;
+  }
+  header .font-display.text-lg {
+    font-size: 0.92rem !important;
+  }
+  #mainNav {
+    gap: 0.25rem !important;
+  }
+  #mainNav .nav-tab {
+    padding: 0.28rem 0.5rem !important;
+    font-size: 0.64rem !important;
+  }
+  header a[href="../secundaria-est41.html"] {
+    padding: 0.3rem 0.55rem !important;
+    font-size: 0.66rem !important;
+  }
+
+  main {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  main > div {
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
+    gap: 0.5rem !important;
+  }
+
+  #studentSelectorBar {
+    padding: 0.55rem 0.65rem !important;
+    gap: 0.45rem !important;
+    border-radius: 0.85rem !important;
+  }
+  #studentSelectorBar .w-9.h-9 {
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+  }
+  #studentSelectorBar .text-xs {
+    font-size: 0.68rem !important;
+    line-height: 1.2 !important;
+  }
+  #btnQuickPractice {
+    padding: 0.28rem 0.55rem !important;
+    font-size: 0.65rem !important;
+  }
+  #selectGroup,
+  #selectStudent {
+    font-size: 0.74rem !important;
+    min-width: 110px !important;
+  }
+  #studentSelectWrapper {
+    min-width: 160px !important;
+    padding: 0.35rem 0.55rem !important;
+  }
+  #studentRecordBadge {
+    padding: 0.32rem 0.55rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  #view-arena {
+    gap: 0.5rem !important;
+  }
+  #view-arena > div:first-child {
+    padding: 0.5rem 0.65rem !important;
+    gap: 0.45rem !important;
+    border-radius: 0.85rem !important;
+  }
+  #hudMissionTitle {
+    font-size: 0.78rem !important;
+  }
+  #hudMissionSub {
+    font-size: 0.66rem !important;
+  }
+  #hudScore {
+    font-size: 0.85rem !important;
+  }
+
+  .kb-key {
+    height: 35px;
+    font-size: 11px;
+    border-bottom-width: 2.5px;
+    border-radius: 6px;
+  }
+  .kb-key .finger-bar {
+    height: 2.5px;
+  }
+  .letter-tile {
+    width: 48px;
+    height: 56px;
+    border-radius: 9px;
+  }
+}

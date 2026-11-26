@@ -1334,3 +1334,156 @@ body {
   }
 }
 
+/* ========================================================= */
+/* ADAPTACIÓN COMPACTA EXCLUSIVA PARA CELULAR (<= 768px)     */
+/* (La versión de computadora >= 769px permanece intacta)    */
+/* ========================================================= */
+@media (max-width: 768px) {
+  .portal-topbar {
+    padding: 0.3rem 0.55rem;
+    gap: 0.4rem;
+  }
+  .portal-topbar-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 0.85rem;
+    border-radius: 7px;
+  }
+  .portal-topbar-title {
+    font-size: 0.74rem;
+    line-height: 1.1;
+  }
+  .portal-topbar-sub {
+    display: none;
+  }
+  .portal-back-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.68rem;
+    border-radius: 7px;
+  }
+
+  .hud-top {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+    padding: 0.3rem 0.5rem;
+  }
+  .hud-left,
+  .hud-right {
+    gap: 0.3rem;
+    justify-content: center;
+  }
+  .pilot-pill {
+    padding: 0.18rem 0.45rem;
+    font-size: 0.66rem;
+    max-width: 115px;
+  }
+  .telemetry-pill {
+    padding: 0.18rem 0.45rem;
+    gap: 0.25rem;
+  }
+  .telemetry-label {
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
+  }
+  .telemetry-value {
+    font-size: 0.8rem;
+  }
+  .shield-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .combo-badge {
+    padding: 0.18rem 0.45rem;
+    font-size: 0.68rem;
+  }
+  .hud-center {
+    padding: 0.2rem 0.75rem;
+    min-width: 0;
+    width: 100%;
+  }
+  .mission-tag {
+    font-size: 0.58rem;
+  }
+  .equation-display {
+    font-size: 1.2rem;
+    line-height: 1.1;
+  }
+  .speed-timer {
+    font-size: 0.6rem;
+  }
+  .hud-btn,
+  .hud-select {
+    padding: 0.26rem 0.48rem;
+    font-size: 0.66rem;
+    border-radius: 7px;
+  }
+
+  .arena-wrapper {
+    margin: 0.25rem 0.4rem;
+    border-radius: 10px;
+  }
+
+  .hud-bottom {
+    padding: 0.28rem 0.5rem;
+    gap: 0.4rem;
+  }
+  .progress-box {
+    min-width: 0;
+    width: 100%;
+    font-size: 0.68rem;
+    gap: 0.45rem;
+  }
+  .progress-track {
+    height: 7px;
+  }
+
+  .modal-overlay {
+    top: 40px;
+    padding: 0.5rem;
+  }
+  .modal-card {
+    padding: 0.9rem;
+    border-radius: 14px;
+    max-height: calc(100vh - 54px);
+  }
+  .modal-badge {
+    font-size: 0.62rem;
+    padding: 0.18rem 0.55rem;
+    margin-bottom: 0.4rem;
+  }
+  .modal-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.35rem;
+  }
+  .modal-subtitle {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    margin-bottom: 0.75rem;
+  }
+  .rule-box {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.72rem;
+  }
+  .rule-box strong {
+    font-size: 0.66rem;
+  }
+  .student-select,
+  .config-input {
+    padding: 0.42rem 0.6rem;
+    font-size: 0.78rem;
+  }
+  .section-tab {
+    padding: 0.35rem 0.3rem;
+    font-size: 0.7rem;
+  }
+  .lvl-chip {
+    padding: 0.3rem 0.2rem;
+    font-size: 0.68rem;
+  }
+  .btn-primary-sci,
+  .btn-secondary-sci {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.78rem;
+  }
+}
+
