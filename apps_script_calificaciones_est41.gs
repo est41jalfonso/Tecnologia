@@ -231,6 +231,24 @@ function doPost(e) {
     }
 
     var groupFolder = DriveApp.getFolderById(book.driveFolderId);
+    var folderEntries = [];
+    var itFolders = groupFolder.getFolders();
+    while (itFolders.hasNext()) {
+      var f = itFolders.next();
+      folderEntries.push({ folder: f, norm: normName_(f.getName()) });
+    }
+    function resolveStudentFolder_(targetName) {
+      var t = normName_(targetName);
+      for (var i = 0; i < folderEntries.length; i++) {
+        if (folderEntries[i].norm === t) return folderEntries[i].folder;
+      }
+      for (var j = 0; j < folderEntries.length; j++) {
+        var fn = folderEntries[j].norm;
+        if (fn.indexOf(t) !== -1 || t.indexOf(fn) !== -1) return folderEntries[j].folder;
+      }
+      return null;
+    }
+
     var items = Array.isArray(payload.items) ? payload.items : [];
     var saved = [];
     var errors = [];
@@ -238,7 +256,7 @@ function doPost(e) {
     items.forEach(function(item) {
       try {
         var studentName = String(item.name || '').trim();
-        var studentFolder = findSubfolder_(groupFolder, studentName);
+        var studentFolder = resolveStudentFolder_(studentName);
         if (!studentFolder) {
           errors.push({ name: studentName, error: 'No se encontró carpeta del alumno en ' + groupCode });
           return;
