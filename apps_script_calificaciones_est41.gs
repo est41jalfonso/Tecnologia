@@ -66,11 +66,37 @@ function getOrCreateReportsFolder_(studentFolder) {
   return studentFolder.createFolder('reportes de calificación');
 }
 
+function limpiarCeldaRefSiAplica_(sh, a1) {
+  if (!sh) return false;
+  var rng = sh.getRange(a1);
+  var val = String(rng.getDisplayValue() || '').trim();
+  var frm = String(rng.getFormula() || '');
+  if (/^#REF!/i.test(val) || frm.indexOf('#REF!') !== -1) {
+    if (rng.isPartOfMerge()) {
+      rng.breakApart();
+    }
+    rng.clearContent();
+    return true;
+  }
+  return false;
+}
+
 /**
  * Audita errores de fórmulas (#REF!, #DIV/0!, #VALUE!, #NAME?, #N/A, #ERROR!),
  * suma de ponderaciones en RASGOS II y consistencia de promedios en los 8 libros.
+ * Limpia automáticamente los #REF! residuales conocidos en 1B (TRIM II!AI1 y Prácticas II!A4).
  */
 function auditarConexionesYFormulas() {
+  var ss1B = SpreadsheetApp.openById(BOOKS['1B'].evalId);
+  var fixedTrim = limpiarCeldaRefSiAplica_(ss1B.getSheetByName('TRIM II'), 'AI1');
+  var fixedPract = limpiarCeldaRefSiAplica_(ss1B.getSheetByName('Prácticas II'), 'A4');
+  if (fixedTrim || fixedPract) {
+    SpreadsheetApp.flush();
+    Logger.log('AUTO-REPARACIÓN 1B: ' +
+      (fixedTrim ? 'TRIM II!AI1 limpiado. ' : '') +
+      (fixedPract ? 'Prácticas II!A4 limpiado.' : ''));
+  }
+
   var report = [];
   var errRegex = /^#(REF!|DIV\/0!|VALUE!|NAME\?|N\/A|ERROR!|NUM!)/;
 
