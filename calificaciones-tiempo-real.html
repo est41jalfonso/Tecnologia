@@ -972,11 +972,15 @@ function applyLiveSnapshot(g,snap){
   // Solo considerar Cuestionarios si se ha aplicado al grupo (actualmente 2° B, o en cuanto exista algún valor distinto de 5)
   const quizVals=activeStudents.map(s=>s.traits.cuestionarios).filter(v=>v!=null);
   const quizApplied=(g.code.toUpperCase()==='2B')||quizVals.some(v=>v!==5);
+  // Solo considerar Cuadernillo si ya se evaluó (si todos tienen el mismo valor por defecto, queda vacío/pendiente)
+  const cuadVals=activeStudents.map(s=>s.traits.cuadernillo).filter(v=>v!=null);
+  const cuadApplied=new Set(cuadVals).size>1;
   const keys=['trabajos','practicas','cuestionarios','proyectos','cuadernillo'];
 
-  if(!quizApplied){
+  if(!quizApplied||!cuadApplied){
     for(const stu of activeStudents){
-      stu.traits.cuestionarios=null;
+      if(!quizApplied)stu.traits.cuestionarios=null;
+      if(!cuadApplied)stu.traits.cuadernillo=null;
       let sum=0,wSum=0;
       keys.forEach((k,idx)=>{
         const v=stu.traits[k];
