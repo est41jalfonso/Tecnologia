@@ -664,7 +664,13 @@
         <!-- Student Header Banner -->
         <div class="bg-gradient-to-r from-sky-900 via-sky-800 to-blue-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="space-y-1.5">
-            <span id="groupPill" class="inline-flex items-center px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-extrabold uppercase tracking-wider"></span>
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="groupPill" class="inline-flex items-center px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-extrabold uppercase tracking-wider"></span>
+              <span id="liveSyncPill" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-300/40 text-emerald-100 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+                <span>Conectando con Google Sheets…</span>
+              </span>
+            </div>
             <h2 id="studentName" class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight"></h2>
             <p id="studentMeta" class="text-sm text-sky-100 font-medium"></p>
             <p id="groupSub" class="text-xs text-sky-200/90"></p>
@@ -672,6 +678,10 @@
           <div class="flex flex-col items-start md:items-end gap-2.5 shrink-0">
             <span id="standing" class="status typical"></span>
             <div class="flex flex-wrap items-center gap-2">
+              <button id="refreshLiveBtn" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs transition-colors cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">sync</span>
+                <span>Actualizar datos</span>
+              </button>
               <button id="printBtn" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-sky-900 hover:bg-sky-50 font-extrabold text-xs shadow-md transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-[18px]">print</span>
                 <span>Imprimir / Guardar PDF (Carta)</span>
@@ -780,7 +790,211 @@ const DATA={"iterations":100000,"hash":"SHA-256","groups":[{"key":"1a","code":"1
 const RUBRIC=[['trabajos','Trabajos',10],['practicas','Prácticas de laboratorio',10],['cuestionarios','Cuestionarios',30],['proyectos','Proyectos',30],['cuadernillo','Cuadernillo',20]];
 const $=id=>document.getElementById(id);
 const TEACHER_STORAGE_KEY='est41_teacher_vault_v1';
+const LIVE_SHEETS={
+  '1A':'1L6rC6vlz0vy8bRhbB-26UcZDsx1Nq4A9iNSb1VAEVS8',
+  '1B':'1jRX8xGSrE_6n9bGab0Qj8zHDD0h1rLhoL--0DgdWqZU',
+  '2B':'1KbVhsvrjB0c9vvvGLQw1Qn-PB5wQT3SjXWEU-5l7CcE',
+  '3C':'1RDeb8NrPgfbxyCJC3qVOYplUVJ7IXzcx7pzxlyuute8'
+};
+const liveCache={};
 let currentGroup=null,currentStudent=null,currentRecord=null,teacherVault=null;
+
+function gvizVal(row,idx){const c=row?.c?.[idx];if(!c)return null;return c.v!==undefined?c.v:(c.f??null);}
+function numOrNull(v){if(v===null||v===undefined||v==='')return null;const n=Number(v);return Number.isFinite(n)?n:null;}
+
+function fetchGvizJsonp(sheetId,sheetName){
+  return new Promise((resolve,reject)=>{
+    const cb='__est41GvizCb_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script');
+    const timer=setTimeout(()=>{cleanup();reject(new Error('Tiempo de espera agotado al consultar Google Sheets'));},12000);
+    function cleanup(){
+      clearTimeout(timer);
+      try{delete window[cb];}catch(_){window[cb]=undefined;}
+      if(script.parentNode)script.parentNode.removeChild(script);
+    }
+    window[cb]=function(resp){
+      cleanup();
+      if(resp&&resp.table)resolve(resp.table);
+      else reject(new Error('Respuesta inválida de Google Sheets'));
+    };
+    script.onerror=function(){cleanup();reject(new Error('Error de red al consultar Google Sheets'));};
+    script.src='https://docs.google.com/spreadsheets/d/'+encodeURIComponent(sheetId)+'/gviz/tq?tqx='+encodeURIComponent('responseHandler:'+cb)+'&sheet='+encodeURIComponent(sheetName)+'&_ts='+Date.now();
+    document.head.appendChild(script);
+  });
+}
+
+async function syncLiveGroup(g,force=false){
+  const code=g.code.toUpperCase();
+  const sheetId=LIVE_SHEETS[code];
+  if(!sheetId)return null;
+  const cached=liveCache[code];
+  if(!force&&cached&&(Date.now()-cached.ts)<60000){
+    applyLiveSnapshot(g,cached);
+    return cached;
+  }
+  const [rasgosTbl,asistTbl,trimTbl]=await Promise.all([
+    fetchGvizJsonp(sheetId,'RASGOS II'),
+    fetchGvizJsonp(sheetId,'ASIST II'),
+    fetchGvizJsonp(sheetId,'TRIM II').catch(()=>null)
+  ]);
+
+  let weights=[10,10,30,30,20];
+  const studentsByN={};
+  for(const r of (rasgosTbl.rows||[])){
+    const a=gvizVal(r,0),b=gvizVal(r,1);
+    const c2=numOrNull(gvizVal(r,2)),c3=numOrNull(gvizVal(r,3)),c4=numOrNull(gvizVal(r,4));
+    if(a==null&&b==null&&c2!=null&&c2>0&&c2<=1&&c3!=null){
+      weights=[c2,c3,c4,numOrNull(gvizVal(r,5)),numOrNull(gvizVal(r,6))].map(x=>Math.round((x||0)*100));
+    }
+    const listNum=numOrNull(a);
+    if(listNum!=null&&listNum>=1&&typeof b==='string'&&b.trim()!==''&&!/nombre/i.test(b)){
+      const t={
+        trabajos:numOrNull(gvizVal(r,2)),
+        practicas:numOrNull(gvizVal(r,3)),
+        cuestionarios:numOrNull(gvizVal(r,4)),
+        proyectos:numOrNull(gvizVal(r,5)),
+        cuadernillo:numOrNull(gvizVal(r,6))
+      };
+      const avgM=numOrNull(gvizVal(r,12));
+      const finalN=numOrNull(gvizVal(r,13));
+      const level=gvizVal(r,14);
+      const obs=gvizVal(r,15);
+      studentsByN[listNum]={n:listNum,name:b.trim(),traits:t,average:avgM,finalGrade:finalN,level:level!=null?String(level):null,status:obs!=null?String(obs):null};
+    }
+  }
+
+  let weekCols=[];
+  let faltasCol=-1;
+  const colLabels=(asistTbl.cols||[]).map(c=>(c.label||'').trim());
+  for(let idx=2;idx<colLabels.length;idx++){
+    const lbl=colLabels[idx];
+    if(/^\d{1,2}\s*[-–]\s*\d{1,2}|^\d{1,2}\s+[a-z]{3}/i.test(lbl)){
+      weekCols.push({startCol:idx,label:lbl.replace(/\s+/g,' ').trim()});
+    }else if(/faltas/i.test(lbl)){faltasCol=idx;}
+  }
+  if(!weekCols.length){
+    for(const r of (asistTbl.rows||[]).slice(0,10)){
+      for(let idx=2;idx<(r.c?.length||0);idx++){
+        const lbl=String(gvizVal(r,idx)||'').trim();
+        if(/^\d{1,2}\s*[-–]\s*\d{1,2}|^\d{1,2}\s+[a-z]{3}/i.test(lbl)){
+          weekCols.push({startCol:idx,label:lbl.replace(/\s+/g,' ').trim()});
+        }else if(/faltas/i.test(lbl)){faltasCol=idx;}
+      }
+      if(weekCols.length)break;
+    }
+  }
+
+  let groupPresent=0,groupAbsent=0;
+  const weekTotals=weekCols.map(()=>({p:0,a:0,students:0}));
+  for(const r of (asistTbl.rows||[])){
+    const listNum=numOrNull(gvizVal(r,0));
+    const b=gvizVal(r,1);
+    if(listNum!=null&&studentsByN[listNum]&&typeof b==='string'&&b.trim()!==''){
+      const stu=studentsByN[listNum];
+      let totP=0,totA=0;
+      stu.weeklyAttendance=weekCols.map((wc,wi)=>{
+        const nextStart=wi+1<weekCols.length?weekCols[wi+1].startCol:(faltasCol>wc.startCol?faltasCol:wc.startCol+5);
+        const endCol=Math.min(nextStart,wc.startCol+5);
+        let p=0,a=0,hasAny=false;
+        for(let ci=wc.startCol;ci<endCol;ci++){
+          const v=numOrNull(gvizVal(r,ci));
+          if(v===1){p++;totP++;groupPresent++;hasAny=true;}
+          else if(v===0){a++;totA++;groupAbsent++;hasAny=true;}
+        }
+        if(hasAny){
+          weekTotals[wi].p+=p;weekTotals[wi].a+=a;weekTotals[wi].students++;
+          return {present:p,absent:a};
+        }
+        return null;
+      });
+      stu.attendance={present:totP,absent:totA,total:totP+totA};
+    }
+  }
+
+  // Extract TRIM II projects/activities summary if present
+  if(trimTbl&&Array.isArray(trimTbl.rows)){
+    let titleRow=null;
+    for(const r of trimTbl.rows.slice(0,10)){
+      const c2=String(gvizVal(r,2)||'');
+      if(/proyecto/i.test(c2)){titleRow=r;break;}
+    }
+    const projectCols=[{col:2,fallback:'Proyecto 1'},{col:7,fallback:'Proyecto 2'},{col:12,fallback:'Proyecto 3'},{col:17,fallback:'Proyecto 4'},{col:22,fallback:'Proyecto 5'},{col:27,fallback:'Proyecto 6'}];
+    const projectLabels=projectCols.map(pc=>String(titleRow?gvizVal(titleRow,pc.col)||pc.fallback:pc.fallback).trim());
+    for(const r of trimTbl.rows){
+      const listNum=numOrNull(gvizVal(r,0));
+      const b=gvizVal(r,1);
+      if(listNum!=null&&studentsByN[listNum]&&typeof b==='string'&&b.trim()!==''){
+        const projs=[];
+        projectCols.forEach((pc,pi)=>{
+          const sc=numOrNull(gvizVal(r,pc.col));
+          if(sc!=null||projectLabels[pi]){
+            projs.push({label:projectLabels[pi],score:sc,status:sc==null?'Pendiente':'Evaluado'});
+          }
+        });
+        if(projs.length)studentsByN[listNum].projects=projs;
+      }
+    }
+  }
+
+  const snap={ts:Date.now(),weights,studentsByN,weekCols,weekTotals,groupPresent,groupAbsent};
+  liveCache[code]=snap;
+  applyLiveSnapshot(g,snap);
+  return snap;
+}
+
+function applyLiveSnapshot(g,snap){
+  const activeStudents=Object.values(snap.studentsByN);
+  if(!activeStudents.length)return;
+  const avgs=activeStudents.map(s=>s.average).filter(v=>v!=null);
+  if(avgs.length){
+    const sorted=[...avgs].sort((a,b)=>a-b);
+    const mean=avgs.reduce((a,b)=>a+b,0)/avgs.length;
+    const mid=Math.floor(sorted.length/2);
+    const median=sorted.length%2?sorted[mid]:(sorted[mid-1]+sorted[mid])/2;
+    const sd=Math.sqrt(avgs.reduce((a,v)=>a+Math.pow(v-mean,2),0)/avgs.length);
+    g.metrics.students=activeStudents.length;
+    g.metrics.average=mean;
+    g.metrics.reportedAverage=mean;
+    g.metrics.median=median;
+    g.metrics.sd=sd;
+    const bins=[0,0,0,0,0];
+    for(const v of avgs){
+      if(v<6)bins[0]++;else if(v<7)bins[1]++;else if(v<8)bins[2]++;else if(v<9)bins[3]++;else bins[4]++;
+    }
+    g.distribution={bins,labels:['< 6','6–6.9','7–7.9','8–8.9','9–10']};
+  }
+  g.metrics.present=snap.groupPresent;
+  g.metrics.absent=snap.groupAbsent;
+  g.metrics.attendanceHasPresence=(snap.groupPresent+snap.groupAbsent)>0;
+
+  const keys=['trabajos','practicas','cuestionarios','proyectos','cuadernillo'];
+  keys.forEach((k,idx)=>{
+    const meta=g.traits.find(t=>t.key===k);
+    if(meta){
+      const vals=activeStudents.map(s=>s.traits[k]).filter(v=>v!=null);
+      meta.weight=snap.weights[idx]??meta.weight;
+      meta.available=vals.length>0;
+      meta.captured=vals.length;
+      meta.average=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):null;
+    }
+    if(RUBRIC[idx])RUBRIC[idx][2]=snap.weights[idx]??RUBRIC[idx][2];
+  });
+
+  if(snap.weekCols.length){
+    g.attendanceWeeks=snap.weekCols.map(w=>w.label);
+    g.weeklyAttendanceSummary=snap.weekCols.map((w,wi)=>{
+      const wt=snap.weekTotals[wi];
+      return {
+        label:w.label,
+        present:wt.p,
+        absent:wt.a,
+        studentsCaptured:wt.students,
+        meanPresent:wt.students?wt.p/wt.students:null,
+        meanAbsent:wt.students?wt.a/wt.students:null
+      };
+    });
+  }
+}
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function dec64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
@@ -794,6 +1008,43 @@ function showError(msg){
   el.classList.remove('hidden');
 }
 
+function setLiveSyncBadge(ok,msg){
+  const el=$('liveSyncPill');
+  if(!el)return;
+  if(ok){
+    el.className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-300/40 text-emerald-100 text-xs font-bold';
+    el.innerHTML='<span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span><span>'+esc(msg)+'</span>';
+  }else{
+    el.className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-300/40 text-amber-100 text-xs font-bold';
+    el.innerHTML='<span class="w-2 h-2 rounded-full bg-amber-300"></span><span>'+esc(msg)+'</span>';
+  }
+}
+
+async function applyLiveRecordForStudent(force=false){
+  if(!currentGroup||!currentStudent)return;
+  try{
+    const snap=await syncLiveGroup(currentGroup,force);
+    const liveStu=snap?.studentsByN?.[currentStudent.n];
+    if(liveStu){
+      currentRecord={
+        ...currentRecord,
+        traits:liveStu.traits,
+        average:liveStu.average,
+        finalGrade:liveStu.finalGrade,
+        level:liveStu.level,
+        status:liveStu.status,
+        attendance:liveStu.attendance,
+        weeklyAttendance:liveStu.weeklyAttendance,
+        projects:liveStu.projects||currentRecord.projects
+      };
+    }
+    const hora=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    setLiveSyncBadge(true,'Sincronizado en vivo con Google Sheets · '+hora);
+  }catch(err){
+    setLiveSyncBadge(false,'Modo respaldo local (sin conexión en vivo)');
+  }
+}
+
 async function openReport(){
   const idx=Number($('studentSelect').value);
   const list=[...currentGroup.roster].sort((a,b)=>(a.n||0)-(b.n||0));
@@ -804,6 +1055,7 @@ async function openReport(){
     if(teacherVault[key]){
       currentRecord=teacherVault[key];
       showError('');
+      await applyLiveRecordForStudent(false);
       renderReport();
       return;
     }
@@ -818,6 +1070,8 @@ async function openReport(){
     const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:dec64(currentStudent.sealed.s),iterations:DATA.iterations,hash:DATA.hash},material,{name:'AES-GCM',length:256},false,['decrypt']);
     const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:dec64(currentStudent.sealed.i)},key,dec64(currentStudent.sealed.c));
     currentRecord=JSON.parse(new TextDecoder().decode(raw));
+    $('loginBtn').innerHTML='<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Sincronizando…</span>';
+    await applyLiveRecordForStudent(false);
     renderReport();
   }catch(e){
     showError('No se pudo abrir el reporte. Verifica tu clave corta (iniciales + grupo + número de lista a 2 dígitos, ej. ARP1A01) e inténtalo de nuevo.');
@@ -829,7 +1083,7 @@ async function openReport(){
 }
 
 function selectedTrait(r,k,g){const meta=g.traits.find(x=>x.key===k);if(meta&&!meta.available)return null;const t=traitData(r),v=asNumber(t[k]);return v}
-function studentComposite(r,g){let s=0,w=0;for(const [k,,weight]of RUBRIC){const v=selectedTrait(r,k,g);if(v!==null){s+=v*weight;w+=weight}}return w?s/w:null}
+function studentComposite(r,g){if(typeof r.average==='number'&&Number.isFinite(r.average))return r.average;let s=0,w=0;for(const [k,,weight]of RUBRIC){const v=selectedTrait(r,k,g);if(v!==null){s+=v*weight;w+=weight}}return w?s/w:null}
 function groupScore(g){return g.metrics.average}
 function classify(value,g){const mean=groupScore(g),sd=g.metrics.sd;if(value==null||mean==null||sd==null)return{label:'Sin comparación suficiente',cls:'typical'};if(value<mean-sd)return{label:'Debajo del rango habitual',cls:'below'};if(value>mean+sd)return{label:'Por encima del rango habitual',cls:'above'};return{label:'Dentro del rango habitual',cls:'typical'}}
 
@@ -976,6 +1230,14 @@ function init(){
   $('nextStudentBtn').addEventListener('click',()=>stepStudent(1));
   $('resetSimBtn').addEventListener('click',()=>{
     if(currentGroup&&currentRecord)renderRubric(currentGroup,currentRecord);
+  });
+  $('refreshLiveBtn').addEventListener('click',async()=>{
+    if(!currentGroup||!currentStudent)return;
+    $('refreshLiveBtn').disabled=true;
+    setLiveSyncBadge(true,'Actualizando desde Google Sheets…');
+    await applyLiveRecordForStudent(true);
+    renderReport();
+    $('refreshLiveBtn').disabled=false;
   });
   $('printBtn').addEventListener('click',printReport);
   window.addEventListener('beforeprint',()=>{
