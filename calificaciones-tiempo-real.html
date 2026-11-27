@@ -578,7 +578,12 @@
             </div>
             <div class="sm:col-span-4">
               <label for="teacherPass" class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">Contraseña Maestra</label>
-              <input id="teacherPass" type="password" autocomplete="current-password" placeholder="Contraseña docente" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2 text-sm font-mono font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:ring-0"/>
+              <div class="relative">
+                <input id="teacherPass" type="password" autocomplete="current-password" placeholder="Contraseña docente" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 pl-3.5 pr-10 py-2 text-sm font-mono font-bold text-slate-900 focus:border-indigo-600 focus:bg-white focus:ring-0"/>
+                <button id="toggleTeacherPwdBtn" type="button" aria-label="Mostrar u ocultar contraseña docente" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 p-1 cursor-pointer">
+                  <span id="toggleTeacherPwdIcon" class="material-symbols-outlined text-[18px]">visibility</span>
+                </button>
+              </div>
             </div>
             <div class="sm:col-span-3">
               <button id="teacherLoginBtn" type="button" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-sm cursor-pointer">
@@ -1265,6 +1270,12 @@ function init(){
     const isPwd=inp.type==='password';
     inp.type=isPwd?'text':'password';
     $('togglePwdIcon').textContent=isPwd?'visibility_off':'visibility';
+  });
+  $('toggleTeacherPwdBtn').addEventListener('click',()=>{
+    const inp=$('teacherPass');
+    const isPwd=inp.type==='password';
+    inp.type=isPwd?'text':'password';
+    $('toggleTeacherPwdIcon').textContent=isPwd?'visibility_off':'visibility';
   });
   $('logoutBtn').addEventListener('click',()=>{
     currentRecord=null;currentStudent=null;
