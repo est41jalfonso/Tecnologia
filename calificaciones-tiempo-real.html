@@ -756,12 +756,33 @@
 
         <!-- Group Statistical Summary Strip -->
         <div class="space-y-3">
-          <h3 class="font-display font-extrabold text-lg text-slate-900 flex items-center gap-2">
-            <span class="material-symbols-outlined text-emerald-600">groups</span>
-            Estadística General del Grupo
-          </h3>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="font-display font-extrabold text-lg text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-600">groups</span>
+              Estadística General del Grupo (Promedio al Corte)
+            </h3>
+            <button id="exportGroupCsvBtn" type="button" class="hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              <span>Descargar Concentrado Grupal (.CSV)</span>
+            </button>
+          </div>
           <div id="groupStats" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
         </div>
+
+        <!-- Areas of Opportunity (based on RASGOS II) -->
+        <article id="opportunitiesSection" class="bg-white rounded-2xl border-2 border-amber-200 shadow-sm p-6 space-y-4">
+          <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="font-display font-extrabold text-lg text-slate-900 flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-600">trending_up</span>
+                Áreas de Oportunidad para Mejorar Resultados (RASGOS II)
+              </h3>
+              <p class="text-xs text-slate-600">Diagnóstico personalizado y grupal según las ponderaciones y promedios capturados hasta el momento</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">Enfoque Formativo</span>
+          </div>
+          <div id="opportunitiesGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-5"></div>
+        </article>
 
         <!-- Detailed Breakdown -->
         <article class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-6 space-y-5">
@@ -942,6 +963,8 @@ async function syncLiveGroup(g,force=false){
   return snap;
 }
 
+const OFFICIAL_ASIST_WEEKS=['16 - 20 nov','23 - 27 nov','30 nov - 04 dic','07 - 11 dic','14 - 18 dic','04 - 08 ene','11 - 15 ene','18 - 22 ene','25 - 29 ene','01 - 05 feb','08 - 12 feb','15 - 19 feb','22 - 26 feb','01 - 05 mar','08 - 12 mar'];
+
 function applyLiveSnapshot(g,snap){
   const activeStudents=Object.values(snap.studentsByN);
   if(!activeStudents.length)return;
@@ -980,19 +1003,36 @@ function applyLiveSnapshot(g,snap){
     if(RUBRIC[idx])RUBRIC[idx][2]=snap.weights[idx]??RUBRIC[idx][2];
   });
 
-  if(snap.weekCols.length){
-    g.attendanceWeeks=snap.weekCols.map(w=>w.label);
-    g.weeklyAttendanceSummary=snap.weekCols.map((w,wi)=>{
-      const wt=snap.weekTotals[wi];
-      return {
-        label:w.label,
-        present:wt.p,
-        absent:wt.a,
-        studentsCaptured:wt.students,
-        meanPresent:wt.students?wt.p/wt.students:null,
-        meanAbsent:wt.students?wt.a/wt.students:null
-      };
-    });
+  // Garantizar las 15 fechas del encabezado oficial de ASIST II en el eje horizontal para todos los grupos
+  const weekIndexByNorm={};
+  snap.weekCols.forEach((w,wi)=>{
+    weekIndexByNorm[w.label.replace(/\s+/g,' ').trim().toLowerCase()]=wi;
+  });
+  const targetWeeks=OFFICIAL_ASIST_WEEKS;
+  g.attendanceWeeks=targetWeeks;
+  g.weeklyAttendanceSummary=targetWeeks.map((lbl)=>{
+    const wi=weekIndexByNorm[lbl.replace(/\s+/g,' ').trim().toLowerCase()];
+    if(wi===undefined){
+      return {label:lbl,present:0,absent:0,studentsCaptured:0,meanPresent:null,meanAbsent:null};
+    }
+    const wt=snap.weekTotals[wi];
+    return {
+      label:lbl,
+      present:wt.p,
+      absent:wt.a,
+      studentsCaptured:wt.students,
+      meanPresent:wt.students?wt.p/wt.students:null,
+      meanAbsent:wt.students?wt.a/wt.students:null
+    };
+  });
+  // Alinear weeklyAttendance de cada alumno con las 15 fechas oficiales
+  for(const stu of activeStudents){
+    if(Array.isArray(stu.weeklyAttendance)){
+      stu.weeklyAttendance=targetWeeks.map((lbl)=>{
+        const wi=weekIndexByNorm[lbl.replace(/\s+/g,' ').trim().toLowerCase()];
+        return wi!==undefined?(stu.weeklyAttendance[wi]??null):null;
+      });
+    }
   }
 }
 
@@ -1101,12 +1141,14 @@ function setTeacherModeUI(active){
     $('teacherLoginPanel').classList.add('hidden');
     $('teacherActiveBar').classList.remove('hidden');
     $('teacherAccessBtn').classList.add('hidden');
+    $('exportGroupCsvBtn')?.classList.remove('hidden');
     $('password').value='';
     $('password').placeholder='Modo Docente activo';
     $('password').disabled=true;
   }else{
     $('teacherActiveBar').classList.add('hidden');
     $('teacherAccessBtn').classList.remove('hidden');
+    $('exportGroupCsvBtn')?.classList.add('hidden');
     $('password').placeholder='Ej. ARP1A01';
   }
 }
@@ -1239,6 +1281,7 @@ function init(){
     renderReport();
     $('refreshLiveBtn').disabled=false;
   });
+  $('exportGroupCsvBtn').addEventListener('click',exportGroupCsv);
   $('printBtn').addEventListener('click',printReport);
   window.addEventListener('beforeprint',()=>{
     if(currentGroup&&currentRecord)renderPrintSheet();
@@ -1283,6 +1326,7 @@ function renderReport(){
   renderTraitCompare(g,r);
   renderStudent(g,r,avg,standing);
   renderRubric(g,r);
+  renderOpportunities(g,r);
   renderDetails(g,r);
   renderPrintSheet();
   $('report').classList.remove('hidden');
@@ -1426,6 +1470,113 @@ function calculate(){
   }
   $('calculatedAvg').textContent=wSum?(sum/wSum).toFixed(2)+' / 10':'—';
   $('calculatedPoints').textContent=wSum?points.toFixed(2)+' / 10':'—';
+}
+
+function getOpportunityTips(g,r){
+  const tips={
+    trabajos:'Completar y entregar a tiempo las actividades y tareas en clase.',
+    practicas:'Asistir y concluir las prácticas en el laboratorio de cómputo.',
+    cuestionarios:'Repasar los temas clave y contestar los cuestionarios del trimestre.',
+    proyectos:'Integrar todas las evidencias y criterios de los proyectos trimestrales.',
+    cuadernillo:'Mantener al día las actividades del cuadernillo y apuntes.'
+  };
+  const personal=[];
+  for(const t of g.traits){
+    const own=selectedTrait(r,t.key,g);
+    if(own==null)continue;
+    const gap=Math.max(0,10-own);
+    const potentialPts=gap*(t.weight/100);
+    const belowGroup=t.average!=null&&own<t.average;
+    if(own<8.5||belowGroup){
+      personal.push({
+        label:t.label,
+        weight:t.weight,
+        own,
+        groupAvg:t.average,
+        potentialPts,
+        tip:tips[t.key]||'Reforzar este rasgo de evaluación.'
+      });
+    }
+  }
+  personal.sort((a,b)=>b.potentialPts-a.potentialPts);
+
+  const groupOpps=g.traits
+    .filter(t=>t.average!=null&&t.average<8.5)
+    .map(t=>({label:t.label,weight:t.weight,avg:t.average,tip:tips[t.key]||''}))
+    .sort((a,b)=>a.avg-b.avg);
+
+  return {personal,groupOpps};
+}
+
+function renderOpportunities(g,r){
+  const {personal,groupOpps}=getOpportunityTips(g,r);
+  const stuHtml=personal.length
+    ? personal.slice(0,3).map(o=>{
+        const severity=o.own<6?'border-rose-200 bg-rose-50/70':'border-amber-200 bg-amber-50/70';
+        const badge=o.own<6?'bg-rose-100 text-rose-800':'bg-amber-100 text-amber-900';
+        return '<div class="rounded-xl border p-3.5 '+severity+' space-y-1">'+
+          '<div class="flex items-center justify-between gap-2">'+
+            '<strong class="text-sm font-extrabold text-slate-900">'+esc(o.label)+' ('+o.weight+'%)</strong>'+
+            '<span class="px-2 py-0.5 rounded-md text-xs font-extrabold '+badge+'">Actual: '+o.own.toFixed(1)+' · Hasta +'+o.potentialPts.toFixed(2)+' pts</span>'+
+          '</div>'+
+          '<p class="text-xs text-slate-700 leading-relaxed">'+esc(o.tip)+(o.groupAvg!=null?' (Promedio grupal en RASGOS II: <strong>'+o.groupAvg.toFixed(1)+'</strong>).':'')+'</p>'+
+        '</div>';
+      }).join('')
+    : '<div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">¡Excelente desempeño! Todos tus rasgos evaluados en RASGOS II se encuentran en nivel sobresaliente (≥ 8.5).</div>';
+
+  const grpHtml=groupOpps.length
+    ? groupOpps.map(o=>'<div class="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-1">'+
+        '<div class="flex items-center justify-between gap-2">'+
+          '<strong class="text-sm font-bold text-slate-900">'+esc(o.label)+' ('+o.weight+'%)</strong>'+
+          '<span class="px-2 py-0.5 rounded-md bg-sky-100 text-sky-900 text-xs font-extrabold">Prom. grupo: '+o.avg.toFixed(2)+'</span>'+
+        '</div>'+
+        '<p class="text-xs text-slate-600">'+esc(o.tip)+'</p>'+
+      '</div>').join('')
+    : '<div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">El grupo mantiene promedios altos (≥ 8.5) en todos los rasgos de RASGOS II.</div>';
+
+  $('opportunitiesGrid').innerHTML=
+    '<div class="space-y-2.5"><h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Prioridades para el alumno</h4>'+stuHtml+'</div>'+
+    '<div class="space-y-2.5"><h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Diagnóstico del grupo '+esc(g.label)+' (RASGOS II)</h4>'+grpHtml+'</div>';
+}
+
+async function exportGroupCsv(){
+  if(!currentGroup)return;
+  try{await syncLiveGroup(currentGroup,true);}catch(_){}
+  const g=currentGroup;
+  const code=g.code.toUpperCase();
+  const snap=liveCache[code];
+  const nowStr=new Date().toLocaleString('es-MX');
+  const rows=['"Grupo","No. Lista","Nombre","Trabajos (10%)","Practicas (10%)","Cuestionarios (30%)","Proyectos (30%)","Cuadernillo (20%)","Promedio al Corte (RASGOS II)","Promedio Oficial","Nivel","Observaciones","Asistencia %","Corte"'];
+  const list=[...g.roster].sort((a,b)=>(a.n||0)-(b.n||0));
+  for(const s of list){
+    const rec=(snap?.studentsByN?.[s.n])||(teacherVault?.[code+'|'+s.n]);
+    if(!rec)continue;
+    const t=rec.traits||{};
+    const p=Number(rec.attendance?.present||0),a=Number(rec.attendance?.absent||0),tot=p+a;
+    const attPct=tot?Math.round(p/tot*100)+'%':'—';
+    rows.push([
+      '"'+g.label+'"',
+      s.n,
+      '"'+String(rec.name||s.name).replace(/"/g,'""')+'"',
+      t.trabajos??'',
+      t.practicas??'',
+      t.cuestionarios??'',
+      t.proyectos??'',
+      t.cuadernillo??'',
+      rec.average!=null?Number(rec.average).toFixed(2):'',
+      rec.finalGrade??'',
+      '"'+(rec.level||'')+'"',
+      '"'+(rec.status||'')+'"',
+      '"'+attPct+'"',
+      '"'+nowStr+'"'
+    ].join(','));
+  }
+  const blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Concentrado_Calificaciones_'+code+'.csv';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
 }
 
 function renderDetails(g,r){
@@ -1589,8 +1740,13 @@ function renderPrintSheet(){
     ? '<table class="ps-table"><thead><tr><th>Actividad / Criterio</th><th class="num">Resultado</th></tr></thead><tbody>'+extraItems.slice(0,8).map(x=>'<tr><td>'+esc(x[0])+'</td><td class="num">'+esc(x[1])+'</td></tr>').join('')+'</tbody></table>'
     : '<p style="font-size:9px;color:#475569;margin:0;">Este grupo reporta calificaciones consolidadas por rasgo oficial. Consulta la sección de Misiones en el portal para verificar tus entregas semanales.</p>';
 
+  const {personal:printOpps}=getOpportunityTips(g,r);
+  const printOppsHtml=printOpps.length
+    ? '<div style="margin-top:5px;padding-top:4px;border-top:1px dashed #CBD5E1;"><strong style="font-size:8.5px;color:#92400E;">Áreas de oportunidad (RASGOS II):</strong><ul style="margin:2px 0 0 12px;padding:0;font-size:8.2px;color:#334155;">'+printOpps.slice(0,2).map(o=>'<li><strong>'+esc(o.label)+' ('+o.own.toFixed(1)+'):</strong> '+esc(o.tip)+'</li>').join('')+'</ul></div>'
+    : '<div style="margin-top:5px;padding-top:4px;border-top:1px dashed #CBD5E1;font-size:8.2px;color:#065F46;"><strong>Desempeño sobresaliente:</strong> Todos los rasgos evaluados en RASGOS II ≥ 8.5.</div>';
+
   const compRows=[
-    ['Promedio registrado',r.average],
+    ['Promedio al corte (RASGOS II)',r.average!=null?Number(r.average).toFixed(2):null],
     ['Calificación oficial',r.finalGrade],
     ['Promedio redondeado',r.rounded],
     ['Nivel / Estado',r.level||r.status],
@@ -1658,6 +1814,7 @@ function renderPrintSheet(){
         '<div class="ps-card-title">Detalle y Registro Complementario <span>Corte al '+esc(fecha)+'</span></div>'+
         extraHtml+
         (compRows.length?'<table class="ps-table" style="margin-top:5px;"><tbody>'+compRows.map(x=>'<tr><td>'+esc(x[0])+'</td><td class="num">'+esc(x[1])+'</td></tr>').join('')+'</tbody></table>':'')+
+        printOppsHtml+
       '</div>'+
     '</div>'+
 
