@@ -118,6 +118,41 @@ function auditarConexionesYFormulas() {
 }
 
 /**
+ * Repara los errores #REF! detectados en el libro de 1B (TRIM II!AI1 y Prácticas II!A4)
+ * y vuelve a ejecutar la auditoría completa para confirmar 0 errores.
+ */
+function repararErrores1B() {
+  var ss1B = SpreadsheetApp.openById(BOOKS['1B'].evalId);
+  var cambios = [];
+
+  var trim = ss1B.getSheetByName('TRIM II');
+  if (trim) {
+    var ai1 = trim.getRange('AI1');
+    var vAi1 = String(ai1.getDisplayValue() || '').trim();
+    var fAi1 = ai1.getFormula();
+    if (/^#REF!/i.test(vAi1) || (fAi1 && fAi1.indexOf('#REF!') !== -1)) {
+      cambios.push('TRIM II!AI1 limpiado (antes valor="' + vAi1 + '", fórmula="' + fAi1 + '")');
+      ai1.clearContent();
+    }
+  }
+
+  var pract = ss1B.getSheetByName('Prácticas II');
+  if (pract) {
+    var a4 = pract.getRange('A4');
+    var vA4 = String(a4.getDisplayValue() || '').trim();
+    var fA4 = a4.getFormula();
+    if (/^#REF!/i.test(vA4) || (fA4 && fA4.indexOf('#REF!') !== -1)) {
+      cambios.push('Prácticas II!A4 limpiado (antes valor="' + vA4 + '", fórmula="' + fA4 + '")');
+      a4.clearContent();
+    }
+  }
+
+  SpreadsheetApp.flush();
+  Logger.log(cambios.length ? 'REPARACIONES EN 1B:\n' + cambios.join('\n') : 'Sin #REF! pendientes en TRIM II!AI1 ni Prácticas II!A4.');
+  return auditarConexionesYFormulas();
+}
+
+/**
  * Endpoint Web App (GET) que devuelve los datos en tiempo real de RASGOS II y ASIST II.
  */
 function doGet(e) {
@@ -202,13 +237,20 @@ function doPost(e) {
       }
     });
 
+    var unifiedResults = saved.map(function(s) {
+      return { ok: true, n: s.n, name: s.name, fileName: s.fileName, fileId: s.fileId, url: s.url };
+    }).concat(errors.map(function(er) {
+      return { ok: false, name: er.name, error: er.error };
+    }));
+
     return ContentService
       .createTextOutput(JSON.stringify({
         ok: true,
         group: groupCode,
         savedCount: saved.length,
         saved: saved,
-        errors: errors
+        errors: errors,
+        results: unifiedResults
       }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
