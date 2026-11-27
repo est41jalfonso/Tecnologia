@@ -266,12 +266,12 @@
         color: #0F172A !important;
         margin: 0 !important;
         padding: 0 !important;
-        font-family: Verdana, Tahoma, 'DejaVu Sans', sans-serif !important;
+        font-family: Georgia, 'Times New Roman', Times, serif !important;
         font-synthesis: none !important;
         font-variant-ligatures: none !important;
         font-feature-settings: "liga" 0, "clig" 0 !important;
-        letter-spacing: 0.03em !important;
-        font-size: 9.5px !important;
+        letter-spacing: 0.01em !important;
+        font-size: 9.8px !important;
         line-height: 1.3 !important;
       }
       header, aside, nav, #main-content, .skip-link,
@@ -279,11 +279,12 @@
         display: none !important;
       }
       #printSheet, #printSheet * {
-        font-family: Verdana, Tahoma, 'DejaVu Sans', sans-serif !important;
+        box-sizing: border-box !important;
+        font-family: Georgia, 'Times New Roman', Times, serif !important;
         font-synthesis: none !important;
         font-variant-ligatures: none !important;
         font-feature-settings: "liga" 0, "clig" 0 !important;
-        letter-spacing: 0.03em !important;
+        letter-spacing: 0.01em !important;
       }
       #printSheet {
         display: block !important;
@@ -387,7 +388,7 @@
       }
       .ps-gbox small { display: block; font-size: 7.5px; font-weight: 700; color: #64748B; text-transform: uppercase; }
       .ps-gbox strong { display: block; font-size: 11px; font-weight: 700; color: #0F172A; }
-      .ps-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+      .ps-table { width: 100%; border-collapse: collapse; font-size: 9px; table-layout: auto; }
       .ps-table th {
         text-align: left;
         background: #F1F5F9;
@@ -395,10 +396,10 @@
         font-size: 8px;
         font-weight: 700;
         text-transform: uppercase;
-        padding: 3px 5px;
+        padding: 3px 4px;
         border-bottom: 1px solid #CBD5E1;
       }
-      .ps-table td { padding: 3px 5px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
+      .ps-table td { padding: 3px 4px; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
       .ps-table .num { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
       .ps-bar-track { position: relative; height: 8px; background: #E2E8F0; border-radius: 999px; width: 100%; }
       .ps-bar-fill { height: 100%; background: #0284C7; border-radius: 999px; }
@@ -1680,7 +1681,7 @@ function buildPrintAttendanceSvg(g,r){
     const mp=Number(s.meanPresent||0),ma=Number(s.meanAbsent||0),tot=mp+ma;
     return tot>0?Math.round(mp/tot*100):null;
   });
-  const W=760,H=132,L=36,R=30,T=18,B=28,plotW=W-L-R,plotH=H-T-B;
+  const W=760,H=136,L=36,R=30,T=22,B=28,plotW=W-L-R,plotH=H-T-B;
   const x=i=>L+(weeks.length<2?plotW/2:i*plotW/(weeks.length-1));
   const y=v=>T+plotH-(v/100)*plotH;
 
@@ -1705,7 +1706,7 @@ function buildPrintAttendanceSvg(g,r){
       for(const p of seg){
         svg+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#FFFFFF" stroke="'+color+'" stroke-width="2"/>';
         if(showLabels){
-          const ly=p[1]<T+14?p[1]+11:p[1]-6;
+          const ly=p[1]-9;
           svg+='<text x="'+p[0]+'" y="'+ly+'" text-anchor="middle" font-size="8" font-weight="700" fill="'+color+'">'+p[2]+'%</text>';
         }
       }
