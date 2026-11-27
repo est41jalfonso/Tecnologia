@@ -968,6 +968,28 @@ const OFFICIAL_ASIST_WEEKS=['16 - 20 nov','23 - 27 nov','30 nov - 04 dic','07 - 
 function applyLiveSnapshot(g,snap){
   const activeStudents=Object.values(snap.studentsByN);
   if(!activeStudents.length)return;
+
+  // Solo considerar Cuestionarios si se ha aplicado al grupo (actualmente 2° B, o en cuanto exista algún valor distinto de 5)
+  const quizVals=activeStudents.map(s=>s.traits.cuestionarios).filter(v=>v!=null);
+  const quizApplied=(g.code.toUpperCase()==='2B')||quizVals.some(v=>v!==5);
+  const keys=['trabajos','practicas','cuestionarios','proyectos','cuadernillo'];
+
+  if(!quizApplied){
+    for(const stu of activeStudents){
+      stu.traits.cuestionarios=null;
+      let sum=0,wSum=0;
+      keys.forEach((k,idx)=>{
+        const v=stu.traits[k];
+        const w=snap.weights[idx]??0;
+        if(v!=null&&w>0){sum+=v*w;wSum+=w;}
+      });
+      if(wSum>0){
+        stu.average=Math.round((sum/wSum)*100)/100;
+        stu.finalGrade=Math.round(stu.average);
+      }
+    }
+  }
+
   const avgs=activeStudents.map(s=>s.average).filter(v=>v!=null);
   if(avgs.length){
     const sorted=[...avgs].sort((a,b)=>a-b);
@@ -990,7 +1012,6 @@ function applyLiveSnapshot(g,snap){
   g.metrics.absent=snap.groupAbsent;
   g.metrics.attendanceHasPresence=(snap.groupPresent+snap.groupAbsent)>0;
 
-  const keys=['trabajos','practicas','cuestionarios','proyectos','cuadernillo'];
   keys.forEach((k,idx)=>{
     const meta=g.traits.find(t=>t.key===k);
     if(meta){
@@ -1355,7 +1376,7 @@ function renderDistribution(g,studentAvg){
 function renderTraitCompare(g,r){
   $('traitCompare').innerHTML=g.traits.map(t=>{
     const own=selectedTrait(r,t.key,g),mean=t.average;
-    return'<div class="chart-row"><div><div class="label">'+esc(t.label)+'</div><div class="weight">'+t.weight+'% · '+(t.available?(t.captured+' notas comparables'):'Pendiente de captura')+'</div></div><div><div class="track"><div class="fill" style="width:'+Math.max(0,Math.min(100,(own??0)*10))+'%"></div>'+(mean==null?'':'<span class="avg-marker" title="Promedio grupal '+mean.toFixed(1)+'" style="left:'+Math.max(0,Math.min(100,mean*10))+'%"></span>')+'</div><div class="bench-note">Alumno: <strong>'+(own==null?'—':own.toFixed(1))+'</strong> · Grupo: '+(mean==null?'—':mean.toFixed(1))+'</div></div><b class="text-right font-display text-base text-slate-900">'+(own==null?'—':own.toFixed(1))+'</b></div>';
+    return'<div class="chart-row"><div><div class="label">'+esc(t.label)+'</div><div class="weight">'+t.weight+'% · '+(t.available?(t.captured+' notas comparables'):'Pendiente de captura')+'</div></div><div><div class="track"><div class="fill" style="width:'+Math.max(0,Math.min(100,(own??0)*10))+'%"></div>'+(mean==null?'':'<span class="avg-marker" title="Promedio grupal '+mean.toFixed(1)+'" style="left:'+Math.max(0,Math.min(100,mean*10))+'%"></span>')+'</div><div class="bench-note">Alumno: <strong>'+(own==null?'Pendiente':own.toFixed(1))+'</strong> · Grupo: '+(mean==null?'Pendiente':mean.toFixed(1))+'</div></div><b class="text-right font-display text-sm '+(own==null?'text-amber-700':'text-slate-900 text-base')+'">'+(own==null?'Pendiente':own.toFixed(1))+'</b></div>';
   }).join('');
 }
 
