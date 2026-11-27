@@ -626,6 +626,52 @@
           </div>
         </div>
 
+        <!-- Sección Exclusiva Docente: Generar y Guardar Informes PDF en Google Drive -->
+        <div id="teacherDriveSection" class="hidden bg-white rounded-2xl border-2 border-sky-300 shadow-sm p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+              </div>
+              <div>
+                <h2 class="font-display font-extrabold text-base text-slate-900">Generar y Guardar Informes Individuales en Google Drive</h2>
+                <p class="text-xs text-slate-600">Guarda el reporte PDF actualizado de cada estudiante dentro de su carpeta <code class="px-1 py-0.5 rounded bg-slate-100 font-mono text-[11px]">reportes de calificación</code> con nombre, fecha y hora.</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-sky-50 text-sky-900 border border-sky-200 text-xs font-bold">Exclusivo Docente</span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+            <div class="lg:col-span-6">
+              <label for="driveScriptUrl" class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">URL de Web App (Apps Script de Google Drive)</label>
+              <input id="driveScriptUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-mono text-slate-900 focus:border-sky-600 focus:bg-white focus:ring-0"/>
+            </div>
+            <div class="lg:col-span-3">
+              <button id="genSingleReportBtn" type="button" class="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-sm transition-colors cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">person_add</span>
+                <span>Guardar Alumno Actual</span>
+              </button>
+            </div>
+            <div class="lg:col-span-3">
+              <button id="genGroupReportsBtn" type="button" class="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">drive_folder_upload</span>
+                <span>Generar Todo el Grupo en Drive</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="driveProgressBox" class="hidden rounded-xl bg-slate-50 border border-slate-200 p-3.5 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-800">
+              <span id="driveProgressText">Preparando informes…</span>
+              <span id="driveProgressCount">0 / 0</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+              <div id="driveProgressBar" class="h-full bg-emerald-600 rounded-full transition-all duration-200" style="width:0%"></div>
+            </div>
+            <div id="driveProgressLog" class="text-[11px] text-slate-600 max-h-24 overflow-y-auto space-y-0.5"></div>
+          </div>
+        </div>
+
         <!-- Executive Access Control Bar -->
         <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md p-5 sm:p-6 space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
@@ -1172,17 +1218,25 @@ function isValidTeacherUser(u){
   return ['jose alfonso ruvalcaba andrade','mtro jose alfonso ruvalcaba andrade','alfonso ruvalcaba','jalfonso','est41jalfonso','alfonso'].includes(n);
 }
 
+const DRIVE_SCRIPT_KEY='est41_drive_script_url_v1';
+
 function setTeacherModeUI(active){
   if(active){
     $('teacherLoginPanel').classList.add('hidden');
     $('teacherActiveBar').classList.remove('hidden');
+    $('teacherDriveSection')?.classList.remove('hidden');
     $('teacherAccessBtn').classList.add('hidden');
     $('exportGroupCsvBtn')?.classList.remove('hidden');
     $('password').value='';
     $('password').placeholder='Modo Docente activo';
     $('password').disabled=true;
+    try{
+      const savedUrl=localStorage.getItem(DRIVE_SCRIPT_KEY);
+      if(savedUrl&&$('driveScriptUrl'))$('driveScriptUrl').value=savedUrl;
+    }catch(_){}
   }else{
     $('teacherActiveBar').classList.add('hidden');
+    $('teacherDriveSection')?.classList.add('hidden');
     $('teacherAccessBtn').classList.remove('hidden');
     $('exportGroupCsvBtn')?.classList.add('hidden');
     $('password').placeholder='Ej. ARP1A01';
@@ -1324,6 +1378,11 @@ function init(){
     $('refreshLiveBtn').disabled=false;
   });
   $('exportGroupCsvBtn').addEventListener('click',exportGroupCsv);
+  $('driveScriptUrl').addEventListener('change',()=>{
+    try{localStorage.setItem(DRIVE_SCRIPT_KEY,$('driveScriptUrl').value.trim());}catch(_){}
+  });
+  $('genSingleReportBtn').addEventListener('click',()=>generateReportsToDrive(false));
+  $('genGroupReportsBtn').addEventListener('click',()=>generateReportsToDrive(true));
   $('printBtn').addEventListener('click',printReport);
   window.addEventListener('beforeprint',()=>{
     if(currentGroup&&currentRecord)renderPrintSheet();
@@ -1726,9 +1785,8 @@ function buildPrintAttendanceSvg(g,r){
     '</div>';
 }
 
-function renderPrintSheet(){
-  if(!currentGroup||!currentRecord||!currentStudent)return;
-  const g=currentGroup,r=currentRecord,m=g.metrics,avg=studentComposite(r,g),standing=classify(avg,g);
+function renderPrintSheetFor(g,r,stu){
+  const m=g.metrics,avg=studentComposite(r,g),standing=classify(avg,g);
   const {fecha,hora}=formatPrintTimestamp(new Date());
   const official=r.finalGrade??r.average??r.rounded??null;
   const officialLabel=r.finalGrade!=null?'Calificación oficial':'Promedio registrado';
@@ -1800,7 +1858,7 @@ function renderPrintSheet(){
     ['Cuadernillo',r.libro]
   ].filter(x=>x[1]!=null);
 
-  $('printSheet').innerHTML=
+  return ''+
     '<div class="ps-header">'+
       '<div>'+
         '<div class="ps-sub">ESCUELA SECUNDARIA TÉCNICA N° 41 · TECNOLOGÍA CON ÉNFASIS EN INFORMÁTICA</div>'+
@@ -1816,8 +1874,8 @@ function renderPrintSheet(){
 
     '<div class="ps-student-bar">'+
       '<div>'+
-        '<div class="ps-student-name">'+esc(currentStudent.name)+'</div>'+
-        '<div class="ps-student-meta">Grupo: '+esc(g.label)+' · No. de lista: '+currentStudent.n+' · Turno: '+esc(g.shift)+'</div>'+
+        '<div class="ps-student-name">'+esc(stu.name)+'</div>'+
+        '<div class="ps-student-meta">Grupo: '+esc(g.label)+' · No. de lista: '+stu.n+' · Turno: '+esc(g.shift)+'</div>'+
       '</div>'+
       '<span class="ps-badge '+standing.cls+'">'+esc(standing.label)+'</span>'+
     '</div>'+
@@ -1871,9 +1929,174 @@ function renderPrintSheet(){
     '</div>';
 }
 
+function renderPrintSheet(){
+  const g=currentGroup,r=currentRecord,stu=currentStudent;
+  if(!g||!r||!stu)return;
+  $('printSheet').innerHTML=renderPrintSheetFor(g,r,stu);
+}
+
 function printReport(){
   renderPrintSheet();
   window.print();
+}
+
+function buildStandalonePrintHtml(g,r,stu){
+  const body=renderPrintSheetFor(g,r,stu);
+  return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+
+    '<style>'+
+      '@page{size:letter portrait;margin:7mm 9mm;}'+
+      '*{box-sizing:border-box;font-family:Georgia,"Times New Roman",Times,serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}'+
+      'html,body{background:#FFFFFF;color:#0F172A;margin:0;padding:0;font-size:9.8px;line-height:1.3;}'+
+      '.ps-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;border-bottom:2px solid #0369A1;padding-bottom:6px;margin-bottom:6px;}'+
+      '.ps-title{font-size:15px;font-weight:700;color:#0F172A;margin:1px 0;}'+
+      '.ps-sub{font-size:9.5px;color:#334155;font-weight:600;}'+
+      '.ps-stamp{text-align:right;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:7px;padding:4px 8px;font-size:9px;color:#0C4A6E;flex-shrink:0;}'+
+      '.ps-stamp strong{display:block;font-size:9.5px;font-weight:700;color:#0369A1;}'+
+      '.ps-student-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0F172A;color:#FFFFFF;border-radius:8px;padding:6px 10px;margin-bottom:6px;}'+
+      '.ps-student-name{font-size:13px;font-weight:700;}'+
+      '.ps-student-meta{font-size:9px;color:#CBD5E1;margin-top:1px;}'+
+      '.ps-badge{padding:3px 9px;border-radius:999px;font-size:9px;font-weight:700;white-space:nowrap;}'+
+      '.ps-badge.above{background:#D1FAE5;color:#065F46;}'+
+      '.ps-badge.typical{background:#DBEAFE;color:#1E40AF;}'+
+      '.ps-badge.below{background:#FEF3C7;color:#92400E;}'+
+      '.ps-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px;}'+
+      '.ps-kpi{border:1px solid #CBD5E1;border-radius:7px;padding:5px 7px;background:#F8FAFC;}'+
+      '.ps-kpi small{display:block;font-size:8px;font-weight:700;text-transform:uppercase;color:#475569;}'+
+      '.ps-kpi strong{display:block;font-size:14px;font-weight:700;color:#0369A1;margin:1px 0;}'+
+      '.ps-kpi span{display:block;font-size:8px;color:#64748B;}'+
+      '.ps-card{border:1px solid #CBD5E1;border-radius:8px;padding:5px 8px;margin-bottom:6px;background:#FFFFFF;page-break-inside:avoid;}'+
+      '.ps-card-title{font-size:10.5px;font-weight:700;color:#0F172A;border-bottom:1px solid #E2E8F0;padding-bottom:3px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;}'+
+      '.ps-card-title span{font-size:8.5px;font-weight:600;color:#64748B;}'+
+      '.ps-group-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:2px;}'+
+      '.ps-gbox{border:1px solid #E2E8F0;border-radius:6px;padding:3px 5px;text-align:center;background:#FFFFFF;}'+
+      '.ps-gbox small{display:block;font-size:7.5px;font-weight:700;color:#64748B;text-transform:uppercase;}'+
+      '.ps-gbox strong{display:block;font-size:11px;font-weight:700;color:#0F172A;}'+
+      '.ps-table{width:100%;border-collapse:collapse;font-size:9px;table-layout:auto;}'+
+      '.ps-table th{text-align:left;background:#F1F5F9;color:#334155;font-size:8px;font-weight:700;text-transform:uppercase;padding:3px 4px;border-bottom:1px solid #CBD5E1;}'+
+      '.ps-table td{padding:3px 4px;border-bottom:1px solid #F1F5F9;vertical-align:middle;}'+
+      '.ps-table .num{text-align:right;font-weight:700;}'+
+      '.ps-bar-track{position:relative;height:8px;background:#E2E8F0;border-radius:999px;width:100%;}'+
+      '.ps-bar-fill{height:100%;background:#0284C7;border-radius:999px;}'+
+      '.ps-bar-avg{position:absolute;top:-2px;width:2px;height:12px;background:#0F172A;}'+
+      '.ps-two-col{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;}'+
+      '.ps-bins{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;align-items:end;height:54px;padding:4px 5px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;}'+
+      '.ps-bin{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:1px;}'+
+      '.ps-bin b{font-size:8px;font-weight:700;color:#334155;}'+
+      '.ps-binbar{width:70%;background:#CBD5E1;border-radius:3px 3px 0 0;}'+
+      '.ps-bin.is-student .ps-binbar{background:#0284C7;}'+
+      '.ps-bin.is-student b,.ps-bin.is-student span{color:#0369A1;font-weight:700;}'+
+      '.ps-bin span{font-size:7.5px;color:#475569;}'+
+      '.ps-att-svg{width:100%;height:auto;display:block;}'+
+      '.ps-att-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:8px;color:#475569;margin-top:2px;}'+
+      '.ps-att-key{display:inline-flex;align-items:center;gap:4px;font-weight:600;}'+
+      '.ps-att-swatch{display:inline-block;width:12px;height:3px;border-radius:2px;}'+
+      '.ps-footer{border-top:1px dashed #94A3B8;padding-top:5px;margin-top:4px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;font-size:8.5px;color:#475569;}'+
+      '.ps-sign{border-top:1px solid #334155;width:185px;text-align:center;padding-top:3px;font-size:8.2px;color:#0F172A;font-weight:600;}'+
+    '</style></head><body><div id="printSheet">'+body+'</div></body></html>';
+}
+
+function formatFileTimestamp(d){
+  const pad=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+'-'+pad(d.getMinutes());
+}
+
+async function generateReportsToDrive(wholeGroup){
+  if(!teacherVault)return;
+  const g=currentGroup;
+  if(!g)return;
+  const box=$('driveProgressBox');
+  const txt=$('driveProgressText');
+  const cnt=$('driveProgressCount');
+  const bar=$('driveProgressBar');
+  const logEl=$('driveProgressLog');
+  const btnSingle=$('genSingleReportBtn');
+  const btnGroup=$('genGroupReportsBtn');
+
+  const urlInput=$('driveScriptUrl');
+  const scriptUrl=(urlInput?urlInput.value:'').trim();
+  if(!scriptUrl||!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(scriptUrl)){
+    box.style.display='block';
+    txt.textContent='Falta la URL válida de Google Apps Script (/exec).';
+    cnt.textContent='Error';
+    bar.style.width='0%';
+    logEl.innerHTML='<span style="color:#B91C1C;font-weight:700;">Implementa <code>apps_script_calificaciones_est41.gs</code> como Aplicación Web y pega su URL terminada en <code>/exec</code> en el campo superior.</span>';
+    return;
+  }
+  try{localStorage.setItem(DRIVE_SCRIPT_KEY,scriptUrl);}catch(_){}
+
+  const targets=wholeGroup
+    ? g.roster.slice().sort((a,b)=>a.n-b.n)
+    : (currentStudent?[currentStudent]:[]);
+  if(!targets.length){
+    box.style.display='block';
+    txt.textContent='No hay estudiante seleccionado.';
+    cnt.textContent='0 / 0';
+    return;
+  }
+
+  box.style.display='block';
+  txt.textContent='Sincronizando calificaciones en vivo desde Google Sheets...';
+  cnt.textContent='0 / '+targets.length;
+  bar.style.width='4%';
+  logEl.textContent='';
+  btnSingle.disabled=true;
+  btnGroup.disabled=true;
+
+  try{
+    await syncLiveGroup(g,true);
+    const stamp=formatFileTimestamp(new Date());
+    const items=targets.map(stu=>{
+      const rec=g.records[String(stu.n)]||{};
+      const safeName=String(stu.name||'Alumno').replace(/[\\/:*?"<>|]/g,' ').replace(/\s+/g,' ').trim();
+      return {
+        n:stu.n,
+        name:stu.name,
+        fileName:safeName+' '+stamp+'.pdf',
+        html:buildStandalonePrintHtml(g,rec,stu)
+      };
+    });
+
+    const BATCH=5;
+    let done=0,saved=0,errors=[];
+    for(let i=0;i<items.length;i+=BATCH){
+      const batch=items.slice(i,i+BATCH);
+      txt.textContent='Generando y guardando en Drive ('+g.label+')...';
+      const resp=await fetch(scriptUrl,{
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({
+          token:'poncho0312',
+          group:g.code.toUpperCase(),
+          items:batch
+        })
+      });
+      if(!resp.ok)throw new Error('HTTP '+resp.status);
+      const data=await resp.json();
+      if(!data.ok)throw new Error(data.error||'Error en Apps Script');
+      (data.results||[]).forEach(r=>{
+        if(r.ok){
+          saved++;
+          logEl.innerHTML+='<div>✅ <strong>'+esc(r.name)+'</strong> → <code>'+esc(r.fileName)+'</code></div>';
+        }else{
+          errors.push(r.name+': '+r.error);
+          logEl.innerHTML+='<div style="color:#B91C1C;">❌ <strong>'+esc(r.name)+'</strong>: '+esc(r.error)+'</div>';
+        }
+      });
+      done+=batch.length;
+      cnt.textContent=done+' / '+items.length;
+      bar.style.width=Math.round((done/items.length)*100)+'%';
+      logEl.scrollTop=logEl.scrollHeight;
+    }
+    txt.textContent=errors.length
+      ? 'Completado con '+errors.length+' aviso(s): '+saved+' PDF guardado(s) en Drive.'
+      : '¡Listo! '+saved+' informe(s) PDF guardado(s) en "reportes de calificación" en Drive.';
+  }catch(err){
+    txt.textContent='Error al conectar con Google Drive / Apps Script.';
+    logEl.innerHTML+='<div style="color:#B91C1C;font-weight:700;">Detalle: '+esc(err.message||String(err))+'</div>';
+  }finally{
+    btnSingle.disabled=false;
+    btnGroup.disabled=false;
+  }
 }
 
 init();
