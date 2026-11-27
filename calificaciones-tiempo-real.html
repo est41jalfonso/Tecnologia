@@ -1777,9 +1777,14 @@ function renderPrintSheet(){
     : '<p style="font-size:9px;color:#475569;margin:0;">Este grupo reporta calificaciones consolidadas por rasgo oficial. Consulta la sección de Misiones en el portal para verificar tus entregas semanales.</p>';
 
   const {personal:printOpps}=getOpportunityTips(g,r);
-  const printOppsHtml=printOpps.length
-    ? '<div style="margin-top:5px;padding-top:4px;border-top:1px dashed #CBD5E1;"><strong style="font-size:8.5px;color:#92400E;">Áreas de oportunidad (RASGOS II):</strong><ul style="margin:2px 0 0 12px;padding:0;font-size:8.2px;color:#334155;">'+printOpps.slice(0,2).map(o=>'<li><strong>'+esc(o.label)+' ('+o.own.toFixed(1)+'):</strong> '+esc(o.tip)+'</li>').join('')+'</ul></div>'
-    : '<div style="margin-top:5px;padding-top:4px;border-top:1px dashed #CBD5E1;font-size:8.2px;color:#065F46;"><strong>Desempeño sobresaliente:</strong> Todos los rasgos evaluados en RASGOS II ≥ 8.5.</div>';
+  const evaluatedNames=g.traits.filter(t=>t.available).map(t=>t.label+' ('+t.weight+'%)').join(', ');
+  const printOppsHtml=
+    '<div style="margin-top:5px;padding:5px 7px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;">'+
+      '<div style="font-size:8.6px;font-weight:700;color:#92400E;margin-bottom:2px;">Sugerencias para alumno y padre de familia · Rasgos evaluados al momento: '+esc(evaluatedNames||'Ninguno')+'</div>'+
+      (printOpps.length
+        ? '<ul style="margin:2px 0 0 13px;padding:0;font-size:8.1px;color:#334155;line-height:1.28;">'+printOpps.slice(0,3).map(o=>'<li><strong>'+esc(o.label)+' ('+o.own.toFixed(1)+(o.groupAvg!=null?' vs. grupo '+o.groupAvg.toFixed(1):'')+'):</strong> '+esc(o.tip)+' <em>(Puede sumar hasta +'+o.potentialPts.toFixed(2)+' pts)</em>.</li>').join('')+'</ul>'
+        : '<div style="font-size:8.1px;color:#065F46;"><strong>Desempeño sobresaliente:</strong> En los rasgos evaluados hasta el momento el alumno mantiene resultados ≥ 8.5. Se sugiere continuar entregando actividades en tiempo y prepararse para los rasgos pendientes.</div>')+
+    '</div>';
 
   const compRows=[
     ['Promedio al corte (RASGOS II)',r.average!=null?Number(r.average).toFixed(2):null],
@@ -1833,6 +1838,7 @@ function renderPrintSheet(){
     '<div class="ps-card">'+
       '<div class="ps-card-title">Comparativa de Rasgos de Evaluación (Alumno vs. Promedio del Grupo) <span>Barra azul: Alumno · Línea negra: Promedio del grupo</span></div>'+
       '<table class="ps-table"><thead><tr><th>Rasgo Evaluado</th><th class="num">Peso</th><th>Comparativa Visual</th><th class="num">Alumno</th><th class="num">Grupo</th><th class="num">Aportación</th></tr></thead><tbody>'+traitRows+'</tbody></table>'+
+      printOppsHtml+
     '</div>'+
 
     '<div class="ps-card">'+
@@ -1850,12 +1856,11 @@ function renderPrintSheet(){
         '<div class="ps-card-title">Detalle y Registro Complementario <span>Corte al '+esc(fecha)+'</span></div>'+
         extraHtml+
         (compRows.length?'<table class="ps-table" style="margin-top:5px;"><tbody>'+compRows.map(x=>'<tr><td>'+esc(x[0])+'</td><td class="num">'+esc(x[1])+'</td></tr>').join('')+'</tbody></table>':'')+
-        printOppsHtml+
       '</div>'+
     '</div>'+
 
     '<div class="ps-footer">'+
-      '<div><strong>Nota de actualización continua:</strong> Este documento refleja el avance capturado hasta el <strong>'+esc(fecha)+' a las '+esc(hora)+'</strong>. Las calificaciones y actividades evaluadas se actualizan periódicamente conforme avanza el trimestre.</div>'+
+      '<div><strong>Nota:</strong> Estos resultados son informativos y se van actualizando conforme se va avanzando en el trimestre. Válido para la fecha en el que fue consultado (<strong>'+esc(fecha)+' · '+esc(hora)+'</strong>).</div>'+
       '<div class="ps-sign">Firma de enterado (Madre, Padre o Tutor)</div>'+
     '</div>';
 }
