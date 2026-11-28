@@ -149,3 +149,31 @@ select:focus-visible {
     height: 148px;
   }
 }
+
+/* Fondo decorativo con dibujos de fracciones en colores pasteles suaves */
+.pastel-fractions-bg {
+  background-color: #F8FAFC;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg opacity='0.34'%3E%3Ccircle cx='44' cy='44' r='22' fill='%23E0F2FE' stroke='%23BAE6FD' stroke-width='2'/%3E%3Cpath d='M44 44 L44 22 A22 22 0 0 1 66 44 Z' fill='%23BAE6FD'/%3E%3Ccircle cx='168' cy='52' r='20' fill='%23DCFCE7' stroke='%23BBF7D0' stroke-width='2'/%3E%3Cpath d='M168 52 L168 32 A20 20 0 1 1 148 52 Z' fill='%23BBF7D0'/%3E%3Ccircle cx='110' cy='125' r='24' fill='%23F3E8FF' stroke='%23E9D5FF' stroke-width='2'/%3E%3Cpath d='M110 125 L110 101 A24 24 0 0 1 134 125 Z' fill='%23DDD6FE'/%3E%3Ccircle cx='48' cy='176' r='18' fill='%23FEF3C7' stroke='%23FDE68A' stroke-width='2'/%3E%3Cpath d='M48 176 L48 158 A18 18 0 0 1 66 176 Z' fill='%23FDE68A'/%3E%3Ctext x='172' y='178' font-family='sans-serif' font-weight='bold' font-size='20' fill='%23CBD5E1'%3E1/2%3C/text%3E%3Ctext x='98' y='44' font-family='sans-serif' font-weight='bold' font-size='16' fill='%23CBD5E1'%3E3/4%3C/text%3E%3C/g%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+.mission-option-card {
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+
+.mission-option-card:not(:disabled):hover {
+  transform: translateY(-3px);
+}
+
+.mission-option-card svg {
+  width: 132px;
+  height: 132px;
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .mission-option-card svg {
+    width: 156px;
+    height: 156px;
+  }
+}

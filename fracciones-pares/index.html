@@ -48,7 +48,10 @@
 
       <nav aria-label="Navegación del videojuego" class="flex flex-wrap items-center gap-1.5">
         <button data-tab="play" class="nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer">
-          JUGAR PARES
+          SECCIÓN DE PRUEBA (MEMORAMA)
+        </button>
+        <button data-tab="missions" class="nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer">
+          MISIONES CONTRARRELOJ
         </button>
         <button data-tab="catalog" class="nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer">
           CATÁLOGO (345 FRACCIONES)
@@ -138,6 +141,94 @@
 
       <!-- TABLERO -->
       <div id="boardGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- TAB: MISIONES CONTRARRELOJ (20 PREGUNTAS POR MISIÓN) -->
+    <section id="tabMissions" class="hidden space-y-5">
+      <!-- SELECTOR DE MISIÓN -->
+      <div id="missionSelectPanel" class="bg-white/95 rounded-3xl border-2 border-purple-200 shadow-sm p-5 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 text-xs font-extrabold uppercase tracking-wider mb-1">
+              <span class="material-symbols-outlined text-[15px]">timer</span>
+              Retos Contrarreloj • 20 Preguntas por Misión
+            </span>
+            <h1 class="font-display font-extrabold text-2xl text-slate-900">Misiones de Fracciones</h1>
+            <p class="text-sm text-slate-600 font-medium">Elige una misión. Responde antes de que termine el reloj: acertar a la primera suma calificación positiva completa; si ocupas más intentos, la calificación baja.</p>
+          </div>
+        </div>
+        <div id="missionsCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5"></div>
+      </div>
+
+      <!-- ÁREA DE TRABAJO DE LA MISIÓN ACTIVA (CON FONDO PASTEL DECORATIVO) -->
+      <div id="missionPlayArea" class="hidden pastel-fractions-bg rounded-3xl border-2 border-sky-200 shadow-md p-5 sm:p-8 space-y-6">
+        <!-- HUD DE MISIÓN -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-white/95 rounded-2xl border-2 border-purple-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-purple-800">Misión / Pregunta</div>
+            <div id="mStatProgress" class="font-display font-extrabold text-xl text-slate-900 mt-0.5">1 / 20</div>
+          </div>
+          <div class="bg-white/95 rounded-2xl border-2 border-amber-300 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">Reloj Contrarreloj</div>
+            <div id="mStatClock" class="font-display font-extrabold text-xl text-amber-700 mt-0.5">20 s</div>
+          </div>
+          <div class="bg-white/95 rounded-2xl border-2 border-emerald-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">A la Primera</div>
+            <div id="mStatFirstTry" class="font-display font-extrabold text-xl text-emerald-700 mt-0.5">0</div>
+          </div>
+          <div class="bg-white/95 rounded-2xl border-2 border-sky-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-sky-800">Calificación</div>
+            <div id="mStatGrade" class="font-display font-extrabold text-xl text-sky-700 mt-0.5">0.0 / 10</div>
+          </div>
+        </div>
+
+        <!-- BARRA DE TIEMPO -->
+        <div class="w-full h-3 bg-white/90 rounded-full border border-slate-200 overflow-hidden">
+          <div id="mTimeBar" class="h-full bg-emerald-500 transition-all duration-300" style="width:100%"></div>
+        </div>
+
+        <!-- PREGUNTA Y FRACCIÓN OBJETIVO -->
+        <div class="bg-white/95 rounded-3xl border-2 border-sky-200 p-5 sm:p-7 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-center md:text-left">
+            <span id="mMissionBadge" class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-900 text-xs font-extrabold uppercase tracking-wider">Misión 1</span>
+            <h2 id="mQuestionText" class="font-display font-extrabold text-xl sm:text-2xl text-slate-900 leading-snug"></h2>
+            <p id="mHintSub" class="text-sm text-slate-600 font-medium">Selecciona uno de los 3 pasteles ilustrados antes de que el reloj llegue a 0.</p>
+          </div>
+          <div class="shrink-0 bg-sky-50 border-2 border-sky-300 rounded-2xl px-7 py-4 flex flex-col items-center">
+            <span class="text-[10px] font-extrabold uppercase tracking-widest text-sky-800 mb-1">Fracción</span>
+            <div id="mTargetFraction" class="frac-display"></div>
+          </div>
+        </div>
+
+        <!-- 3 OPCIONES ILUSTRADAS -->
+        <div id="mOptionsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+
+        <!-- FEEDBACK DE PREGUNTA -->
+        <div id="mFeedbackBox" class="hidden rounded-2xl px-4 py-3 text-sm font-bold flex items-center justify-between gap-3"></div>
+      </div>
+
+      <!-- RESULTADO FINAL DE LA MISIÓN -->
+      <div id="missionResultBox" class="hidden bg-white rounded-3xl border-2 border-emerald-300 shadow-lg p-6 sm:p-8 text-center space-y-5 max-w-xl mx-auto">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-[40px]">military_tech</span>
+        </div>
+        <div class="space-y-1.5">
+          <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">Misión Finalizada (20 Preguntas)</span>
+          <h2 id="mResultTitle" class="font-display font-extrabold text-3xl text-slate-900">Calificación: 10.0 / 10</h2>
+          <p id="mResultDetail" class="text-sm text-slate-600 font-medium"></p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <button id="mNextMissionBtn" type="button" class="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm shadow-md cursor-pointer">
+            Siguiente Misión →
+          </button>
+          <button id="mRetryMissionBtn" type="button" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-md cursor-pointer">
+            Repetir Misión
+          </button>
+          <button id="mBackListBtn" type="button" class="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm cursor-pointer">
+            Ver todas las misiones
+          </button>
+        </div>
+      </div>
     </section>
 
     <!-- TAB: CATÁLOGO -->
