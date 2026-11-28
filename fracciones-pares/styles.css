@@ -28,12 +28,12 @@ select:focus-visible {
 
 .pair-card {
   perspective: 1000px;
-  min-height: 164px;
+  min-height: 215px;
 }
 
 @media (min-width: 640px) {
   .pair-card {
-    min-height: 184px;
+    min-height: 245px;
   }
 }
 
@@ -62,7 +62,7 @@ select:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
+  padding: 0.5rem;
   user-select: none;
 }
 
@@ -138,14 +138,14 @@ select:focus-visible {
 }
 
 .svg-wrap svg {
-  width: 92px;
-  height: 92px;
+  width: 146px;
+  height: 146px;
   display: block;
 }
 
 @media (min-width: 640px) {
   .svg-wrap svg {
-    width: 108px;
-    height: 108px;
+    width: 172px;
+    height: 172px;
   }
 }

@@ -3,7 +3,7 @@
   const PALETTE = ['#0284C7', '#7C3AED', '#059669', '#D97706'];
 
   function renderCircleSvg(num, den, color) {
-    const cx = 60, cy = 60, r = 46;
+    const cx = 60, cy = 60, r = 55;
     let slices = '';
     for (let i = 0; i < den; i++) {
       const a0 = (-90 + (360 * i) / den) * (Math.PI / 180);
@@ -14,25 +14,25 @@
       const y1 = (cy + r * Math.sin(a1)).toFixed(2);
       const largeArc = 360 / den > 180 ? 1 : 0;
       const fill = i < num ? color : '#FFFFFF';
-      slices += `<path d="M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${largeArc} 1 ${x1} ${y1} Z" fill="${fill}" stroke="#1E293B" stroke-width="2.2" stroke-linejoin="round"/>`;
+      slices += `<path d="M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${largeArc} 1 ${x1} ${y1} Z" fill="${fill}" stroke="#0F172A" stroke-width="2.4" stroke-linejoin="round"/>`;
     }
     return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-      <circle cx="60" cy="60" r="50" fill="#F8FAFC"/>
+      <circle cx="60" cy="60" r="57" fill="#F8FAFC"/>
       ${slices}
     </svg>`;
   }
 
   function renderBarSvg(num, den, color) {
-    const xStart = 10, yStart = 36, totalW = 100, h = 48;
+    const xStart = 4, yStart = 20, totalW = 112, h = 80;
     const segW = totalW / den;
     let rects = '';
     for (let i = 0; i < den; i++) {
       const x = (xStart + i * segW).toFixed(2);
       const fill = i < num ? color : '#FFFFFF';
-      rects += `<rect x="${x}" y="${yStart}" width="${segW.toFixed(2)}" height="${h}" fill="${fill}" stroke="#1E293B" stroke-width="${den > 16 ? 1.2 : 2}"/>`;
+      rects += `<rect x="${x}" y="${yStart}" width="${segW.toFixed(2)}" height="${h}" fill="${fill}" stroke="#0F172A" stroke-width="${den > 16 ? 1.5 : 2.4}"/>`;
     }
     return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-      <rect x="4" y="28" width="112" height="64" rx="10" fill="#F8FAFC"/>
+      <rect x="2" y="16" width="116" height="88" rx="8" fill="#F8FAFC"/>
       ${rects}
     </svg>`;
   }
@@ -51,19 +51,19 @@
     const dims = getGridDims(den);
     if (!dims) return renderBarSvg(num, den, color);
     const [rows, cols] = dims;
-    const pad = 14, size = 92;
+    const pad = 5, size = 110;
     const cw = size / cols, ch = size / rows;
     let cells = '';
     let idx = 0;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         const fill = idx < num ? color : '#FFFFFF';
-        cells += `<rect x="${(pad + c * cw).toFixed(2)}" y="${(pad + r * ch).toFixed(2)}" width="${cw.toFixed(2)}" height="${ch.toFixed(2)}" fill="${fill}" stroke="#1E293B" stroke-width="${den >= 36 ? 1 : 1.6}"/>`;
+        cells += `<rect x="${(pad + c * cw).toFixed(2)}" y="${(pad + r * ch).toFixed(2)}" width="${cw.toFixed(2)}" height="${ch.toFixed(2)}" fill="${fill}" stroke="#0F172A" stroke-width="${den >= 36 ? 1.2 : 2}"/>`;
         idx++;
       }
     }
     return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-      <rect x="8" y="8" width="104" height="104" rx="10" fill="#F8FAFC"/>
+      <rect x="2" y="2" width="116" height="116" rx="8" fill="#F8FAFC"/>
       ${cells}
     </svg>`;
   }
