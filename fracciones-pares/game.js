@@ -159,9 +159,10 @@
           `
           : `
             <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-              Dibujo
+              Pastel
             </span>
             <div class="svg-wrap">${card.item.svg}</div>
+            <span class="mt-1 px-3 py-0.5 rounded-full bg-slate-100 border border-slate-300 font-display font-extrabold text-base text-slate-900">${card.item.label}</span>
           `;
 
       el.innerHTML = `

@@ -4,6 +4,7 @@
 
   function renderCircleSvg(num, den, color) {
     const cx = 60, cy = 60, r = 55;
+    const sw = den <= 12 ? 2.4 : (den <= 26 ? 1.6 : (den <= 50 ? 1.1 : 0.7));
     let slices = '';
     for (let i = 0; i < den; i++) {
       const a0 = (-90 + (360 * i) / den) * (Math.PI / 180);
@@ -14,7 +15,7 @@
       const y1 = (cy + r * Math.sin(a1)).toFixed(2);
       const largeArc = 360 / den > 180 ? 1 : 0;
       const fill = i < num ? color : '#FFFFFF';
-      slices += `<path d="M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${largeArc} 1 ${x1} ${y1} Z" fill="${fill}" stroke="#0F172A" stroke-width="2.4" stroke-linejoin="round"/>`;
+      slices += `<path d="M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${largeArc} 1 ${x1} ${y1} Z" fill="${fill}" stroke="#0F172A" stroke-width="${sw}" stroke-linejoin="round"/>`;
     }
     return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
       <circle cx="60" cy="60" r="57" fill="#F8FAFC"/>
@@ -78,19 +79,11 @@
   const FRACTIONS = [];
   let colorIdx = 0;
 
-  // 1. Todas las fracciones propias con denominadores de 2 a 26 -> 325 fracciones únicas
+  // 1. Todas las fracciones propias con denominadores de 2 a 26 -> 325 fracciones únicas en formato pastel redondo
   for (let den = 2; den <= 26; den++) {
     for (let num = 1; num < den; num++) {
       const color = PALETTE[colorIdx % PALETTE.length];
       colorIdx++;
-      let svg;
-      if (den <= 10) {
-        svg = (num + den) % 2 === 0 ? renderCircleSvg(num, den, color) : renderBarSvg(num, den, color);
-      } else if (den <= 12) {
-        svg = renderCircleSvg(num, den, color);
-      } else {
-        svg = renderGridSvg(num, den, color);
-      }
       FRACTIONS.push({
         id: `f-${num}-${den}`,
         num,
@@ -98,12 +91,12 @@
         label: `${num}/${den}`,
         level: levelForDen(den),
         hint: `${num} ${num === 1 ? 'parte iluminada' : 'partes iluminadas'} de ${den} partes iguales.`,
-        svg
+        svg: renderCircleSvg(num, den, color)
       });
     }
   }
 
-  // 2. Fracciones adicionales en cuadrícula de denominadores 30, 36, 40, 50, 100 -> +20 fracciones (total 345)
+  // 2. Fracciones adicionales en formato pastel redondo (denominadores 30, 36, 40, 50, 100 -> +20 fracciones, total 345)
   const extraPairs = [
     [7, 30], [11, 30], [17, 30], [23, 30],
     [5, 36], [11, 36], [19, 36], [25, 36],
@@ -121,7 +114,7 @@
       label: `${num}/${den}`,
       level: levelForDen(den),
       hint: `${num} partes iluminadas de ${den} partes iguales.`,
-      svg: renderGridSvg(num, den, color)
+      svg: renderCircleSvg(num, den, color)
     });
   });
 
