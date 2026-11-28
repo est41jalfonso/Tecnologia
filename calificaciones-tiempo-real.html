@@ -1932,9 +1932,45 @@ function printReport(){
   window.print();
 }
 
-function buildStandalonePrintHtml(g,r,stu){
-  const body=renderPrintSheetFor(g,r,stu)
-    .replace('<svg class="ps-att-svg"','<svg class="ps-att-svg" width="690" height="124"');
+function svgToPngDataUrl(svgMarkup,width,height){
+  return new Promise(resolve=>{
+    try{
+      const svgClean=svgMarkup.replace(/<svg\b/,'<svg xmlns="http://www.w3.org/2000/svg"');
+      const blob=new Blob([svgClean],{type:'image/svg+xml;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const img=new Image();
+      img.onload=()=>{
+        try{
+          const scale=2;
+          const canvas=document.createElement('canvas');
+          canvas.width=width*scale;
+          canvas.height=height*scale;
+          const ctx=canvas.getContext('2d');
+          ctx.fillStyle='#FFFFFF';
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          URL.revokeObjectURL(url);
+          resolve(canvas.toDataURL('image/png'));
+        }catch(_){
+          URL.revokeObjectURL(url);
+          resolve(null);
+        }
+      };
+      img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};
+      img.src=url;
+    }catch(_){resolve(null);}
+  });
+}
+
+async function buildStandalonePrintHtml(g,r,stu){
+  let body=renderPrintSheetFor(g,r,stu);
+  const svgMatch=body.match(/<svg class="ps-att-svg"[\s\S]*?<\/svg>/);
+  if(svgMatch){
+    const pngUrl=await svgToPngDataUrl(svgMatch[0],760,136);
+    if(pngUrl){
+      body=body.replace(svgMatch[0],'<img src="'+pngUrl+'" style="width:100%;height:auto;display:block;" alt="Comportamiento semanal de asistencia"/>');
+    }
+  }
   return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+
     '<style>'+
       '@page{size:letter portrait;margin:7mm 9mm;}'+
@@ -1944,18 +1980,18 @@ function buildStandalonePrintHtml(g,r,stu){
       '.ps-header>div{display:table-cell;vertical-align:top;}'+
       '.ps-title{font-size:15px;font-weight:700;color:#0F172A;margin:1px 0;}'+
       '.ps-sub{font-size:9.5px;color:#334155;font-weight:600;}'+
-      '.ps-stamp{width:170px;text-align:right;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:7px;padding:4px 8px;font-size:9px;color:#0C4A6E;}'+
+      '.ps-stamp{width:175px;text-align:right;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:7px;padding:4px 8px;font-size:9px;color:#0C4A6E;}'+
       '.ps-stamp strong{display:block;font-size:9.5px;font-weight:700;color:#0369A1;}'+
       '.ps-student-bar{display:table;width:100%;background:#0F172A;color:#FFFFFF;border-radius:8px;padding:6px 10px;margin-bottom:6px;}'+
       '.ps-student-bar>div{display:table-cell;vertical-align:middle;}'+
-      '.ps-student-bar>.ps-badge{display:table-cell;vertical-align:middle;text-align:right;width:185px;}'+
-      '.ps-student-name{font-size:13px;font-weight:700;}'+
+      '.ps-student-bar>.ps-badge{display:inline-block;float:right;margin-top:3px;}'+
+      '.ps-student-name{font-size:13px;font-weight:700;color:#FFFFFF;}'+
       '.ps-student-meta{font-size:9px;color:#CBD5E1;margin-top:1px;}'+
       '.ps-badge{padding:3px 9px;border-radius:999px;font-size:9px;font-weight:700;white-space:nowrap;}'+
       '.ps-badge.above{background:#D1FAE5;color:#065F46;}'+
       '.ps-badge.typical{background:#DBEAFE;color:#1E40AF;}'+
       '.ps-badge.below{background:#FEF3C7;color:#92400E;}'+
-      '.ps-kpis{display:table;width:100%;table-layout:fixed;border-spacing:5px 0;margin:0 -5px 6px -5px;}'+
+      '.ps-kpis{display:table;width:100%;table-layout:fixed;border-spacing:5px 0;margin-bottom:6px;}'+
       '.ps-kpi{display:table-cell;width:25%;border:1px solid #CBD5E1;border-radius:7px;padding:5px 7px;background:#F8FAFC;vertical-align:top;}'+
       '.ps-kpi small{display:block;font-size:8px;font-weight:700;text-transform:uppercase;color:#475569;}'+
       '.ps-kpi strong{display:block;font-size:14px;font-weight:700;color:#0369A1;margin:1px 0;}'+
@@ -1963,7 +1999,7 @@ function buildStandalonePrintHtml(g,r,stu){
       '.ps-card{border:1px solid #CBD5E1;border-radius:8px;padding:5px 8px;margin-bottom:6px;background:#FFFFFF;page-break-inside:avoid;}'+
       '.ps-card-title{font-size:10.5px;font-weight:700;color:#0F172A;border-bottom:1px solid #E2E8F0;padding-bottom:3px;margin-bottom:5px;}'+
       '.ps-card-title span{float:right;font-size:8.5px;font-weight:600;color:#64748B;}'+
-      '.ps-group-strip{display:table;width:100%;table-layout:fixed;border-spacing:4px 0;margin:0 -4px 2px -4px;}'+
+      '.ps-group-strip{display:table;width:100%;table-layout:fixed;border-spacing:4px 0;margin-bottom:2px;}'+
       '.ps-gbox{display:table-cell;width:16.66%;border:1px solid #E2E8F0;border-radius:6px;padding:3px 5px;text-align:center;background:#FFFFFF;}'+
       '.ps-gbox small{display:block;font-size:7.5px;font-weight:700;color:#64748B;text-transform:uppercase;}'+
       '.ps-gbox strong{display:block;font-size:11px;font-weight:700;color:#0F172A;}'+
@@ -1974,7 +2010,7 @@ function buildStandalonePrintHtml(g,r,stu){
       '.ps-bar-track{position:relative;height:8px;background:#E2E8F0;border-radius:999px;width:100%;}'+
       '.ps-bar-fill{height:8px;background:#0284C7;border-radius:999px;}'+
       '.ps-bar-avg{position:absolute;top:-2px;width:2px;height:12px;background:#0F172A;}'+
-      '.ps-two-col{display:table;width:100%;table-layout:fixed;border-spacing:6px 0;margin:0 -6px 6px -6px;}'+
+      '.ps-two-col{display:table;width:100%;table-layout:fixed;border-spacing:6px 0;margin-bottom:6px;}'+
       '.ps-two-col>.ps-card{display:table-cell;width:50%;vertical-align:top;}'+
       '.ps-bins{display:table;width:100%;table-layout:fixed;border-spacing:4px 0;height:54px;padding:4px 5px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;}'+
       '.ps-bin{display:table-cell;width:20%;vertical-align:bottom;text-align:center;height:46px;}'+
@@ -1983,7 +2019,6 @@ function buildStandalonePrintHtml(g,r,stu){
       '.ps-bin.is-student .ps-binbar{background:#0284C7;}'+
       '.ps-bin.is-student b,.ps-bin.is-student span{color:#0369A1;font-weight:700;}'+
       '.ps-bin span{display:block;font-size:7.5px;color:#475569;}'+
-      '.ps-att-svg{width:100%;height:auto;display:block;}'+
       '.ps-att-legend{font-size:8px;color:#475569;margin-top:2px;}'+
       '.ps-att-key{display:inline-block;margin-right:12px;font-weight:600;}'+
       '.ps-att-swatch{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:4px;vertical-align:middle;}'+
@@ -2038,7 +2073,7 @@ async function generateReportsToDrive(wholeGroup){
     const snap=await syncLiveGroup(g,true);
     const stamp=formatFileTimestamp(new Date());
     const codeUpper=g.code.toUpperCase();
-    const items=targets.map(stu=>{
+    const items=await Promise.all(targets.map(async stu=>{
       const vaultRec=(teacherVault&&teacherVault[codeUpper+'|'+stu.n])||{};
       const liveStu=(snap&&snap.studentsByN&&snap.studentsByN[stu.n])||{};
       const rec={
@@ -2052,9 +2087,9 @@ async function generateReportsToDrive(wholeGroup){
         n:stu.n,
         name:stu.name,
         fileName:safeName+' '+stamp+'.pdf',
-        html:buildStandalonePrintHtml(g,rec,stu)
+        html:await buildStandalonePrintHtml(g,rec,stu)
       };
-    });
+    }));
 
     const BATCH=5;
     let done=0,saved=0,errors=[];
