@@ -144,6 +144,28 @@ function auditarConexionesYFormulas() {
 }
 
 /**
+ * Crea (o reemplaza) un activador (Trigger) diario entre las 8:00 p.m. y las 9:00 p.m.
+ * para ejecutar automáticamente auditarConexionesYFormulas().
+ * Ejecuta esta función UNA SOLA VEZ desde el editor de Apps Script.
+ */
+function instalarActivadorNocturno() {
+  var triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(function(t) {
+    if (t.getHandlerFunction() === 'auditarConexionesYFormulas') {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+
+  ScriptApp.newTrigger('auditarConexionesYFormulas')
+    .timeBased()
+    .everyDays(1)
+    .atHour(20)
+    .create();
+
+  Logger.log('Activador nocturno instalado: auditarConexionesYFormulas se ejecutará todos los días entre 8:00 p.m. y 9:00 p.m.');
+}
+
+/**
  * Repara los errores #REF! detectados en el libro de 1B (TRIM II!AI1 y Prácticas II!A4)
  * y vuelve a ejecutar la auditoría completa para confirmar 0 errores.
  */
