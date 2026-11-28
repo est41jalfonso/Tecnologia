@@ -661,6 +661,7 @@
   function init() {
     populateLevels();
     initTabs();
+    switchTab('welcome');
     loadStudents();
     renderCatalog();
     renderMissionsList();
