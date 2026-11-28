@@ -343,9 +343,9 @@
     missionIdx: 0,
     questions: [],
     qIndex: 0,
-    qAttempts: 0,
     scoreSum: 0,
     firstTryCount: 0,
+    errorCount: 0,
     timeoutCount: 0,
     clockHandle: null,
     timeLeft: 20,
@@ -418,9 +418,9 @@
       missionIdx: idx,
       questions: picked,
       qIndex: 0,
-      qAttempts: 0,
       scoreSum: 0,
       firstTryCount: 0,
+      errorCount: 0,
       timeoutCount: 0,
       clockHandle: null,
       timeLeft: m.timePerQ,
@@ -437,6 +437,7 @@
     const m = MISSIONS[mState.missionIdx];
     $('mStatProgress').textContent = (mState.qIndex + 1) + ' / ' + m.count;
     $('mStatFirstTry').textContent = String(mState.firstTryCount);
+    if ($('mStatErrors')) $('mStatErrors').textContent = String(mState.errorCount);
     const currentGrade = (mState.scoreSum / m.count) * 10;
     $('mStatGrade').textContent = currentGrade.toFixed(1) + ' / 10';
   }
@@ -501,47 +502,44 @@
 
   function handleMissionAnswer(opt, btn) {
     if (mState.locked) return;
+    stopMissionClock();
+    mState.locked = true;
     const target = mState.questions[mState.qIndex];
-    mState.qAttempts++;
+
+    // Deshabilitar todas las opciones para impedir otro intento en la misma pregunta
+    Array.from($('mOptionsGrid').children).forEach((el) => {
+      el.disabled = true;
+    });
 
     if (opt.id === target.id) {
-      stopMissionClock();
-      mState.locked = true;
-      let earned = 0;
-      let msg = '';
-      if (mState.qAttempts === 1) {
-        earned = 1;
-        mState.firstTryCount++;
-        msg = `¡Correcto a la primera! (${target.label}: ${target.hint}) +100%`;
-      } else if (mState.qAttempts === 2) {
-        earned = 0.5;
-        msg = `Correcto en 2.º intento (${target.label}). Calificación reducida al 50%.`;
-      } else {
-        earned = 0;
-        msg = `Correcto en ${mState.qAttempts}.º intento (${target.label}). Sin puntos en esta pregunta.`;
-      }
-      mState.scoreSum += earned;
+      mState.scoreSum += 1;
+      mState.firstTryCount++;
       btn.className = 'mission-option-card bg-emerald-50 rounded-3xl border-4 border-emerald-500 p-5 shadow-md flex flex-col items-center justify-center gap-2';
       playTone(660, 0.1, 'sine');
       setTimeout(() => playTone(880, 0.14, 'sine'), 80);
-      showMissionFeedback('ok', msg);
-      updateMissionHud();
-      setTimeout(advanceMissionQuestion, 1100);
+      showMissionFeedback('ok', `¡Acierto! (${target.label}: ${target.hint})`);
     } else {
-      btn.disabled = true;
-      btn.className = 'mission-option-card bg-rose-50 rounded-3xl border-4 border-rose-400 p-5 opacity-60 flex flex-col items-center justify-center gap-2';
-      playTone(220, 0.16, 'sawtooth');
-      showMissionFeedback('err', 'Ese dibujo no corresponde a ' + target.label + '. Tu calificación bajará si ocupas más intentos, ¡elige otro rápido!');
+      mState.errorCount++;
+      btn.className = 'mission-option-card bg-rose-100 rounded-3xl border-4 border-rose-600 p-5 shadow-md flex flex-col items-center justify-center gap-2';
+      playTone(220, 0.18, 'sawtooth');
+      showMissionFeedback('err', `Error: ese dibujo corresponde a ${opt.label}, no a ${target.label}.`);
     }
+
+    updateMissionHud();
+    setTimeout(advanceMissionQuestion, 1300);
   }
 
   function handleMissionTimeout() {
     if (mState.locked) return;
     mState.locked = true;
+    mState.errorCount++;
     mState.timeoutCount++;
+    Array.from($('mOptionsGrid').children).forEach((el) => {
+      el.disabled = true;
+    });
     const target = mState.questions[mState.qIndex];
     playTone(180, 0.25, 'sawtooth');
-    showMissionFeedback('err', '¡Tiempo agotado! La respuesta correcta correspondía a ' + target.label + ' (' + target.hint + ').');
+    showMissionFeedback('err', '¡Tiempo agotado! Se registró como error. La fracción era ' + target.label + '.');
     updateMissionHud();
     setTimeout(advanceMissionQuestion, 1400);
   }
@@ -576,7 +574,7 @@
     const stuLabel = currentStudent ? `#${currentStudent.no} · ${currentStudent.name}` : 'Alumno invitado';
     if ($('mResultStudent')) $('mResultStudent').textContent = 'Alumno(a): ' + stuLabel;
     $('mResultTitle').textContent = `Calificación: ${finalGrade} / 10`;
-    $('mResultDetail').textContent = `En ${m.title}: acertaste ${mState.firstTryCount} de ${m.count} preguntas a la primera (${mState.timeoutCount} por tiempo agotado).`;
+    $('mResultDetail').textContent = `En ${m.title}: ${mState.firstTryCount} aciertos y ${mState.errorCount} errores de ${m.count} preguntas (${mState.timeoutCount} por tiempo agotado).`;
     if ($('mResultDate')) {
       $('mResultDate').textContent = 'Fecha de evaluación: ' + new Date().toLocaleString('es-MX');
     }

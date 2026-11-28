@@ -248,7 +248,7 @@
       <!-- ÁREA DE TRABAJO DE LA MISIÓN ACTIVA (CON FONDO PASTEL DECORATIVO) -->
       <div id="missionPlayArea" class="hidden pastel-fractions-bg rounded-3xl border-2 border-sky-200 shadow-md p-5 sm:p-8 space-y-6">
         <!-- HUD DE MISIÓN -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <div class="bg-white/95 rounded-2xl border-2 border-purple-200 p-3 shadow-xs">
             <div class="text-[11px] font-extrabold uppercase tracking-wider text-purple-800">Misión / Pregunta</div>
             <div id="mStatProgress" class="font-display font-extrabold text-xl text-slate-900 mt-0.5">1 / 20</div>
@@ -258,10 +258,14 @@
             <div id="mStatClock" class="font-display font-extrabold text-xl text-amber-700 mt-0.5">20 s</div>
           </div>
           <div class="bg-white/95 rounded-2xl border-2 border-emerald-200 p-3 shadow-xs">
-            <div class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">A la Primera</div>
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">Aciertos</div>
             <div id="mStatFirstTry" class="font-display font-extrabold text-xl text-emerald-700 mt-0.5">0</div>
           </div>
-          <div class="bg-white/95 rounded-2xl border-2 border-sky-200 p-3 shadow-xs">
+          <div class="bg-white/95 rounded-2xl border-2 border-rose-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-rose-800">Errores</div>
+            <div id="mStatErrors" class="font-display font-extrabold text-xl text-rose-700 mt-0.5">0</div>
+          </div>
+          <div class="col-span-2 sm:col-span-1 bg-white/95 rounded-2xl border-2 border-sky-200 p-3 shadow-xs">
             <div class="text-[11px] font-extrabold uppercase tracking-wider text-sky-800">Calificación</div>
             <div id="mStatGrade" class="font-display font-extrabold text-xl text-sky-700 mt-0.5">0.0 / 10</div>
           </div>
@@ -366,7 +370,7 @@
     </div>
   </div>
 
-  <script src="fractions.js?v=2"></script>
-  <script src="game.js?v=2"></script>
+  <script src="fractions.js?v=3"></script>
+  <script src="game.js?v=3"></script>
 </body>
 </html>
