@@ -644,7 +644,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
             <div class="lg:col-span-6">
               <label for="driveScriptUrl" class="block text-xs font-extrabold text-slate-700 mb-1 uppercase tracking-wider">URL de Web App (Apps Script de Google Drive)</label>
-              <input id="driveScriptUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-mono text-slate-900 focus:border-sky-600 focus:bg-white focus:ring-0"/>
+              <input id="driveScriptUrl" type="url" value="https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec" placeholder="https://script.google.com/macros/s/.../exec" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-mono text-slate-900 focus:border-sky-600 focus:bg-white focus:ring-0"/>
             </div>
             <div class="lg:col-span-3">
               <button id="genSingleReportBtn" type="button" class="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-sm transition-colors cursor-pointer">
@@ -1219,6 +1219,8 @@ function isValidTeacherUser(u){
 }
 
 const DRIVE_SCRIPT_KEY='est41_drive_script_url_v1';
+const DEFAULT_DRIVE_SCRIPT_URL='https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec';
+const DRIVE_EXEC_RE=/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i;
 
 function setTeacherModeUI(active){
   if(active){
@@ -1231,8 +1233,10 @@ function setTeacherModeUI(active){
     $('password').placeholder='Modo Docente activo';
     $('password').disabled=true;
     try{
-      const savedUrl=localStorage.getItem(DRIVE_SCRIPT_KEY);
-      if(savedUrl&&$('driveScriptUrl'))$('driveScriptUrl').value=savedUrl;
+      const savedUrl=(localStorage.getItem(DRIVE_SCRIPT_KEY)||'').trim();
+      if($('driveScriptUrl')){
+        $('driveScriptUrl').value=DRIVE_EXEC_RE.test(savedUrl)?savedUrl:DEFAULT_DRIVE_SCRIPT_URL;
+      }
     }catch(_){}
   }else{
     $('teacherActiveBar').classList.add('hidden');
@@ -2019,15 +2023,9 @@ async function generateReportsToDrive(wholeGroup){
   const btnGroup=$('genGroupReportsBtn');
 
   const urlInput=$('driveScriptUrl');
-  const scriptUrl=(urlInput?urlInput.value:'').trim();
-  if(!scriptUrl||!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(scriptUrl)){
-    box.style.display='block';
-    txt.textContent='Falta la URL válida de Google Apps Script (/exec).';
-    cnt.textContent='Error';
-    bar.style.width='0%';
-    logEl.innerHTML='<span style="color:#B91C1C;font-weight:700;">Implementa <code>apps_script_calificaciones_est41.gs</code> como Aplicación Web y pega su URL terminada en <code>/exec</code> en el campo superior.</span>';
-    return;
-  }
+  const rawUrl=(urlInput?urlInput.value:'').trim();
+  const scriptUrl=DRIVE_EXEC_RE.test(rawUrl)?rawUrl:DEFAULT_DRIVE_SCRIPT_URL;
+  if(urlInput&&urlInput.value!==scriptUrl)urlInput.value=scriptUrl;
   try{localStorage.setItem(DRIVE_SCRIPT_KEY,scriptUrl);}catch(_){}
 
   const targets=wholeGroup
