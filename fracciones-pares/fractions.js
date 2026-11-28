@@ -120,4 +120,47 @@
   });
 
   window.FRACTIONS_PAIRS_BANK = FRACTIONS;
+
+  // Familias de Fracciones Equivalentes para el Explorador, Memorama de Equivalencias y Misión 6
+  const BASE_EQUIV_SPECS = [
+    { base: [1, 2], mults: [2, 3, 4, 5, 6], group: 'A', color: '#0284C7' },
+    { base: [1, 3], mults: [2, 3, 4, 5], group: 'A', color: '#7C3AED' },
+    { base: [2, 3], mults: [2, 3, 4, 5], group: 'A', color: '#059669' },
+    { base: [1, 4], mults: [2, 3, 4, 5], group: 'A', color: '#D97706' },
+    { base: [3, 4], mults: [2, 3, 4, 5], group: 'A', color: '#0284C7' },
+    { base: [1, 5], mults: [2, 3, 4], group: 'B', color: '#7C3AED' },
+    { base: [2, 5], mults: [2, 3, 4], group: 'B', color: '#059669' },
+    { base: [3, 5], mults: [2, 3, 4], group: 'B', color: '#D97706' },
+    { base: [4, 5], mults: [2, 3, 4], group: 'B', color: '#0284C7' },
+    { base: [1, 6], mults: [2, 3, 4], group: 'B', color: '#7C3AED' },
+    { base: [5, 6], mults: [2, 3, 4], group: 'B', color: '#059669' },
+    { base: [3, 8], mults: [2, 3], group: 'B', color: '#D97706' }
+  ];
+
+  const EQUIVALENT_FAMILIES = BASE_EQUIV_SPECS.map((spec) => {
+    const [bn, bd] = spec.base;
+    const baseItem = {
+      num: bn,
+      den: bd,
+      label: `${bn}/${bd}`,
+      mult: 1,
+      svg: renderCircleSvg(bn, bd, spec.color)
+    };
+    const equivalents = spec.mults.map((m) => ({
+      num: bn * m,
+      den: bd * m,
+      label: `${bn * m}/${bd * m}`,
+      mult: m,
+      svg: renderCircleSvg(bn * m, bd * m, spec.color)
+    }));
+    return {
+      id: `eq-${bn}-${bd}`,
+      group: spec.group,
+      color: spec.color,
+      base: baseItem,
+      equivalents
+    };
+  });
+
+  window.EQUIVALENT_FAMILIES = EQUIVALENT_FAMILIES;
 })();

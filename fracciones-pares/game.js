@@ -1,6 +1,7 @@
 // Motor del videojuego FraccionesPairs (Primaria Teodoro Olivares)
 (function () {
   const bank = window.FRACTIONS_PAIRS_BANK || [];
+  const equivFamilies = window.EQUIVALENT_FAMILIES || [];
   const $ = (id) => document.getElementById(id);
 
   const SPREADSHEET_ID = '1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A';
@@ -139,21 +140,29 @@
   let levelsList = [];
 
   function populateLevels() {
-    levelsList = [...new Set(bank.map((c) => c.level))];
+    const baseLevels = [...new Set(bank.map((c) => c.level))];
+    const equivLevels = ['Equivalentes · Nivel A (1/2, 1/3, 1/4)', 'Equivalentes · Nivel B (Quintos, Sextos, Octavos)'];
+    levelsList = baseLevels.concat(equivLevels);
     const sel = $('levelSelect');
     const catSel = $('catalogLevel');
-    levelsList.forEach((lv, idx) => {
+    baseLevels.forEach((lv, idx) => {
       const count = bank.filter((c) => c.level === lv).length;
       const opt1 = document.createElement('option');
       opt1.value = lv;
       opt1.textContent = lv + ' (' + count + ' fracciones)';
-      if (idx === 0) opt1.selected = true; // Iniciar siempre con Nivel 1 (fracciones sencillas)
+      if (idx === 0) opt1.selected = true;
       sel.appendChild(opt1);
 
       const opt2 = document.createElement('option');
       opt2.value = lv;
       opt2.textContent = lv + ' (' + count + ')';
       catSel.appendChild(opt2);
+    });
+    equivLevels.forEach((elv) => {
+      const opt = document.createElement('option');
+      opt.value = elv;
+      opt.textContent = elv;
+      sel.appendChild(opt);
     });
   }
 
@@ -169,6 +178,46 @@
     $('winModal').classList.add('hidden');
 
     const lv = $('levelSelect').value;
+    if (lv.startsWith('Equivalentes · Nivel')) {
+      const grp = lv.includes('Nivel A') ? 'A' : 'B';
+      const famPool = equivFamilies.filter((f) => f.group === grp);
+      const eqPairs = [];
+      famPool.forEach((fam) => {
+        fam.equivalents.forEach((eq) => {
+          const pid = fam.id + '-x' + eq.mult;
+          eqPairs.push({
+            id: pid,
+            base: fam.base,
+            eq: eq,
+            hint: `${fam.base.label} es equivalente a ${eq.label} (×${eq.mult} arriba y abajo).`
+          });
+        });
+      });
+      const desiredPairs = Number($('difficultySelect').value) || 8;
+      totalPairs = Math.min(desiredPairs, eqPairs.length);
+      const chosen = shuffle(eqPairs).slice(0, totalPairs);
+      const cards = [];
+      chosen.forEach((p) => {
+        cards.push({
+          uid: p.id + '-base',
+          id: p.id,
+          kind: 'term',
+          item: { num: p.base.num, den: p.base.den, label: p.base.label, svg: p.base.svg, hint: p.hint, term: p.base.label }
+        });
+        cards.push({
+          uid: p.id + '-eq',
+          id: p.id,
+          kind: 'image',
+          item: { num: p.eq.num, den: p.eq.den, label: p.eq.label, svg: p.eq.svg, hint: p.hint, term: p.eq.label }
+        });
+      });
+      deck = shuffle(cards);
+      renderBoard();
+      updateStats();
+      setFeedback('info', 'Modo Equivalentes: une cada <strong>fracción base</strong> con su <strong>fracción equivalente</strong> (representan la misma parte del pastel).');
+      return;
+    }
+
     const pool = lv === 'all' ? bank : bank.filter((c) => c.level === lv);
     const desiredPairs = Number($('difficultySelect').value) || 8;
     totalPairs = Math.min(desiredPairs, pool.length);
@@ -338,7 +387,8 @@
     { id: 2, title: 'Misión 2: Explorador', desc: 'Séptimos, octavos, novenos y décimos', minDen: 5, maxDen: 10, timePerQ: 18, count: 20, color: 'sky' },
     { id: 3, title: 'Misión 3: Desafío Medio', desc: 'Denominadores medianos (9 a 16)', minDen: 9, maxDen: 16, timePerQ: 16, count: 20, color: 'purple' },
     { id: 4, title: 'Misión 4: Maestro', desc: 'Fracciones más grandes (15 a 26)', minDen: 15, maxDen: 26, timePerQ: 15, count: 20, color: 'amber' },
-    { id: 5, title: 'Misión 5: Súper Reto', desc: 'Hasta centésimos (20 a 100)', minDen: 18, maxDen: 100, timePerQ: 14, count: 20, color: 'rose' }
+    { id: 5, title: 'Misión 5: Súper Reto', desc: 'Hasta centésimos (20 a 100)', minDen: 18, maxDen: 100, timePerQ: 14, count: 20, color: 'rose' },
+    { id: 6, title: 'Misión 6: Equivalentes', desc: 'Relaciona fracciones equivalentes (1/2 = 2/4)', isEquiv: true, timePerQ: 18, count: 20, color: 'sky' }
   ];
 
   let mState = {
@@ -407,12 +457,34 @@
     $('missionStudentErr')?.classList.add('hidden');
     stopMissionClock();
     const m = MISSIONS[idx] || MISSIONS[0];
-    const pool = bank.filter((c) => c.den >= m.minDen && c.den <= m.maxDen);
     const picked = [];
-    while (picked.length < m.count) {
-      const batch = shuffle(pool);
-      for (const it of batch) {
-        if (picked.length < m.count) picked.push(it);
+    if (m.isEquiv) {
+      const equivQuestions = [];
+      equivFamilies.forEach((fam) => {
+        fam.equivalents.forEach((eq) => {
+          equivQuestions.push({
+            id: eq.label,
+            num: fam.base.num,
+            den: fam.base.den,
+            label: fam.base.label,
+            hint: `${fam.base.label} = ${eq.label} (se multiplicó por ${eq.mult} el numerador y el denominador).`,
+            correctEq: eq,
+            familyId: fam.id
+          });
+        });
+      });
+      while (picked.length < m.count) {
+        for (const q of shuffle(equivQuestions)) {
+          if (picked.length < m.count) picked.push(q);
+        }
+      }
+    } else {
+      const pool = bank.filter((c) => c.den >= m.minDen && c.den <= m.maxDen);
+      while (picked.length < m.count) {
+        const batch = shuffle(pool);
+        for (const it of batch) {
+          if (picked.length < m.count) picked.push(it);
+        }
       }
     }
 
@@ -452,7 +524,11 @@
     mState.locked = false;
 
     $('mMissionBadge').textContent = m.title;
-    $('mQuestionText').textContent = buildQuestionPrompt(target, mState.qIndex);
+    if (m.isEquiv) {
+      $('mQuestionText').textContent = `¿Cuál de las 3 opciones es una fracción EQUIVALENTE a ${target.label} (ocupa exactamente la misma parte del pastel)?`;
+    } else {
+      $('mQuestionText').textContent = buildQuestionPrompt(target, mState.qIndex);
+    }
     $('mTargetFraction').innerHTML = `
       <span class="frac-num">${target.num}</span>
       <span class="frac-bar"></span>
@@ -460,9 +536,22 @@
     `;
     $('mFeedbackBox').classList.add('hidden');
 
-    // Elegir 2 distractores distintos del mismo rango de dificultad
-    const distractorPool = shuffle(bank.filter((c) => c.id !== target.id && c.den >= m.minDen && c.den <= m.maxDen));
-    const options = shuffle([target, distractorPool[0], distractorPool[1]]);
+    let options;
+    if (m.isEquiv) {
+      const targetVal = target.num / target.den;
+      const distPool = shuffle(
+        bank.filter((c) => Math.abs(c.num / c.den - targetVal) > 0.04 && c.den >= 4 && c.den <= 20)
+      );
+      const correctOpt = { id: target.id, label: target.correctEq.label, svg: target.correctEq.svg };
+      options = shuffle([
+        correctOpt,
+        { id: distPool[0].id, label: distPool[0].label, svg: distPool[0].svg },
+        { id: distPool[1].id, label: distPool[1].label, svg: distPool[1].svg }
+      ]);
+    } else {
+      const distractorPool = shuffle(bank.filter((c) => c.id !== target.id && c.den >= m.minDen && c.den <= m.maxDen));
+      options = shuffle([target, distractorPool[0], distractorPool[1]]);
+    }
 
     const grid = $('mOptionsGrid');
     grid.innerHTML = '';
@@ -472,7 +561,9 @@
       btn.className = 'mission-option-card bg-white/95 rounded-3xl border-3 border-slate-200 hover:border-sky-400 p-5 shadow-sm flex flex-col items-center justify-center gap-2 cursor-pointer';
       btn.innerHTML = `
         <div class="pointer-events-none">${opt.svg}</div>
-        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Seleccionar dibujo</span>
+        ${m.isEquiv
+          ? `<span class="px-3 py-0.5 rounded-full bg-sky-100 border border-sky-300 font-display font-extrabold text-base text-slate-900">${opt.label}</span>`
+          : `<span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Seleccionar dibujo</span>`}
       `;
       btn.addEventListener('click', () => handleMissionAnswer(opt, btn));
       grid.appendChild(btn);
@@ -635,19 +726,71 @@
     }
   }
 
+  let selectedEquivIdx = 0;
+
+  function renderEquivalentsExplorer() {
+    const chips = $('equivSelectorChips');
+    const area = $('equivDisplayArea');
+    if (!chips || !area || !equivFamilies.length) return;
+
+    chips.innerHTML = equivFamilies.map((f, idx) => `
+      <button type="button" data-eq-idx="${idx}" class="px-4 py-2 rounded-full font-display font-extrabold text-sm transition-all cursor-pointer ${idx === selectedEquivIdx ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 text-slate-800 hover:bg-sky-50 border border-slate-300'}">
+        ${f.base.label}
+      </button>
+    `).join('');
+
+    chips.querySelectorAll('[data-eq-idx]').forEach((b) => {
+      b.addEventListener('click', () => {
+        selectedEquivIdx = Number(b.getAttribute('data-eq-idx'));
+        renderEquivalentsExplorer();
+      });
+    });
+
+    const fam = equivFamilies[selectedEquivIdx] || equivFamilies[0];
+    area.innerHTML = `
+      <div class="bg-white/95 rounded-2xl border-2 border-sky-200 p-4 sm:p-5 text-center space-y-1">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-sky-800">Regla de Equivalencia</span>
+        <p class="text-sm sm:text-base font-semibold text-slate-700">
+          Si multiplicas el <strong>numerador</strong> y el <strong>denominador</strong> de <strong class="text-sky-700">${fam.base.label}</strong> por el mismo número, obtienes una fracción equivalente que ilumina exactamente la misma parte del pastel:
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <article class="bg-white rounded-3xl border-4 border-sky-400 p-5 shadow-md flex flex-col items-center text-center gap-3">
+          <span class="px-3 py-1 rounded-full bg-sky-600 text-white text-xs font-extrabold uppercase">Fracción Base</span>
+          <div class="svg-wrap">${fam.base.svg}</div>
+          <div class="font-display font-extrabold text-3xl text-slate-900">${fam.base.label}</div>
+          <span class="text-xs font-bold text-slate-600">${fam.base.num} parte(s) de ${fam.base.den}</span>
+        </article>
+        ${fam.equivalents.map((eq) => `
+          <article class="bg-white rounded-3xl border-2 border-emerald-300 p-5 shadow-sm flex flex-col items-center text-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-extrabold uppercase">Equivalente (×${eq.mult})</span>
+            <div class="svg-wrap">${eq.svg}</div>
+            <div class="font-display font-extrabold text-3xl text-slate-900">${fam.base.label} = ${eq.label}</div>
+            <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
+              (${fam.base.num}×${eq.mult}) / (${fam.base.den}×${eq.mult})
+            </span>
+          </article>
+        `).join('')}
+      </div>
+    `;
+  }
+
   function switchTab(tab) {
     if (tab !== 'missions') stopMissionClock();
     document.querySelectorAll('.nav-tab').forEach((b) => {
-      const isCur = b.getAttribute('data-tab') === tab;
-      if (isCur) {
+      const t = b.getAttribute('data-tab');
+      if (t === tab) {
         b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer';
-      } else if (b.getAttribute('data-tab') === 'missions') {
+      } else if (t === 'missions') {
         b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer';
+      } else if (t === 'equivalents') {
+        b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-sky-800 bg-sky-50 hover:bg-sky-100 border border-sky-300 cursor-pointer';
       } else {
         b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer';
       }
     });
     $('tabWelcome')?.classList.toggle('hidden', tab !== 'welcome');
+    $('tabEquivalents')?.classList.toggle('hidden', tab !== 'equivalents');
     $('tabPlay').classList.toggle('hidden', tab !== 'play');
     $('tabMissions').classList.toggle('hidden', tab !== 'missions');
     $('tabCatalog').classList.toggle('hidden', tab !== 'catalog');
@@ -711,12 +854,23 @@
     switchTab('welcome');
     loadStudents();
     renderCatalog();
+    renderEquivalentsExplorer();
     renderMissionsList();
     buildNewRound();
 
     $('welcomeStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
     $('missionStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
     $('goTestModeBtn')?.addEventListener('click', () => switchTab('play'));
+    $('goEquivalentsModeBtn')?.addEventListener('click', () => switchTab('equivalents'));
+    $('eqToMemoryBtn')?.addEventListener('click', () => {
+      $('levelSelect').value = 'Equivalentes · Nivel A (1/2, 1/3, 1/4)';
+      buildNewRound();
+      switchTab('play');
+    });
+    $('eqToMissionBtn')?.addEventListener('click', () => {
+      switchTab('missions');
+      if (currentStudent) startMission(5);
+    });
     $('goMissionsModeBtn')?.addEventListener('click', () => {
       if (!currentStudent) {
         $('welcomeStudentErr')?.classList.remove('hidden');
