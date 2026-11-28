@@ -47,18 +47,25 @@
       </div>
 
       <nav aria-label="Navegación del videojuego" class="flex flex-wrap items-center gap-1.5">
-        <button data-tab="play" class="nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer">
+        <button data-tab="welcome" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer">
+          INICIO
+        </button>
+        <button data-tab="play" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer">
           SECCIÓN DE PRUEBA (MEMORAMA)
         </button>
-        <button data-tab="missions" class="nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer">
+        <button data-tab="missions" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer">
           MISIONES CONTRARRELOJ
         </button>
-        <button data-tab="catalog" class="nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer">
-          CATÁLOGO (345 FRACCIONES)
+        <button data-tab="catalog" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer">
+          CATÁLOGO (345)
         </button>
       </nav>
 
       <div class="flex items-center gap-2">
+        <div id="headerStudentBadge" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-900 text-xs font-extrabold">
+          <span class="material-symbols-outlined text-[16px]">person</span>
+          <span id="headerStudentName">Sin alumno</span>
+        </div>
         <button id="soundToggleBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 text-xs font-bold cursor-pointer">
           <span id="soundIcon" class="material-symbols-outlined text-[18px]">volume_up</span>
           <span class="hidden sm:inline" id="soundLabel">Sonido</span>
@@ -73,8 +80,75 @@
 
   <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 space-y-6">
 
-    <!-- TAB: JUGAR PARES -->
-    <section id="tabPlay" class="space-y-5">
+    <!-- PANTALLA DE BIENVENIDA: ELEGIR PRUEBA (MEMORAMA) O MISIONES -->
+    <section id="tabWelcome" class="space-y-6 py-2">
+      <div class="bg-white rounded-3xl border-2 border-emerald-200 shadow-md p-6 sm:p-10 text-center space-y-3">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-extrabold uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[16px]">pie_chart</span>
+          Primaria Teodoro Olivares • Aprende Fracciones
+        </span>
+        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+          ¿Cómo quieres empezar hoy?
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto">
+          Elige si deseas practicar primero en la <strong class="text-slate-900">Sección de Prueba (Memorama)</strong> o ir directo a las <strong class="text-purple-800">Misiones Contrarreloj</strong> para obtener tu reporte de calificación.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- OPCIÓN 1: SECCIÓN DE PRUEBA (MEMORAMA) -->
+        <article class="bg-gradient-to-br from-white via-emerald-50/40 to-sky-50/30 rounded-3xl border-2 border-emerald-300 shadow-md p-6 sm:p-8 flex flex-col justify-between gap-6">
+          <div class="space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
+              <span class="material-symbols-outlined text-[32px]">extension</span>
+            </div>
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">Sin límite de tiempo</span>
+            <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">1. Sección de Prueba (Memorama)</h2>
+            <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">
+              Practica a tu ritmo relacionando las fracciones escritas (1/2, 2/3, 1/4, 3/5…) con su dibujo de pastel redondo iluminado. Ideal para aprender antes de las misiones.
+            </p>
+          </div>
+          <button id="goTestModeBtn" type="button" class="w-full px-6 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base shadow-lg shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[22px]">play_circle</span>
+            <span>Entrar a Sección de Prueba</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
+        </article>
+
+        <!-- OPCIÓN 2: MISIONES CONTRARRELOJ (CON SELECTOR DE ALUMNO) -->
+        <article class="bg-gradient-to-br from-white via-purple-50/40 to-sky-50/30 rounded-3xl border-2 border-purple-300 shadow-md p-6 sm:p-8 flex flex-col justify-between gap-6">
+          <div class="space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-md">
+              <span class="material-symbols-outlined text-[32px]">timer</span>
+            </div>
+            <span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold uppercase tracking-wider">5 Misiones • 20 Preguntas c/u • Contrarreloj</span>
+            <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">2. Misiones Contrarreloj (Con Calificación)</h2>
+            <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">
+              Contesta 20 preguntas por misión eligiendo el pastel correcto antes de que acabe el reloj. <strong class="text-slate-900">Selecciona tu nombre</strong> para generar tu reporte de calificación.
+            </p>
+
+            <div class="bg-white rounded-2xl border-2 border-purple-200 p-4 space-y-2">
+              <label for="welcomeStudentSelect" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900">
+                Selecciona tu nombre de la lista:
+              </label>
+              <select id="welcomeStudentSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-bold text-slate-900 focus:border-purple-600 focus:bg-white">
+                <option value="">-- Elige tu nombre --</option>
+              </select>
+              <p id="welcomeStudentErr" class="hidden text-xs font-bold text-rose-700">Por favor, selecciona tu nombre antes de entrar a las misiones.</p>
+            </div>
+          </div>
+
+          <button id="goMissionsModeBtn" type="button" class="w-full px-6 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-base shadow-lg shadow-purple-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[22px]">military_tech</span>
+            <span>Ir a Misiones Contrarreloj</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <!-- TAB: JUGAR PARES (SECCIÓN DE PRUEBA) -->
+    <section id="tabPlay" class="hidden space-y-5">
       <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-4 sm:p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
         <div class="md:col-span-4">
           <label for="levelSelect" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1.5">Nivel de Fracciones</label>
@@ -156,7 +230,14 @@
             <h1 class="font-display font-extrabold text-2xl text-slate-900">Misiones de Fracciones</h1>
             <p class="text-sm text-slate-600 font-medium">Elige una misión. Responde antes de que termine el reloj: acertar a la primera suma calificación positiva completa; si ocupas más intentos, la calificación baja.</p>
           </div>
+          <div class="w-full sm:w-80 shrink-0 bg-purple-50 border-2 border-purple-200 rounded-2xl p-3 space-y-1">
+            <label for="missionStudentSelect" class="block text-[11px] font-extrabold uppercase tracking-wider text-purple-900">Alumno(a) evaluado(a):</label>
+            <select id="missionStudentSelect" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900">
+              <option value="">-- Elige tu nombre --</option>
+            </select>
+          </div>
         </div>
+        <p id="missionStudentErr" class="hidden text-xs font-extrabold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">Selecciona tu nombre de la lista antes de iniciar una misión para generar tu reporte de calificación.</p>
         <div id="missionsCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5"></div>
       </div>
 
@@ -207,17 +288,23 @@
         <div id="mFeedbackBox" class="hidden rounded-2xl px-4 py-3 text-sm font-bold flex items-center justify-between gap-3"></div>
       </div>
 
-      <!-- RESULTADO FINAL DE LA MISIÓN -->
+      <!-- RESULTADO FINAL DE LA MISIÓN (REPORTE DE CALIFICACIÓN CON NOMBRE) -->
       <div id="missionResultBox" class="hidden bg-white rounded-3xl border-2 border-emerald-300 shadow-lg p-6 sm:p-8 text-center space-y-5 max-w-xl mx-auto">
         <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
           <span class="material-symbols-outlined text-[40px]">military_tech</span>
         </div>
-        <div class="space-y-1.5">
-          <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">Misión Finalizada (20 Preguntas)</span>
+        <div class="space-y-2">
+          <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">Reporte de Calificación • Misión Completada</span>
+          <div id="mResultStudent" class="text-base sm:text-lg font-extrabold text-sky-900 bg-sky-50 border border-sky-200 rounded-xl px-4 py-2"></div>
           <h2 id="mResultTitle" class="font-display font-extrabold text-3xl text-slate-900">Calificación: 10.0 / 10</h2>
           <p id="mResultDetail" class="text-sm text-slate-600 font-medium"></p>
+          <p id="mResultDate" class="text-xs text-slate-500 font-semibold"></p>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
+          <button id="mPrintReportBtn" type="button" class="px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm shadow-md cursor-pointer inline-flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px]">print</span>
+            <span>Imprimir / Guardar Reporte</span>
+          </button>
           <button id="mNextMissionBtn" type="button" class="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm shadow-md cursor-pointer">
             Siguiente Misión →
           </button>

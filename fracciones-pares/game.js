@@ -3,6 +3,54 @@
   const bank = window.FRACTIONS_PAIRS_BANK || [];
   const $ = (id) => document.getElementById(id);
 
+  const SPREADSHEET_ID = '1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A';
+  const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv`;
+  const FALLBACK_STUDENTS = [
+    { no: 1, name: 'Alvarez Reyes Maura Esmeralda' },
+    { no: 2, name: 'Arroyo Esparza Luna Guadalupe' },
+    { no: 3, name: 'Barron Gutierrez Diana' },
+    { no: 4, name: 'Bustos Esparza Keily Daniela' },
+    { no: 5, name: 'Calvillo Mendez Erick Daniel' },
+    { no: 6, name: 'Calzada Gonzalez Iker Gael' },
+    { no: 7, name: 'Carreon Palos Jose Pablo' },
+    { no: 8, name: 'Chavez Jaime Victoria Guadalupe' },
+    { no: 9, name: 'Dondiego Candelas Sofia' },
+    { no: 10, name: 'Esparza Ortega Yunuen Leonardo' },
+    { no: 11, name: 'Espino Esparza Julieta Isabel' },
+    { no: 12, name: 'Ferrel Avendaño Cesar Alejandro' },
+    { no: 13, name: 'Gaona Silva Ashley Valentina' },
+    { no: 14, name: 'Gonzalez Galaviz Itzel Guadalupe' },
+    { no: 15, name: 'Gonzalez Macias Juan Carlos' },
+    { no: 16, name: 'Gonzalez Velazquez Maya' },
+    { no: 17, name: 'Hernandez Barranco Johan Santiago' },
+    { no: 18, name: 'Hernandez Mendez Donnovan Dariel' },
+    { no: 19, name: 'Ibarra Loera Victoria' },
+    { no: 20, name: 'Jimenez Rodriguez Dylan Isaac' },
+    { no: 21, name: 'Leyva Bernal Sofia Isabella' },
+    { no: 22, name: 'Lira Rodriguez Lian Maximiliano' },
+    { no: 23, name: 'Lucio Araujo Victor Camilo' },
+    { no: 24, name: 'Luevano Dondiego Vania Victoria' },
+    { no: 25, name: 'Lujan Ramirez Jairo Camilo' },
+    { no: 26, name: 'Martin Olivares Mauricio Damian' },
+    { no: 27, name: 'Martinez Espinoza Hector Damian' },
+    { no: 28, name: 'Martinez Reyes Arturo Damian' },
+    { no: 29, name: 'Medina Zacarias Alexa Miranda' },
+    { no: 30, name: 'Mendez Narvaez Julian' },
+    { no: 31, name: 'Monsivais Escalante Hinata Eliette' },
+    { no: 32, name: 'Morales Villalobos Katia Paula' },
+    { no: 33, name: 'Murillo Lopez Emma Valentina' },
+    { no: 34, name: 'Navarro Romero Carlos Gabriel' },
+    { no: 35, name: 'Puga Castañeda Lia Maria' },
+    { no: 36, name: 'Resendis Perez John Emmanuel' },
+    { no: 37, name: 'Reyes Alonso Alanna Sofia' },
+    { no: 38, name: 'Reyna Ibarra Adrian Ali' },
+    { no: 39, name: 'Romo Cruz Yarenzy Ailyn' },
+    { no: 40, name: 'Torres Candelas Renata Nikole' },
+    { no: 41, name: 'Torres Romero Raul Alberto' }
+  ];
+  let studentsList = FALLBACK_STUDENTS;
+  let currentStudent = null;
+
   let soundEnabled = true;
   let audioCtx = null;
   let deck = [];
@@ -349,6 +397,12 @@
   }
 
   function startMission(idx) {
+    if (!currentStudent) {
+      $('missionStudentErr')?.classList.remove('hidden');
+      $('missionStudentSelect')?.focus();
+      return;
+    }
+    $('missionStudentErr')?.classList.add('hidden');
     stopMissionClock();
     const m = MISSIONS[idx] || MISSIONS[0];
     const pool = bank.filter((c) => c.den >= m.minDen && c.den <= m.maxDen);
@@ -519,8 +573,13 @@
     const finalGrade = ((mState.scoreSum / m.count) * 10).toFixed(1);
     $('missionPlayArea').classList.add('hidden');
     $('missionResultBox').classList.remove('hidden');
+    const stuLabel = currentStudent ? `#${currentStudent.no} · ${currentStudent.name}` : 'Alumno invitado';
+    if ($('mResultStudent')) $('mResultStudent').textContent = 'Alumno(a): ' + stuLabel;
     $('mResultTitle').textContent = `Calificación: ${finalGrade} / 10`;
     $('mResultDetail').textContent = `En ${m.title}: acertaste ${mState.firstTryCount} de ${m.count} preguntas a la primera (${mState.timeoutCount} por tiempo agotado).`;
+    if ($('mResultDate')) {
+      $('mResultDate').textContent = 'Fecha de evaluación: ' + new Date().toLocaleString('es-MX');
+    }
     const nextBtn = $('mNextMissionBtn');
     if (mState.missionIdx + 1 < MISSIONS.length) {
       nextBtn.classList.remove('hidden');
@@ -529,28 +588,96 @@
     }
   }
 
+  function switchTab(tab) {
+    if (tab !== 'missions') stopMissionClock();
+    document.querySelectorAll('.nav-tab').forEach((b) => {
+      const isCur = b.getAttribute('data-tab') === tab;
+      if (isCur) {
+        b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer';
+      } else if (b.getAttribute('data-tab') === 'missions') {
+        b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer';
+      } else {
+        b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer';
+      }
+    });
+    $('tabWelcome')?.classList.toggle('hidden', tab !== 'welcome');
+    $('tabPlay').classList.toggle('hidden', tab !== 'play');
+    $('tabMissions').classList.toggle('hidden', tab !== 'missions');
+    $('tabCatalog').classList.toggle('hidden', tab !== 'catalog');
+  }
+
+  function syncStudentSelection(val) {
+    const found = studentsList.find((s) => String(s.no) === String(val)) || null;
+    currentStudent = found;
+    if ($('welcomeStudentSelect')) $('welcomeStudentSelect').value = val || '';
+    if ($('missionStudentSelect')) $('missionStudentSelect').value = val || '';
+    if ($('headerStudentName')) {
+      $('headerStudentName').textContent = found ? `#${found.no} · ${found.name}` : 'Sin alumno';
+    }
+    if (found) {
+      $('welcomeStudentErr')?.classList.add('hidden');
+      $('missionStudentErr')?.classList.add('hidden');
+    }
+  }
+
+  async function loadStudents() {
+    let list = FALLBACK_STUDENTS;
+    try {
+      const resp = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
+      if (resp.ok) {
+        const csvText = await resp.text();
+        const lines = csvText.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        const parsed = [];
+        for (let i = 1; i < lines.length; i++) {
+          const commaIdx = lines[i].indexOf(',');
+          if (commaIdx === -1) continue;
+          const no = lines[i].slice(0, commaIdx).trim().replace(/^"|"$/g, '');
+          const name = lines[i].slice(commaIdx + 1).trim().replace(/^"|"$/g, '');
+          if (name) parsed.push({ no: Number(no) || i, name });
+        }
+        if (parsed.length > 0) list = parsed;
+      }
+    } catch (_) {}
+
+    studentsList = list;
+    [$('welcomeStudentSelect'), $('missionStudentSelect')].forEach((sel) => {
+      if (!sel) return;
+      sel.innerHTML = '<option value="">-- Elige tu nombre de la lista --</option>';
+      list.forEach((st) => {
+        const opt = document.createElement('option');
+        opt.value = String(st.no);
+        opt.textContent = `${st.no}. ${st.name}`;
+        sel.appendChild(opt);
+      });
+    });
+  }
+
   function initTabs() {
     document.querySelectorAll('.nav-tab').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const tab = btn.getAttribute('data-tab');
-        if (tab !== 'missions') stopMissionClock();
-        document.querySelectorAll('.nav-tab').forEach((b) => {
-          b.className = 'nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer';
-        });
-        btn.className = 'nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer';
-        $('tabPlay').classList.toggle('hidden', tab !== 'play');
-        $('tabMissions').classList.toggle('hidden', tab !== 'missions');
-        $('tabCatalog').classList.toggle('hidden', tab !== 'catalog');
-      });
+      btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
     });
   }
 
   function init() {
     populateLevels();
     initTabs();
+    loadStudents();
     renderCatalog();
     renderMissionsList();
     buildNewRound();
+
+    $('welcomeStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
+    $('missionStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
+    $('goTestModeBtn')?.addEventListener('click', () => switchTab('play'));
+    $('goMissionsModeBtn')?.addEventListener('click', () => {
+      if (!currentStudent) {
+        $('welcomeStudentErr')?.classList.remove('hidden');
+        $('welcomeStudentSelect')?.focus();
+        return;
+      }
+      switchTab('missions');
+    });
+    $('mPrintReportBtn')?.addEventListener('click', () => window.print());
 
     $('newGameBtn').addEventListener('click', buildNewRound);
     $('levelSelect').addEventListener('change', buildNewRound);
