@@ -86,15 +86,18 @@
     txt.innerHTML = html;
   }
 
+  let levelsList = [];
+
   function populateLevels() {
-    const levels = [...new Set(bank.map((c) => c.level))];
+    levelsList = [...new Set(bank.map((c) => c.level))];
     const sel = $('levelSelect');
     const catSel = $('catalogLevel');
-    levels.forEach((lv) => {
+    levelsList.forEach((lv, idx) => {
       const count = bank.filter((c) => c.level === lv).length;
       const opt1 = document.createElement('option');
       opt1.value = lv;
       opt1.textContent = lv + ' (' + count + ' fracciones)';
+      if (idx === 0) opt1.selected = true; // Iniciar siempre con Nivel 1 (fracciones sencillas)
       sel.appendChild(opt1);
 
       const opt2 = document.createElement('option');
@@ -219,6 +222,17 @@
         stopTimer();
         const acc = Math.round((matchedIds.size / attempts) * 100);
         $('winSummary').textContent = `Completaste ${totalPairs} pares de fracciones en ${attempts} intentos (${acc}% de precisión) y un tiempo de ${formatTime(timerSeconds)}.`;
+        const curLv = $('levelSelect').value;
+        const curIdx = levelsList.indexOf(curLv);
+        const nextBtn = $('nextLevelBtn');
+        if (nextBtn) {
+          if (curIdx !== -1 && curIdx + 1 < levelsList.length) {
+            nextBtn.classList.remove('hidden');
+            nextBtn.textContent = 'Subir a ' + levelsList[curIdx + 1].split('·')[0].trim() + ' →';
+          } else {
+            nextBtn.classList.add('hidden');
+          }
+        }
         setTimeout(() => $('winModal').classList.remove('hidden'), 350);
       }
     } else {
@@ -293,6 +307,13 @@
     $('difficultySelect').addEventListener('change', buildNewRound);
     $('modeSelect').addEventListener('change', buildNewRound);
     $('playAgainBtn').addEventListener('click', buildNewRound);
+    $('nextLevelBtn')?.addEventListener('click', () => {
+      const curIdx = levelsList.indexOf($('levelSelect').value);
+      if (curIdx !== -1 && curIdx + 1 < levelsList.length) {
+        $('levelSelect').value = levelsList[curIdx + 1];
+      }
+      buildNewRound();
+    });
     $('closeWinBtn').addEventListener('click', () => $('winModal').classList.add('hidden'));
     $('catalogSearch').addEventListener('input', renderCatalog);
     $('catalogLevel').addEventListener('change', renderCatalog);

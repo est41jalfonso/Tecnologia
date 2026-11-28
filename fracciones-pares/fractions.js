@@ -70,10 +70,11 @@
   }
 
   function levelForDen(den) {
-    if (den <= 6) return 'Básico (2 a 6)';
-    if (den <= 12) return 'Intermedio (7 a 12)';
-    if (den <= 20) return 'Avanzado (13 a 20)';
-    return 'Reto (21 a 100)';
+    if (den <= 6) return 'Nivel 1 · Inicial (2 a 6)';
+    if (den <= 10) return 'Nivel 2 · Intermedio (7 a 10)';
+    if (den <= 16) return 'Nivel 3 · Avanzado (11 a 16)';
+    if (den <= 26) return 'Nivel 4 · Experto (17 a 26)';
+    return 'Nivel 5 · Súper Reto (30 a 100)';
   }
 
   const FRACTIONS = [];
