@@ -2110,7 +2110,16 @@ async function generateReportsToDrive(wholeGroup){
       : '¡Listo! '+saved+' informe(s) PDF guardado(s) en "reportes de calificación" en Drive.';
   }catch(err){
     txt.textContent='Error al conectar con Google Drive / Apps Script.';
-    logEl.innerHTML+='<div style="color:#B91C1C;font-weight:700;">Detalle: '+esc(err.message||String(err))+'</div>';
+    const rawMsg=err.message||String(err);
+    const isCors=/failed to fetch|networkerror|load failed/i.test(rawMsg);
+    logEl.innerHTML+='<div style="color:#B91C1C;font-weight:700;">Detalle: '+esc(rawMsg)+'</div>'+
+      (isCors
+        ? '<div style="margin-top:6px;padding:8px 10px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;color:#7F1D1D;line-height:1.45;">'+
+            '<strong>Causa detectada (bloqueo CORS):</strong> Tu Web App de Apps Script está devolviendo una página de inicio de sesión en lugar de JSON porque <strong>Quién tiene acceso</strong> no está en <strong>"Cualquier persona"</strong>.<br>'+
+            '<strong>Solución:</strong> En Apps Script ve a <em>Implementar → Administrar implementaciones → Editar (lápiz) → Versión: Nueva versión → Quién tiene acceso: <strong>Cualquier persona</strong> → Implementar</em>. '+
+            '<a href="'+esc(scriptUrl+'?action=ping')+'" target="_blank" rel="noopener" style="color:#0369A1;font-weight:700;text-decoration:underline;">Probar URL en nueva pestaña</a>'+
+          '</div>'
+        : '');
   }finally{
     btnSingle.disabled=false;
     btnGroup.disabled=false;

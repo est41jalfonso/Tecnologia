@@ -204,6 +204,18 @@ function repararErrores1B() {
  * Endpoint Web App (GET) que devuelve los datos en tiempo real de RASGOS II y ASIST II.
  */
 function doGet(e) {
+  var action = (e && e.parameter && e.parameter.action) ? String(e.parameter.action).toLowerCase() : '';
+  if (action === 'ping') {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        ok: true,
+        status: 'ready',
+        service: 'EST41 Reportes Drive',
+        updatedAt: new Date().toISOString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   var groupParam = (e && e.parameter && e.parameter.group) ? String(e.parameter.group).toUpperCase() : '';
   var result = {
     ok: true,
@@ -237,7 +249,13 @@ function doGet(e) {
  */
 function doPost(e) {
   try {
-    var payload = JSON.parse(e.postData.contents);
+    var rawBody = (e && e.postData && e.postData.contents) ? e.postData.contents : (e && e.parameter && e.parameter.payload ? e.parameter.payload : '');
+    if (!rawBody) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'Solicitud vacía (sin postData).' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    var payload = JSON.parse(rawBody);
     if (!payload || payload.token !== TEACHER_TOKEN) {
       return ContentService
         .createTextOutput(JSON.stringify({ ok: false, error: 'No autorizado. Clave docente inválida.' }))
