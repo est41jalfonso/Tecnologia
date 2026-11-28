@@ -446,7 +446,6 @@
     stopMissionClock();
     const m = MISSIONS[mState.missionIdx];
     const target = mState.questions[mState.qIndex];
-    mState.qAttempts = 0;
     mState.timeLeft = m.timePerQ;
     mState.locked = false;
 
