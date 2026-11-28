@@ -5,6 +5,8 @@
 
   const SPREADSHEET_ID = '1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A';
   const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv`;
+  const STORAGE_SCRIPT_KEY = 'galactic_tables_apps_script_url';
+  const DEFAULT_PRIMARIA_SCRIPT_URL = '';
   const FALLBACK_STUDENTS = [
     { no: 1, name: 'Alvarez Reyes Maura Esmeralda' },
     { no: 2, name: 'Arroyo Esparza Luna Guadalupe' },
@@ -564,6 +566,39 @@
     }
   }
 
+  async function sendFractionResultToMasterDb(payload) {
+    const el = $('mSyncStatus');
+    const url = ((localStorage.getItem(STORAGE_SCRIPT_KEY) || '').trim()) || DEFAULT_PRIMARIA_SCRIPT_URL;
+    if (!url) {
+      if (el) {
+        el.className = 'text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2';
+        el.textContent = '⚠ Falta configurar la URL de la Base Maestra de Primaria (botón "⚙ Configurar BD").';
+      }
+      return;
+    }
+    if (el) {
+      el.className = 'text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200 rounded-xl px-3 py-2';
+      el.textContent = '📡 Guardando calificación en Base de Datos Maestra...';
+    }
+    try {
+      await fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      if (el) {
+        el.className = 'text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2';
+        el.textContent = '✅ Calificación registrada en la Base de Datos Maestra de 3.º A.';
+      }
+    } catch (_) {
+      if (el) {
+        el.className = 'text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2';
+        el.textContent = '⚠ No se pudo conectar con Google Sheets.';
+      }
+    }
+  }
+
   function finishMission() {
     stopMissionClock();
     const m = MISSIONS[mState.missionIdx];
@@ -574,9 +609,24 @@
     if ($('mResultStudent')) $('mResultStudent').textContent = 'Alumno(a): ' + stuLabel;
     $('mResultTitle').textContent = `Calificación: ${finalGrade} / 10`;
     $('mResultDetail').textContent = `En ${m.title}: ${mState.firstTryCount} aciertos y ${mState.errorCount} errores de ${m.count} preguntas (${mState.timeoutCount} por tiempo agotado).`;
+    const now = new Date();
     if ($('mResultDate')) {
-      $('mResultDate').textContent = 'Fecha de evaluación: ' + new Date().toLocaleString('es-MX');
+      $('mResultDate').textContent = 'Fecha de evaluación: ' + now.toLocaleString('es-MX');
     }
+    sendFractionResultToMasterDb({
+      game: 'fracciones',
+      date: now.toLocaleDateString('es-MX'),
+      time: now.toLocaleTimeString('es-MX'),
+      studentNo: currentStudent ? currentStudent.no : '',
+      studentName: currentStudent ? currentStudent.name : 'Invitado',
+      missionId: m.id,
+      missionTitle: m.title,
+      grade: Number(finalGrade),
+      correctHits: mState.firstTryCount,
+      errorCount: mState.errorCount,
+      timeoutCount: mState.timeoutCount,
+      totalQuestions: m.count
+    });
     const nextBtn = $('mNextMissionBtn');
     if (mState.missionIdx + 1 < MISSIONS.length) {
       nextBtn.classList.remove('hidden');
@@ -676,6 +726,13 @@
       switchTab('missions');
     });
     $('mPrintReportBtn')?.addEventListener('click', () => window.print());
+    $('configPrimariaDbBtn')?.addEventListener('click', () => {
+      const cur = localStorage.getItem(STORAGE_SCRIPT_KEY) || DEFAULT_PRIMARIA_SCRIPT_URL || '';
+      const next = prompt('Pega la URL /exec de la Base de Datos Maestra de Primaria (se comparte con Guerra Galáctica):', cur);
+      if (next !== null) {
+        localStorage.setItem(STORAGE_SCRIPT_KEY, next.trim());
+      }
+    });
 
     $('newGameBtn').addEventListener('click', buildNewRound);
     $('levelSelect').addEventListener('change', buildNewRound);
