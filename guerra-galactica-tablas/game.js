@@ -1421,7 +1421,12 @@
     btnRetryLevel.style.display = isVictory ? 'none' : 'inline-flex';
     modalGameOver.classList.remove('hidden');
 
-    sendReportToSheet(report);
+    if (state.isPracticeMode) {
+      const syncEl = document.getElementById('goSyncStatus');
+      if (syncEl) syncEl.textContent = '🧪 Modo Prueba: esta partida no se registra en la base de datos.';
+    } else {
+      sendReportToSheet(report);
+    }
   }
 
   async function sendReportToSheet(report) {
@@ -2169,13 +2174,28 @@
   }
 
   // Botones UI
+  const btnPracticeMode = document.getElementById('btnPracticeMode');
+
   btnStartGame.addEventListener('click', () => {
+    state.isPracticeMode = false;
     if (!ensureStudentSelected()) return;
     window.spaceAudio.init();
     startLevel(state.selectedStartLevel, true);
   });
 
+  if (btnPracticeMode) {
+    btnPracticeMode.addEventListener('click', () => {
+      state.isPracticeMode = true;
+      state.currentStudent = { no: 0, name: 'Modo Prueba (Sin registro)' };
+      elPilot.textContent = '🧪 Modo Prueba (Sin registro)';
+      showSecAuthError('');
+      window.spaceAudio.init();
+      startLevel(state.selectedStartLevel, true);
+    });
+  }
+
   btnStartFullscreen.addEventListener('click', () => {
+    state.isPracticeMode = false;
     if (!ensureStudentSelected()) return;
     window.spaceAudio.init();
     if (!document.fullscreenElement) {

@@ -267,6 +267,7 @@
   const SEC_DB_URL = 'https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec';
   const studentsByGroup = {};
   let isLoggedIn = false;
+  let isPracticeMode = false;
   let currentStudent = null;
 
   function normalizeShortKey(val) {
@@ -369,9 +370,24 @@
 
     showLoginError('');
     isLoggedIn = true;
+    isPracticeMode = false;
     currentStudent = { ...student, group: groupCode };
     if ($('headerStudentName')) {
       $('headerStudentName').textContent = `${student.name} (${groupCode})`;
+    }
+    $('loginGate')?.classList.add('hidden');
+    $('tabPlay')?.classList.remove('hidden');
+    $('tabCatalog')?.classList.add('hidden');
+    buildNewRound();
+  }
+
+  function enterPracticeMode() {
+    showLoginError('');
+    isLoggedIn = true;
+    isPracticeMode = true;
+    currentStudent = null;
+    if ($('headerStudentName')) {
+      $('headerStudentName').textContent = 'Modo Prueba (Sin registro)';
     }
     $('loginGate')?.classList.add('hidden');
     $('tabPlay')?.classList.remove('hidden');
@@ -404,6 +420,7 @@
 
     $('loginGroupSelect')?.addEventListener('change', (e) => loadGroupStudents(e.target.value));
     $('loginEnterBtn')?.addEventListener('click', attemptLogin);
+    $('loginPracticeBtn')?.addEventListener('click', enterPracticeMode);
     $('loginPasswordInput')?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();

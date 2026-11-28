@@ -108,9 +108,14 @@
           <input id="loginPasswordInput" type="password" autocomplete="off" placeholder="Ej. ARP1A01" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-mono font-bold uppercase text-slate-900" />
         </div>
         <p id="loginErrorMsg" class="hidden text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2"></p>
-        <button id="loginEnterBtn" type="button" class="w-full px-6 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-base shadow-md transition-all cursor-pointer">
-          Entrar al Videojuego →
-        </button>
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <button id="loginEnterBtn" type="button" class="flex-1 px-6 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-base shadow-md transition-all cursor-pointer">
+            Entrar a Misión Evaluada →
+          </button>
+          <button id="loginPracticeBtn" type="button" class="px-5 py-3.5 rounded-2xl bg-amber-100 hover:bg-amber-200 border-2 border-amber-400 text-amber-900 font-extrabold text-sm transition-all cursor-pointer">
+            Modo Prueba (Sin registro)
+          </button>
+        </div>
       </div>
     </section>
 
@@ -227,6 +232,6 @@
   </div>
 
   <script src="concepts.js?v=2"></script>
-  <script src="game.js?v=2"></script>
+  <script src="game.js?v=3"></script>
 </body>
 </html>

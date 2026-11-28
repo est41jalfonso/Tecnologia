@@ -475,15 +475,17 @@
     document.querySelectorAll('.nav-tab').forEach((b) => {
       b.addEventListener('click', () => {
         const t = b.getAttribute('data-tab');
-        if (t !== 'welcome' && gradeLevel === 'secundaria' && !validateSecondaryLogin()) {
-          switchTab('welcome');
-          return;
-        }
-        if (t === 'missions' && gradeLevel === 'primaria' && !currentStudent) {
-          switchTab('welcome');
-          $('welcomeStudentErr').textContent = 'Por favor, selecciona tu nombre antes de entrar a las misiones.';
-          $('welcomeStudentErr').classList.remove('hidden');
-          return;
+        if (t === 'missions') {
+          if (gradeLevel === 'secundaria' && !validateSecondaryLogin()) {
+            switchTab('welcome');
+            return;
+          }
+          if (gradeLevel === 'primaria' && !currentStudent) {
+            switchTab('welcome');
+            $('welcomeStudentErr').textContent = 'Por favor, selecciona tu nombre antes de entrar a las misiones.';
+            $('welcomeStudentErr').classList.remove('hidden');
+            return;
+          }
         }
         switchTab(t);
       });
@@ -507,7 +509,6 @@
     });
 
     $('goPracticeBtn').addEventListener('click', () => {
-      if (gradeLevel === 'secundaria' && !validateSecondaryLogin()) return;
       switchTab('practice');
     });
     $('goMissionsBtn').addEventListener('click', () => {
