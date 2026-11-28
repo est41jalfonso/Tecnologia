@@ -1,20 +1,8 @@
 /**
  * Google Apps Script — Base de Datos Maestra de Primaria Teodoro Olivares (3.º A)
- * Almacena y consolida los resultados de:
+ * Almacena el historial longitudinal y progreso evolutivo de:
  *   1) Guerra Galáctica de las Tablas (Sumas, Restas, Multiplicaciones, Divisiones)
  *   2) FraccionesPairs (Misiones Contrarreloj de Fracciones)
- *
- * INSTRUCCIONES PARA EL DOCENTE (UNA SOLA VEZ):
- * 1. Abre https://script.google.com y crea un proyecto nuevo (ej. "PrimariaTeodoro_BaseMaestra").
- * 2. Pega TODO este código y guarda (Ctrl + S).
- * 3. En el menú de funciones arriba, elige `inicializarBaseDeDatosPrimaria` y haz clic en "Ejecutar".
- *    - Se creará automáticamente el Google Sheet "Primaria_Teodoro_3A_Base_Datos_Maestra" en tu Drive
- *      con los 41 alumnos de 3.º A precargados y las pestañas de historial.
- * 4. Haz clic en Implementar -> Nueva implementación -> Tipo: "Aplicación web".
- *    - Ejecutar como: "Yo"
- *    - Quién tiene acceso: "Cualquier persona"
- * 5. Copia la URL terminada en /exec y pégala en el botón "⚙ Configurar" de ambos videojuegos
- *    (o pégala en DEFAULT_PRIMARIA_SCRIPT_URL en el código del sitio).
  */
 
 var MASTER_PRIMARIA_DB_ID = '1Exi6YOT1iVp7F-v7lEggqhO-LH9TWYeh86zyccMRwT4';
@@ -22,6 +10,7 @@ var SOURCE_ROSTER_SHEET_ID = '1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A';
 
 var PRIMARIA_SHEETS = {
   RESUMEN: 'ALUMNOS_3A_RESUMEN',
+  UNIFICADO: 'HISTORIAL_UNIFICADO',
   OPERACIONES: 'HISTORIAL_OPERACIONES',
   FRACCIONES: 'HISTORIAL_FRACCIONES',
   LOG: 'REGISTRO_LOG'
@@ -33,17 +22,40 @@ var RESUMEN_HEADERS = [
   'nombre',
   'operaciones_intentos',
   'operaciones_ultimo_nivel',
+  'operaciones_primera_calif',
   'operaciones_ultima_calif',
+  'operaciones_mejora',
+  'operaciones_tendencia',
   'operaciones_promedio',
   'operaciones_mejor_calif',
+  'operaciones_historial',
   'fracciones_misiones',
   'fracciones_ultima_mision',
+  'fracciones_primera_calif',
   'fracciones_ultima_calif',
+  'fracciones_mejora',
+  'fracciones_tendencia',
   'fracciones_promedio',
   'fracciones_mejor_calif',
+  'fracciones_historial',
   'promedio_general',
   'nivel_desempeno',
   'ultima_actividad'
+];
+
+var UNIFICADO_HEADERS = [
+  'fecha',
+  'hora',
+  'no_lista',
+  'nombre',
+  'area',
+  'mision_nivel',
+  'calificacion',
+  'aciertos',
+  'errores',
+  'tendencia_vs_anterior',
+  'detalle',
+  'registrado_en'
 ];
 
 var OPERACIONES_HEADERS = [
@@ -55,6 +67,7 @@ var OPERACIONES_HEADERS = [
   'calificacion',
   'puntaje',
   'aciertos',
+  'errores',
   'tiempo_promedio_seg',
   'detalles',
   'registrado_en'
@@ -147,6 +160,12 @@ function ensurePrimariaSheet_(ss, name, headers, color) {
       .setFontColor('#ffffff')
       .setFontWeight('bold');
     sh.setFrozenRows(1);
+  } else if (sh.getLastColumn() < headers.length) {
+    sh.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sh.getRange(1, 1, 1, headers.length)
+      .setBackground(color || '#065f46')
+      .setFontColor('#ffffff')
+      .setFontWeight('bold');
   }
   return sh;
 }
@@ -177,9 +196,37 @@ function performanceLabel_(grade) {
   return 'Requiere Apoyo';
 }
 
+function computeProgressStats_(grades) {
+  if (!grades || !grades.length) {
+    return { count: 0, first: '', last: '', delta: '', trend: '', avg: '', best: '', timeline: '' };
+  }
+  var first = grades[0];
+  var last = grades[grades.length - 1];
+  var avg = Math.round((grades.reduce(function(a, b) { return a + b; }, 0) / grades.length) * 10) / 10;
+  var best = Math.max.apply(null, grades);
+  var deltaVal = Math.round((last - first) * 10) / 10;
+  var deltaStr = grades.length === 1 ? '0.0' : (deltaVal > 0 ? '+' + deltaVal.toFixed(1) : deltaVal.toFixed(1));
+  var trend = 'Primer intento';
+  if (grades.length > 1) {
+    if (deltaVal > 0.2) trend = 'Mejorando ↑';
+    else if (deltaVal < -0.2) trend = 'Requiere refuerzo ↓';
+    else trend = 'Estable →';
+  }
+  var recent = grades.slice(-8).map(function(g) { return Number(g).toFixed(1); }).join(' → ');
+  return {
+    count: grades.length,
+    first: first,
+    last: last,
+    delta: deltaStr,
+    trend: trend,
+    avg: avg,
+    best: best,
+    timeline: recent
+  };
+}
+
 /**
- * Crea el Google Sheet Maestro de Primaria (3.º A) y precarga los 41 alumnos.
- * Ejecutar UNA SOLA VEZ desde el editor de Apps Script.
+ * Crea o actualiza el Google Sheet Maestro de Primaria (3.º A) con todas las pestañas de historial y progreso.
  */
 function inicializarBaseDeDatosPrimaria() {
   var dbId = getMasterPrimariaId_();
@@ -195,6 +242,7 @@ function inicializarBaseDeDatosPrimaria() {
   }
 
   var shRes = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.RESUMEN, RESUMEN_HEADERS, '#065f46');
+  ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.UNIFICADO, UNIFICADO_HEADERS, '#0f172a');
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.OPERACIONES, OPERACIONES_HEADERS, '#0284c7');
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.FRACCIONES, FRACCIONES_HEADERS, '#7c3aed');
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.LOG, LOG_HEADERS, '#334155');
@@ -202,13 +250,17 @@ function inicializarBaseDeDatosPrimaria() {
   if (shRes.getLastRow() <= 1) {
     var roster = loadSource3ARoster_();
     var rows = roster.map(function(st) {
-      return [st.no, '3A', st.name, 0, '', '', '', '', 0, '', '', '', '', '', '', ''];
+      return [
+        st.no, '3A', st.name,
+        0, '', '', '', '', '', '', '', '',
+        0, '', '', '', '', '', '', '', '',
+        '', '', ''
+      ];
     });
     shRes.getRange(2, 1, rows.length, RESUMEN_HEADERS.length).setValues(rows);
   }
 
   Logger.log('Base Maestra Primaria lista. ID: ' + dbId);
-  Logger.log('URL: ' + ss.getUrl());
   return { ok: true, masterDbId: dbId, url: ss.getUrl() };
 }
 
@@ -229,7 +281,12 @@ function actualizarResumenAlumno_(ss, studentNo, studentName) {
     }
   }
   if (rowIdx === -1) {
-    shRes.appendRow([studentNo || '', '3A', studentName, 0, '', '', '', '', 0, '', '', '', '', '', '', '']);
+    shRes.appendRow([
+      studentNo || '', '3A', studentName,
+      0, '', '', '', '', '', '', '', '',
+      0, '', '', '', '', '', '', '', '',
+      '', '', ''
+    ]);
     rowIdx = shRes.getLastRow();
   }
 
@@ -238,59 +295,99 @@ function actualizarResumenAlumno_(ss, studentNo, studentName) {
     return targetNorm && normText_(rowName) === targetNorm;
   }
 
-  // Estadísticas de Operaciones
   var opVals = shOp.getDataRange().getValues();
   var opGrades = [];
   var opLastLevel = '';
-  var opLastGrade = '';
   for (var oi = 1; oi < opVals.length; oi++) {
     if (matchStudent_(opVals[oi][2], opVals[oi][3])) {
       var g = Number(opVals[oi][5]);
       if (isFinite(g)) opGrades.push(g);
       opLastLevel = String(opVals[oi][4] || '');
-      opLastGrade = isFinite(g) ? g : '';
     }
   }
-  var opAvg = opGrades.length ? Math.round((opGrades.reduce(function(a, b) { return a + b; }, 0) / opGrades.length) * 10) / 10 : '';
-  var opBest = opGrades.length ? Math.max.apply(null, opGrades) : '';
+  var opStats = computeProgressStats_(opGrades);
 
-  // Estadísticas de Fracciones
   var frVals = shFr.getDataRange().getValues();
   var frGrades = [];
   var frLastMission = '';
-  var frLastGrade = '';
   for (var fi = 1; fi < frVals.length; fi++) {
     if (matchStudent_(frVals[fi][2], frVals[fi][3])) {
       var fg = Number(frVals[fi][5]);
       if (isFinite(fg)) frGrades.push(fg);
       frLastMission = String(frVals[fi][4] || '');
-      frLastGrade = isFinite(fg) ? fg : '';
     }
   }
-  var frAvg = frGrades.length ? Math.round((frGrades.reduce(function(a, b) { return a + b; }, 0) / frGrades.length) * 10) / 10 : '';
-  var frBest = frGrades.length ? Math.max.apply(null, frGrades) : '';
+  var frStats = computeProgressStats_(frGrades);
 
   var bothAvgs = [];
-  if (opAvg !== '') bothAvgs.push(opAvg);
-  if (frAvg !== '') bothAvgs.push(frAvg);
+  if (opStats.avg !== '') bothAvgs.push(opStats.avg);
+  if (frStats.avg !== '') bothAvgs.push(frStats.avg);
   var generalAvg = bothAvgs.length ? Math.round((bothAvgs.reduce(function(a, b) { return a + b; }, 0) / bothAvgs.length) * 10) / 10 : '';
   var nowStr = new Date().toLocaleString('es-MX');
 
-  shRes.getRange(rowIdx, 4, 1, 13).setValues([[
-    opGrades.length,
+  shRes.getRange(rowIdx, 4, 1, 21).setValues([[
+    opStats.count,
     opLastLevel,
-    opLastGrade,
-    opAvg,
-    opBest,
-    frGrades.length,
+    opStats.first,
+    opStats.last,
+    opStats.delta,
+    opStats.trend,
+    opStats.avg,
+    opStats.best,
+    opStats.timeline,
+    frStats.count,
     frLastMission,
-    frLastGrade,
-    frAvg,
-    frBest,
+    frStats.first,
+    frStats.last,
+    frStats.delta,
+    frStats.trend,
+    frStats.avg,
+    frStats.best,
+    frStats.timeline,
     generalAvg,
     performanceLabel_(generalAvg),
     nowStr
   ]]);
+
+  return { opStats: opStats, frStats: frStats };
+}
+
+function computePrevGradeTrend_(shUni, studentNo, studentName, area, newGrade) {
+  var targetNorm = normText_(studentName);
+  var vals = shUni.getDataRange().getValues();
+  var prevGrade = null;
+  for (var i = vals.length - 1; i >= 1; i--) {
+    var matchNo = studentNo && Number(vals[i][2]) === Number(studentNo);
+    var matchName = targetNorm && normText_(vals[i][3]) === targetNorm;
+    if ((matchNo || matchName) && String(vals[i][4]) === area) {
+      var g = Number(vals[i][6]);
+      if (isFinite(g)) {
+        prevGrade = g;
+        break;
+      }
+    }
+  }
+  if (prevGrade === null) return 'Primer intento';
+  var diff = Math.round((newGrade - prevGrade) * 10) / 10;
+  if (diff > 0) return 'Mejoró (+' + diff.toFixed(1) + ')';
+  if (diff < 0) return 'Bajó (' + diff.toFixed(1) + ')';
+  return 'Igual (0.0)';
+}
+
+/**
+ * Recalcula el progreso evolutivo de todos los alumnos en ALUMNOS_3A_RESUMEN.
+ */
+function recalcularProgresoTodos3A() {
+  var dbId = getMasterPrimariaId_();
+  if (!dbId) return inicializarBaseDeDatosPrimaria();
+  var ss = SpreadsheetApp.openById(dbId);
+  var shRes = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.RESUMEN, RESUMEN_HEADERS, '#065f46');
+  ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.UNIFICADO, UNIFICADO_HEADERS, '#0f172a');
+  var vals = shRes.getDataRange().getValues();
+  for (var i = 1; i < vals.length; i++) {
+    actualizarResumenAlumno_(ss, vals[i][0], vals[i][2]);
+  }
+  Logger.log('Progreso evolutivo recalculado para ' + (vals.length - 1) + ' alumnos.');
 }
 
 function doGet(e) {
@@ -301,7 +398,7 @@ function doGet(e) {
   if (action === 'ping') {
     return ContentService.createTextOutput(JSON.stringify({
       ok: true,
-      service: 'Primaria Teodoro Olivares 3A - Base Maestra',
+      service: 'Primaria Teodoro Olivares 3A - Base Maestra Evolutiva',
       masterDbConfigured: Boolean(dbId),
       updatedAt: new Date().toISOString()
     })).setMimeType(ContentService.MimeType.JSON);
@@ -344,23 +441,46 @@ function doPost(e) {
     var nowTime = payload.time || new Date().toLocaleTimeString('es-MX');
     var stuNo = payload.studentNo || '';
     var stuName = String(payload.studentName || 'Invitado').trim();
+    var isFracciones = payload.game === 'fracciones';
+    var areaLabel = isFracciones ? 'Fracciones' : 'Operaciones';
+    var misionLabel = isFracciones ? (payload.missionTitle || ('Misión ' + (payload.missionId || ''))) : (payload.levelReached || '');
+    var gradeNum = Number(isFracciones ? payload.grade : payload.overallGrade);
+    var hitsNum = Number(payload.correctHits) || 0;
+    var errsNum = Number(payload.errorCount) || 0;
 
-    if (payload.game === 'fracciones') {
+    var shUni = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.UNIFICADO, UNIFICADO_HEADERS, '#0f172a');
+    var trendVsPrev = computePrevGradeTrend_(shUni, stuNo, stuName, areaLabel, isFinite(gradeNum) ? gradeNum : 0);
+
+    shUni.appendRow([
+      nowDate,
+      nowTime,
+      stuNo,
+      stuName,
+      areaLabel,
+      misionLabel,
+      isFinite(gradeNum) ? gradeNum : '',
+      hitsNum,
+      errsNum,
+      trendVsPrev,
+      isFracciones ? ('Tiempo agotado: ' + (Number(payload.timeoutCount) || 0)) : (payload.details || ''),
+      nowIso
+    ]);
+
+    if (isFracciones) {
       var shFr = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.FRACCIONES, FRACCIONES_HEADERS, '#7c3aed');
       shFr.appendRow([
         nowDate,
         nowTime,
         stuNo,
         stuName,
-        payload.missionTitle || ('Misión ' + (payload.missionId || '')),
-        Number(payload.grade),
-        Number(payload.correctHits) || 0,
-        Number(payload.errorCount) || 0,
+        misionLabel,
+        isFinite(gradeNum) ? gradeNum : '',
+        hitsNum,
+        errsNum,
         Number(payload.timeoutCount) || 0,
         Number(payload.totalQuestions) || 20,
         nowIso
       ]);
-      actualizarResumenAlumno_(ss, stuNo, stuName);
     } else {
       var shOp = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.OPERACIONES, OPERACIONES_HEADERS, '#0284c7');
       shOp.appendRow([
@@ -368,27 +488,29 @@ function doPost(e) {
         nowTime,
         stuNo,
         stuName,
-        payload.levelReached || '',
-        Number(payload.overallGrade),
+        misionLabel,
+        isFinite(gradeNum) ? gradeNum : '',
         Number(payload.score) || 0,
-        Number(payload.correctHits) || 0,
+        hitsNum,
+        errsNum,
         payload.avgTime || '',
         payload.details || '',
         nowIso
       ]);
-      actualizarResumenAlumno_(ss, stuNo, stuName);
     }
+
+    actualizarResumenAlumno_(ss, stuNo, stuName);
 
     var shLog = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.LOG, LOG_HEADERS, '#334155');
     shLog.insertRowAfter(1);
     shLog.getRange(2, 1, 1, LOG_HEADERS.length).setValues([[
       nowIso,
-      payload.game === 'fracciones' ? 'Misión Fracciones' : 'Misión Operaciones',
+      'Misión ' + areaLabel,
       (stuNo ? '#' + stuNo + ' ' : '') + stuName,
-      'Calificación: ' + (payload.game === 'fracciones' ? payload.grade : payload.overallGrade)
+      'Calificación: ' + gradeNum + ' (' + trendVsPrev + ')'
     ]]);
 
-    return ContentService.createTextOutput(JSON.stringify({ ok: true, masterDbId: dbId }))
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, masterDbId: dbId, trend: trendVsPrev }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.message }))

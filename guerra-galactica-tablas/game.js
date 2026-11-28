@@ -1247,7 +1247,12 @@
     const studentNo = state.currentStudent ? state.currentStudent.no : '';
     const studentName = state.currentStudent ? state.currentStudent.name : 'Invitado';
 
+    const totalAttempts = sectionEntries.reduce((acc, s) => acc + s.attempts, 0);
+    const totalCorrect = sectionEntries.reduce((acc, s) => acc + s.correct, 0);
+    const errorCount = Math.max(0, totalAttempts - totalCorrect);
+
     const report = {
+      game: 'operaciones',
       date: dateStr,
       time: timeStr,
       studentNo,
@@ -1256,11 +1261,13 @@
       score: state.score,
       overallGrade,
       avgTime,
-      correctHits: state.correctHits,
+      correctHits: totalCorrect || state.correctHits,
+      errorCount,
+      totalAttempts,
       sectionEntries,
       questionLog: [...state.questionLog],
       tableGrades,
-      details: `Prom: ${avgTime}s` + (detailParts.length ? ` | ${detailParts.join(' | ')}` : ''),
+      details: `Prom: ${avgTime}s | Aciertos: ${totalCorrect}/${totalAttempts} | Errores: ${errorCount}` + (detailParts.length ? ` | ${detailParts.join(' | ')}` : ''),
     };
     state.lastReport = report;
 
