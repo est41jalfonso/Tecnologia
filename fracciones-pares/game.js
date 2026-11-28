@@ -6,7 +6,7 @@
   const SPREADSHEET_ID = '1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A';
   const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv`;
   const STORAGE_SCRIPT_KEY = 'galactic_tables_apps_script_url';
-  const DEFAULT_PRIMARIA_SCRIPT_URL = '';
+  const DEFAULT_PRIMARIA_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymWYF39eoixwUbNNRARS5A_YdbCiInO71hJt5dl4U0Y62yG3SAwIfZy03EarwzswfJGQ/exec';
   const FALLBACK_STUDENTS = [
     { no: 1, name: 'Alvarez Reyes Maura Esmeralda' },
     { no: 2, name: 'Arroyo Esparza Luna Guadalupe' },
