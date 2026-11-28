@@ -2,6 +2,7 @@
 (function () {
   const bank = window.FRACTIONS_PAIRS_BANK || [];
   const equivFamilies = window.EQUIVALENT_FAMILIES || [];
+  const decBank = window.DECIMAL_FRACTIONS_BANK || [];
   const $ = (id) => document.getElementById(id);
 
   const SPREADSHEET_ID = '1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A';
@@ -141,7 +142,11 @@
 
   function populateLevels() {
     const baseLevels = [...new Set(bank.map((c) => c.level))];
-    const equivLevels = ['Equivalentes · Nivel A (1/2, 1/3, 1/4)', 'Equivalentes · Nivel B (Quintos, Sextos, Octavos)'];
+    const equivLevels = [
+      'Equivalentes · Nivel A (1/2, 1/3, 1/4)',
+      'Equivalentes · Nivel B (Quintos, Sextos, Octavos)',
+      'Decimales ↔ Fracciones (0.5, 0.25, 0.75…)'
+    ];
     levelsList = baseLevels.concat(equivLevels);
     const sel = $('levelSelect');
     const catSel = $('catalogLevel');
@@ -178,6 +183,31 @@
     $('winModal').classList.add('hidden');
 
     const lv = $('levelSelect').value;
+    if (lv.startsWith('Decimales')) {
+      const desiredPairs = Number($('difficultySelect').value) || 8;
+      totalPairs = Math.min(desiredPairs, decBank.length);
+      const chosen = shuffle(decBank).slice(0, totalPairs);
+      const cards = [];
+      chosen.forEach((d) => {
+        cards.push({
+          uid: d.id + '-frac',
+          id: d.id,
+          kind: 'image',
+          item: { num: d.num, den: d.den, label: d.label, svg: d.svg, hint: `${d.label} = ${d.dec} (${d.step})`, term: d.label }
+        });
+        cards.push({
+          uid: d.id + '-dec',
+          id: d.id,
+          kind: 'term',
+          item: { num: d.dec, den: 'decimal', label: d.dec, isDecimalCard: true, hint: `${d.decToFrac}`, term: d.dec }
+        });
+      });
+      deck = shuffle(cards);
+      renderBoard();
+      updateStats();
+      setFeedback('info', 'Modo Decimales: une cada <strong>fracción con su pastel</strong> con el <strong>número decimal</strong> equivalente.');
+      return;
+    }
     if (lv.startsWith('Equivalentes · Nivel')) {
       const grp = lv.includes('Nivel A') ? 'A' : 'B';
       const famPool = equivFamilies.filter((f) => f.group === grp);
@@ -248,17 +278,25 @@
 
       const frontContent =
         card.kind === 'term'
-          ? `
-            <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200 text-[10px] font-extrabold uppercase tracking-wider mb-2">
-              Fracción
-            </span>
-            <div class="frac-display" aria-label="${card.item.label}">
-              <span class="frac-num">${card.item.num}</span>
-              <span class="frac-bar"></span>
-              <span class="frac-den">${card.item.den}</span>
-            </div>
-            <span class="text-xs font-bold text-slate-600 mt-1.5">${card.item.num} de ${card.item.den}</span>
-          `
+          ? (card.item.isDecimalCard
+            ? `
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-extrabold uppercase tracking-wider mb-2">
+                Número Decimal
+              </span>
+              <div class="font-display font-extrabold text-4xl text-slate-900 my-2">${card.item.label}</div>
+              <span class="text-xs font-bold text-slate-600">Valor decimal</span>
+            `
+            : `
+              <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200 text-[10px] font-extrabold uppercase tracking-wider mb-2">
+                Fracción
+              </span>
+              <div class="frac-display" aria-label="${card.item.label}">
+                <span class="frac-num">${card.item.num}</span>
+                <span class="frac-bar"></span>
+                <span class="frac-den">${card.item.den}</span>
+              </div>
+              <span class="text-xs font-bold text-slate-600 mt-1.5">${card.item.num} de ${card.item.den}</span>
+            `)
           : `
             <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider mb-1">
               Pastel
@@ -383,12 +421,15 @@
 
   // ==================== MISIONES CONTRARRELOJ (20 PREGUNTAS C/U) ====================
   const MISSIONS = [
-    { id: 1, title: 'Misión 1: Primeros Pasos', desc: 'Fracciones simples (1/2, 2/3, 1/4, 3/5)', minDen: 2, maxDen: 6, timePerQ: 20, count: 20, color: 'emerald' },
-    { id: 2, title: 'Misión 2: Explorador', desc: 'Séptimos, octavos, novenos y décimos', minDen: 5, maxDen: 10, timePerQ: 18, count: 20, color: 'sky' },
-    { id: 3, title: 'Misión 3: Desafío Medio', desc: 'Denominadores medianos (9 a 16)', minDen: 9, maxDen: 16, timePerQ: 16, count: 20, color: 'purple' },
-    { id: 4, title: 'Misión 4: Maestro', desc: 'Fracciones más grandes (15 a 26)', minDen: 15, maxDen: 26, timePerQ: 15, count: 20, color: 'amber' },
-    { id: 5, title: 'Misión 5: Súper Reto', desc: 'Hasta centésimos (20 a 100)', minDen: 18, maxDen: 100, timePerQ: 14, count: 20, color: 'rose' },
-    { id: 6, title: 'Misión 6: Equivalentes', desc: 'Relaciona fracciones equivalentes (1/2 = 2/4)', isEquiv: true, timePerQ: 18, count: 20, color: 'sky' }
+    { id: 1, section: 'Representación Gráfica', title: 'Misión 1: Primeros Pasos', desc: 'Fracciones simples (1/2, 2/3, 1/4, 3/5)', minDen: 2, maxDen: 6, timePerQ: 20, count: 20 },
+    { id: 2, section: 'Representación Gráfica', title: 'Misión 2: Explorador', desc: 'Séptimos, octavos, novenos y décimos', minDen: 5, maxDen: 10, timePerQ: 18, count: 20 },
+    { id: 3, section: 'Representación Gráfica', title: 'Misión 3: Desafío Medio', desc: 'Denominadores medianos (9 a 16)', minDen: 9, maxDen: 16, timePerQ: 16, count: 20 },
+    { id: 4, section: 'Representación Gráfica', title: 'Misión 4: Maestro', desc: 'Fracciones más grandes (15 a 26)', minDen: 15, maxDen: 26, timePerQ: 15, count: 20 },
+    { id: 5, section: 'Representación Gráfica', title: 'Misión 5: Súper Reto', desc: 'Hasta centésimos (20 a 100)', minDen: 18, maxDen: 100, timePerQ: 14, count: 20 },
+    { id: 6, section: 'Fracciones Equivalentes', title: 'Misión 6: Equivalentes Básicas', desc: 'Equivalencias de 1/2, 1/3, 2/3, 1/4 y 3/4', isEquiv: true, eqGroup: 'A', timePerQ: 18, count: 20 },
+    { id: 7, section: 'Fracciones Equivalentes', title: 'Misión 7: Equivalentes Avanzadas', desc: 'Quintos, sextos y octavos equivalentes', isEquiv: true, eqGroup: 'B', timePerQ: 18, count: 20 },
+    { id: 8, section: 'Fracciones y Números Decimales', title: 'Misión 8: Fracción a Decimal', desc: 'Convierte fracciones (1/2, 3/4, 2/5) a decimal', decMode: 'fracToDec', timePerQ: 18, count: 20 },
+    { id: 9, section: 'Fracciones y Números Decimales', title: 'Misión 9: Decimal a Fracción', desc: 'Convierte decimales (0.5, 0.25, 0.6) a fracción', decMode: 'decToFrac', timePerQ: 18, count: 20 }
   ];
 
   let mState = {
@@ -426,22 +467,33 @@
   function renderMissionsList() {
     const grid = $('missionsCardsGrid');
     if (!grid) return;
-    grid.innerHTML = MISSIONS.map((m, idx) => `
-      <button type="button" data-mission-idx="${idx}" class="text-left bg-slate-50 hover:bg-white rounded-2xl border-2 border-slate-200 hover:border-purple-400 p-4 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-3 cursor-pointer">
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between gap-2">
-            <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900 text-[10px] font-extrabold uppercase">${m.count} Preguntas</span>
-            <span class="text-xs font-extrabold text-amber-700">${m.timePerQ}s/preg</span>
+    const sections = [...new Set(MISSIONS.map((m) => m.section))];
+    grid.innerHTML = sections.map((secName) => {
+      const items = MISSIONS.map((m, idx) => ({ m, idx })).filter((x) => x.m.section === secName);
+      return `
+        <div class="space-y-2.5">
+          <h3 class="font-display font-extrabold text-sm uppercase tracking-wider text-slate-700 border-b border-slate-200 pb-1">${secName}</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            ${items.map(({ m, idx }) => `
+              <button type="button" data-mission-idx="${idx}" class="text-left bg-slate-50 hover:bg-white rounded-2xl border-2 border-slate-200 hover:border-purple-400 p-4 shadow-xs hover:shadow-md transition-all flex flex-col justify-between gap-3 cursor-pointer">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900 text-[10px] font-extrabold uppercase">${m.count} Preguntas</span>
+                    <span class="text-xs font-extrabold text-amber-700">${m.timePerQ}s/preg</span>
+                  </div>
+                  <h4 class="font-display font-extrabold text-base text-slate-900">${m.title}</h4>
+                  <p class="text-xs text-slate-600 font-medium">${m.desc}</p>
+                </div>
+                <span class="inline-flex items-center gap-1 text-xs font-extrabold text-purple-700">
+                  <span>Iniciar Misión</span>
+                  <span class="material-symbols-outlined text-[16px]">play_arrow</span>
+                </span>
+              </button>
+            `).join('')}
           </div>
-          <h3 class="font-display font-extrabold text-base text-slate-900">${m.title}</h3>
-          <p class="text-xs text-slate-600 font-medium">${m.desc}</p>
         </div>
-        <span class="inline-flex items-center gap-1 text-xs font-extrabold text-purple-700">
-          <span>Iniciar Misión</span>
-          <span class="material-symbols-outlined text-[16px]">play_arrow</span>
-        </span>
-      </button>
-    `).join('');
+      `;
+    }).join('');
 
     grid.querySelectorAll('[data-mission-idx]').forEach((btn) => {
       btn.addEventListener('click', () => startMission(Number(btn.getAttribute('data-mission-idx'))));
@@ -458,9 +510,15 @@
     stopMissionClock();
     const m = MISSIONS[idx] || MISSIONS[0];
     const picked = [];
-    if (m.isEquiv) {
+    if (m.decMode) {
+      while (picked.length < m.count) {
+        for (const d of shuffle(decBank)) {
+          if (picked.length < m.count) picked.push(d);
+        }
+      }
+    } else if (m.isEquiv) {
       const equivQuestions = [];
-      equivFamilies.forEach((fam) => {
+      equivFamilies.filter((f) => !m.eqGroup || f.group === m.eqGroup).forEach((fam) => {
         fam.equivalents.forEach((eq) => {
           equivQuestions.push({
             id: eq.label,
@@ -524,20 +582,49 @@
     mState.locked = false;
 
     $('mMissionBadge').textContent = m.title;
-    if (m.isEquiv) {
+    if (m.decMode === 'fracToDec') {
+      $('mQuestionText').textContent = `Convierte la fracción ${target.label} a número decimal (${target.num} ÷ ${target.den}):`;
+      $('mTargetFraction').innerHTML = `
+        <span class="frac-num">${target.num}</span>
+        <span class="frac-bar"></span>
+        <span class="frac-den">${target.den}</span>
+      `;
+    } else if (m.decMode === 'decToFrac') {
+      $('mQuestionText').textContent = `¿Qué fracción con su pastel representa exactamente el número decimal ${target.dec}?`;
+      $('mTargetFraction').innerHTML = `<span class="font-display font-extrabold text-4xl text-slate-900 py-2">${target.dec}</span>`;
+    } else if (m.isEquiv) {
       $('mQuestionText').textContent = `¿Cuál de las 3 opciones es una fracción EQUIVALENTE a ${target.label} (ocupa exactamente la misma parte del pastel)?`;
+      $('mTargetFraction').innerHTML = `
+        <span class="frac-num">${target.num}</span>
+        <span class="frac-bar"></span>
+        <span class="frac-den">${target.den}</span>
+      `;
     } else {
       $('mQuestionText').textContent = buildQuestionPrompt(target, mState.qIndex);
+      $('mTargetFraction').innerHTML = `
+        <span class="frac-num">${target.num}</span>
+        <span class="frac-bar"></span>
+        <span class="frac-den">${target.den}</span>
+      `;
     }
-    $('mTargetFraction').innerHTML = `
-      <span class="frac-num">${target.num}</span>
-      <span class="frac-bar"></span>
-      <span class="frac-den">${target.den}</span>
-    `;
     $('mFeedbackBox').classList.add('hidden');
 
     let options;
-    if (m.isEquiv) {
+    if (m.decMode === 'fracToDec') {
+      const dist = shuffle(decBank.filter((d) => d.id !== target.id));
+      options = shuffle([
+        { id: target.id, label: target.dec, isTextOnly: true, hint: target.step },
+        { id: dist[0].id, label: dist[0].dec, isTextOnly: true, hint: dist[0].step },
+        { id: dist[1].id, label: dist[1].dec, isTextOnly: true, hint: dist[1].step }
+      ]);
+    } else if (m.decMode === 'decToFrac') {
+      const dist = shuffle(decBank.filter((d) => d.id !== target.id));
+      options = shuffle([
+        { id: target.id, label: target.label, svg: target.svg, hint: target.decToFrac },
+        { id: dist[0].id, label: dist[0].label, svg: dist[0].svg, hint: dist[0].decToFrac },
+        { id: dist[1].id, label: dist[1].label, svg: dist[1].svg, hint: dist[1].decToFrac }
+      ]);
+    } else if (m.isEquiv) {
       const targetVal = target.num / target.den;
       const distPool = shuffle(
         bank.filter((c) => Math.abs(c.num / c.den - targetVal) > 0.04 && c.den >= 4 && c.den <= 20)
@@ -559,12 +646,20 @@
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'mission-option-card bg-white/95 rounded-3xl border-3 border-slate-200 hover:border-sky-400 p-5 shadow-sm flex flex-col items-center justify-center gap-2 cursor-pointer';
-      btn.innerHTML = `
-        <div class="pointer-events-none">${opt.svg}</div>
-        ${m.isEquiv
-          ? `<span class="px-3 py-0.5 rounded-full bg-sky-100 border border-sky-300 font-display font-extrabold text-base text-slate-900">${opt.label}</span>`
-          : `<span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Seleccionar dibujo</span>`}
-      `;
+      if (opt.isTextOnly) {
+        btn.innerHTML = `
+          <span class="px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase">Número Decimal</span>
+          <span class="font-display font-extrabold text-4xl text-slate-900 my-4">${opt.label}</span>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Seleccionar</span>
+        `;
+      } else {
+        btn.innerHTML = `
+          <div class="pointer-events-none">${opt.svg}</div>
+          ${(m.isEquiv || m.decMode === 'decToFrac')
+            ? `<span class="px-3 py-0.5 rounded-full bg-sky-100 border border-sky-300 font-display font-extrabold text-base text-slate-900">${opt.label}</span>`
+            : `<span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Seleccionar dibujo</span>`}
+        `;
+      }
       btn.addEventListener('click', () => handleMissionAnswer(opt, btn));
       grid.appendChild(btn);
     });
@@ -775,6 +870,26 @@
     `;
   }
 
+  function renderDecimalsExplorer() {
+    const grid = $('decimalsDisplayGrid');
+    if (!grid || !decBank.length) return;
+    grid.innerHTML = decBank.map((d) => `
+      <article class="bg-white rounded-3xl border-2 border-amber-200 p-5 shadow-sm flex flex-col items-center text-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 text-xs font-extrabold">${d.label}</span>
+          <span class="text-slate-400 font-extrabold">=</span>
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold">${d.dec}</span>
+        </div>
+        <div class="svg-wrap">${d.svg}</div>
+        <div class="font-display font-extrabold text-2xl text-slate-900">${d.label} = ${d.dec}</div>
+        <div class="text-xs font-bold text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 w-full">
+          <div>Fracción → Decimal: <strong class="text-sky-700">${d.step}</strong></div>
+          <div>Decimal → Fracción: <strong class="text-emerald-700">${d.decToFrac}</strong></div>
+        </div>
+      </article>
+    `).join('');
+  }
+
   function switchTab(tab) {
     if (tab !== 'missions') stopMissionClock();
     document.querySelectorAll('.nav-tab').forEach((b) => {
@@ -785,12 +900,15 @@
         b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer';
       } else if (t === 'equivalents') {
         b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-sky-800 bg-sky-50 hover:bg-sky-100 border border-sky-300 cursor-pointer';
+      } else if (t === 'decimals') {
+        b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 cursor-pointer';
       } else {
         b.className = 'nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer';
       }
     });
     $('tabWelcome')?.classList.toggle('hidden', tab !== 'welcome');
     $('tabEquivalents')?.classList.toggle('hidden', tab !== 'equivalents');
+    $('tabDecimals')?.classList.toggle('hidden', tab !== 'decimals');
     $('tabPlay').classList.toggle('hidden', tab !== 'play');
     $('tabMissions').classList.toggle('hidden', tab !== 'missions');
     $('tabCatalog').classList.toggle('hidden', tab !== 'catalog');
@@ -855,13 +973,13 @@
     loadStudents();
     renderCatalog();
     renderEquivalentsExplorer();
+    renderDecimalsExplorer();
     renderMissionsList();
     buildNewRound();
 
     $('welcomeStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
     $('missionStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
     $('goTestModeBtn')?.addEventListener('click', () => switchTab('play'));
-    $('goEquivalentsModeBtn')?.addEventListener('click', () => switchTab('equivalents'));
     $('eqToMemoryBtn')?.addEventListener('click', () => {
       $('levelSelect').value = 'Equivalentes · Nivel A (1/2, 1/3, 1/4)';
       buildNewRound();
@@ -870,6 +988,15 @@
     $('eqToMissionBtn')?.addEventListener('click', () => {
       switchTab('missions');
       if (currentStudent) startMission(5);
+    });
+    $('decToMemoryBtn')?.addEventListener('click', () => {
+      $('levelSelect').value = 'Decimales ↔ Fracciones (0.5, 0.25, 0.75…)';
+      buildNewRound();
+      switchTab('play');
+    });
+    $('decToMissionBtn')?.addEventListener('click', () => {
+      switchTab('missions');
+      if (currentStudent) startMission(7);
     });
     $('goMissionsModeBtn')?.addEventListener('click', () => {
       if (!currentStudent) {

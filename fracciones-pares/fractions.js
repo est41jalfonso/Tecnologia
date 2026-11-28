@@ -163,4 +163,37 @@
   });
 
   window.EQUIVALENT_FAMILIES = EQUIVALENT_FAMILIES;
+
+  // Banco de Fracciones <-> Números Decimales (para Explorador, Memorama y Misiones 8 y 9)
+  const DECIMAL_SPECS = [
+    { num: 1, den: 2, dec: '0.5', step: '1 ÷ 2 = 0.5', decToFrac: '0.5 = 5/10 = 1/2', color: '#0284C7' },
+    { num: 1, den: 4, dec: '0.25', step: '1 ÷ 4 = 0.25', decToFrac: '0.25 = 25/100 = 1/4', color: '#7C3AED' },
+    { num: 3, den: 4, dec: '0.75', step: '3 ÷ 4 = 0.75', decToFrac: '0.75 = 75/100 = 3/4', color: '#059669' },
+    { num: 1, den: 5, dec: '0.2', step: '1 ÷ 5 = 0.2', decToFrac: '0.2 = 2/10 = 1/5', color: '#D97706' },
+    { num: 2, den: 5, dec: '0.4', step: '2 ÷ 5 = 0.4', decToFrac: '0.4 = 4/10 = 2/5', color: '#0284C7' },
+    { num: 3, den: 5, dec: '0.6', step: '3 ÷ 5 = 0.6', decToFrac: '0.6 = 6/10 = 3/5', color: '#7C3AED' },
+    { num: 4, den: 5, dec: '0.8', step: '4 ÷ 5 = 0.8', decToFrac: '0.8 = 8/10 = 4/5', color: '#059669' },
+    { num: 1, den: 8, dec: '0.125', step: '1 ÷ 8 = 0.125', decToFrac: '0.125 = 125/1000 = 1/8', color: '#D97706' },
+    { num: 3, den: 8, dec: '0.375', step: '3 ÷ 8 = 0.375', decToFrac: '0.375 = 375/1000 = 3/8', color: '#0284C7' },
+    { num: 5, den: 8, dec: '0.625', step: '5 ÷ 8 = 0.625', decToFrac: '0.625 = 625/1000 = 5/8', color: '#7C3AED' },
+    { num: 7, den: 8, dec: '0.875', step: '7 ÷ 8 = 0.875', decToFrac: '0.875 = 875/1000 = 7/8', color: '#059669' },
+    { num: 1, den: 10, dec: '0.1', step: '1 ÷ 10 = 0.1', decToFrac: '0.1 = 1/10', color: '#D97706' },
+    { num: 3, den: 10, dec: '0.3', step: '3 ÷ 10 = 0.3', decToFrac: '0.3 = 3/10', color: '#0284C7' },
+    { num: 7, den: 10, dec: '0.7', step: '7 ÷ 10 = 0.7', decToFrac: '0.7 = 7/10', color: '#7C3AED' },
+    { num: 9, den: 10, dec: '0.9', step: '9 ÷ 10 = 0.9', decToFrac: '0.9 = 9/10', color: '#059669' },
+    { num: 1, den: 20, dec: '0.05', step: '1 ÷ 20 = 0.05', decToFrac: '0.05 = 5/100 = 1/20', color: '#D97706' },
+    { num: 3, den: 20, dec: '0.15', step: '3 ÷ 20 = 0.15', decToFrac: '0.15 = 15/100 = 3/20', color: '#0284C7' },
+    { num: 1, den: 25, dec: '0.04', step: '1 ÷ 25 = 0.04', decToFrac: '0.04 = 4/100 = 1/25', color: '#7C3AED' }
+  ];
+
+  window.DECIMAL_FRACTIONS_BANK = DECIMAL_SPECS.map((d) => ({
+    id: `dec-${d.num}-${d.den}`,
+    num: d.num,
+    den: d.den,
+    label: `${d.num}/${d.den}`,
+    dec: d.dec,
+    step: d.step,
+    decToFrac: d.decToFrac,
+    svg: renderCircleSvg(d.num, d.den, d.color)
+  }));
 })();
