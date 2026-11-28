@@ -58,8 +58,26 @@
 
   function formatSentenceHtml(text, fillVal, status) {
     const cls = status === 'ok' ? 'blank-pill is-filled-ok' : (status === 'err' ? 'blank-pill is-filled-err' : 'blank-pill');
-    const inner = fillVal ? fillVal : '___';
-    return text.replace(/\[___\]/g, `<span class="${cls}">${inner}</span>`);
+    if (!fillVal) {
+      return text.replace(/\[___\]/g, `<span class="${cls}">___</span>`);
+    }
+    let parts = [fillVal];
+    if (fillVal === 'sin ¿ ?' || fillVal === 'Sin signos') {
+      parts = ['', ''];
+    } else if (fillVal.includes(' ... ')) {
+      parts = fillVal.split(' ... ').map((s) => s.trim());
+    } else if (fillVal.includes(' / ')) {
+      parts = fillVal.split(' / ').map((s) => s.trim());
+    } else if (fillVal === 'sin h') {
+      parts = [''];
+    }
+    let idx = 0;
+    return text.replace(/\[___\]/g, () => {
+      const piece = parts[idx] !== undefined ? parts[idx] : parts[parts.length - 1];
+      idx++;
+      if (piece === '') return '';
+      return `<span class="${cls}">${piece}</span>`;
+    });
   }
 
   function setGradeLevel(lvl) {
