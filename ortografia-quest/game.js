@@ -6,6 +6,7 @@
   const PRIMARIA_CSV_URL = 'https://docs.google.com/spreadsheets/d/1zXwryfrHm9sgDvmAmGz_OpP6PVxtH-3g2vtk0ib6W2A/export?format=csv';
   const STORAGE_SCRIPT_KEY = 'galactic_tables_apps_script_url';
   const DEFAULT_PRIMARIA_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymWYF39eoixwUbNNRARS5A_YdbCiInO71hJt5dl4U0Y62yG3SAwIfZy03EarwzswfJGQ/exec';
+  const DEFAULT_SEC_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec';
 
   const FALLBACK_3A = [
     { no: 1, name: 'Alvarez Reyes Maura Esmeralda' }, { no: 2, name: 'Arroyo Esparza Luna Guadalupe' },
@@ -33,6 +34,7 @@
 
   let gradeLevel = 'primaria';
   let studentsList = FALLBACK_3A;
+  let secStudentsByGroup = {};
   let currentStudent = null;
   let pHits = 0;
   let pCurrent = null;
@@ -97,6 +99,9 @@
       : 'Misiones Secundaria 1.º Grado (Lenguajes Ximhai)';
     currentStudent = null;
     $('headerStudentName').textContent = 'Sin alumno';
+    if (gradeLevel === 'secundaria') {
+      loadSecundariaGroup($('secGroupSelect').value);
+    }
     loadPracticeQuestion();
     renderMissionsList();
   }
@@ -324,39 +329,64 @@
     const now = new Date();
     $('mResultDate').textContent = 'Fecha de evaluación: ' + now.toLocaleString('es-MX');
 
-    if (gradeLevel === 'primaria' && currentStudent) {
-      const syncEl = $('mSyncStatus');
+    const syncEl = $('mSyncStatus');
+    if (currentStudent) {
       syncEl.classList.remove('hidden');
       syncEl.className = 'text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200 rounded-xl px-3 py-2';
       syncEl.textContent = '📡 Guardando calificación en Base de Datos Maestra...';
       try {
-        const url = ((localStorage.getItem(STORAGE_SCRIPT_KEY) || '').trim()) || DEFAULT_PRIMARIA_SCRIPT_URL;
-        await fetch(url, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            game: 'operaciones',
-            date: now.toLocaleDateString('es-MX'),
-            time: now.toLocaleTimeString('es-MX'),
-            studentNo: currentStudent.no || '',
-            studentName: currentStudent.name,
-            levelReached: 'OrtografíaQuest ' + def.title,
-            overallGrade: Number(finalGrade),
-            score: mState.hits * 100,
-            correctHits: mState.hits,
-            errorCount: mState.errors,
-            details: `OrtografíaQuest ${def.title}: ${mState.hits}/${def.count} aciertos, ${mState.errors} errores`
-          })
-        });
-        syncEl.className = 'text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2';
-        syncEl.textContent = '✅ Resultado guardado en la Base de Datos Maestra de Primaria 3.º A.';
+        if (gradeLevel === 'primaria') {
+          const url = ((localStorage.getItem(STORAGE_SCRIPT_KEY) || '').trim()) || DEFAULT_PRIMARIA_SCRIPT_URL;
+          await fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              game: 'ortografia',
+              date: now.toLocaleDateString('es-MX'),
+              time: now.toLocaleTimeString('es-MX'),
+              studentNo: currentStudent.no || '',
+              studentName: currentStudent.name,
+              missionId: def.id,
+              missionTitle: def.title,
+              grade: Number(finalGrade),
+              correctHits: mState.hits,
+              errorCount: mState.errors,
+              timeoutCount: mState.timeouts,
+              totalQuestions: def.count
+            })
+          });
+          syncEl.className = 'text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2';
+          syncEl.textContent = '✅ Resultado guardado en la Base de Datos Maestra de Primaria 3.º A.';
+        } else {
+          await fetch(DEFAULT_SEC_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'ortografia',
+              date: now.toLocaleDateString('es-MX'),
+              time: now.toLocaleTimeString('es-MX'),
+              group: currentStudent.group || '',
+              studentNo: currentStudent.no || '',
+              studentName: currentStudent.name,
+              missionTitle: def.title,
+              grade: Number(finalGrade),
+              correctHits: mState.hits,
+              errorCount: mState.errors,
+              timeoutCount: mState.timeouts,
+              totalQuestions: def.count
+            })
+          });
+          syncEl.className = 'text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2';
+          syncEl.textContent = `✅ Resultado guardado en la Base de Datos Maestra EST 41 (${currentStudent.group}).`;
+        }
       } catch (_) {
         syncEl.className = 'text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2';
         syncEl.textContent = '⚠ No se pudo conectar con Google Sheets.';
       }
     } else {
-      $('mSyncStatus').classList.add('hidden');
+      syncEl.classList.add('hidden');
     }
   }
 
@@ -388,6 +418,32 @@
     });
   }
 
+  async function loadSecundariaGroup(groupCode) {
+    const sel = $('secStudentSelect');
+    if (!sel) return;
+    if (!secStudentsByGroup[groupCode]) {
+      sel.innerHTML = '<option value="">Cargando lista del grupo ' + groupCode + '…</option>';
+      try {
+        const resp = await fetch(DEFAULT_SEC_SCRIPT_URL + '?action=snapshot&group=' + encodeURIComponent(groupCode));
+        const json = await resp.json();
+        const stus = Object.values(json?.snap?.studentsByN || {}).sort((a, b) => a.n - b.n);
+        secStudentsByGroup[groupCode] = stus.map((s) => ({ no: s.n, name: s.name, group: groupCode }));
+      } catch (_) {
+        secStudentsByGroup[groupCode] = [];
+      }
+    }
+    const list = secStudentsByGroup[groupCode] || [];
+    sel.innerHTML = '<option value="">-- Elige tu nombre --</option>';
+    list.forEach((s) => {
+      const opt = document.createElement('option');
+      opt.value = String(s.no);
+      opt.textContent = `${s.no}. ${s.name}`;
+      sel.appendChild(opt);
+    });
+    currentStudent = null;
+    $('headerStudentName').textContent = 'Sin alumno';
+  }
+
   function init() {
     const params = new URLSearchParams(window.location.search);
     const paramGrade = params.get('nivel');
@@ -416,21 +472,21 @@
       if (currentStudent) $('welcomeStudentErr').classList.add('hidden');
     });
 
+    $('secGroupSelect')?.addEventListener('change', (e) => loadSecundariaGroup(e.target.value));
+    $('secStudentSelect')?.addEventListener('change', (e) => {
+      const grp = $('secGroupSelect').value;
+      const val = e.target.value;
+      const list = secStudentsByGroup[grp] || [];
+      currentStudent = list.find((s) => String(s.no) === val) || null;
+      $('headerStudentName').textContent = currentStudent ? `${grp} #${currentStudent.no} · ${currentStudent.name}` : 'Sin alumno';
+      if (currentStudent) $('welcomeStudentErr').classList.add('hidden');
+    });
+
     $('goPracticeBtn').addEventListener('click', () => switchTab('practice'));
     $('goMissionsBtn').addEventListener('click', () => {
-      if (gradeLevel === 'secundaria') {
-        const nm = ($('secNameInput').value || '').trim();
-        const grp = $('secGroupSelect').value;
-        if (!nm) {
-          $('welcomeStudentErr').classList.remove('hidden');
-          $('secNameInput').focus();
-          return;
-        }
-        currentStudent = { no: grp, name: nm };
-        $('headerStudentName').textContent = `${grp} · ${nm}`;
-      } else if (!currentStudent) {
+      if (!currentStudent) {
         $('welcomeStudentErr').classList.remove('hidden');
-        $('welcomeStudentSelect').focus();
+        (gradeLevel === 'secundaria' ? $('secStudentSelect') : $('welcomeStudentSelect'))?.focus();
         return;
       }
       $('welcomeStudentErr').classList.add('hidden');

@@ -125,20 +125,21 @@
               </select>
             </div>
 
-            <!-- INPUT SECUNDARIA -->
+            <!-- SELECTOR SECUNDARIA (LISTA OFICIAL DE LA BASE MAESTRA EST 41) -->
             <div id="secundariaStudentBox" class="hidden bg-white rounded-2xl border-2 border-purple-200 p-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div class="sm:col-span-2">
-                <label for="secNameInput" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900 mb-1">Tu nombre completo:</label>
-                <input id="secNameInput" type="text" placeholder="Ej. Sofía Martínez" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900" />
-              </div>
               <div>
                 <label for="secGroupSelect" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900 mb-1">Grupo:</label>
-                <select id="secGroupSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900">
+                <select id="secGroupSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-bold text-slate-900">
                   <option value="1A">1.º A</option>
                   <option value="1B">1.º B</option>
-                  <option value="1C">1.º C</option>
                   <option value="2B">2.º B</option>
                   <option value="3C">3.º C</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <label for="secStudentSelect" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900 mb-1">Selecciona tu nombre:</label>
+                <select id="secStudentSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-bold text-slate-900">
+                  <option value="">Cargando alumnos…</option>
                 </select>
               </div>
             </div>
@@ -262,7 +263,7 @@
     </section>
   </main>
 
-  <script src="bank.js?v=2"></script>
-  <script src="game.js?v=2"></script>
+  <script src="bank.js?v=3"></script>
+  <script src="game.js?v=3"></script>
 </body>
 </html>

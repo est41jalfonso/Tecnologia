@@ -1092,6 +1092,29 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
     var payload = JSON.parse(rawBody);
+    if (payload && payload.action === 'ortografia') {
+      var dbIdOrto = getMasterDbId_();
+      if (!dbIdOrto) dbIdOrto = inicializarBaseDeDatosMaestra().masterDbId;
+      var ssOrto = SpreadsheetApp.openById(dbIdOrto);
+      var shOrto = ensureSheetWithHeaders_(ssOrto, 'HISTORIAL_ORTOGRAFIA', [
+        'fecha', 'hora', 'grupo', 'no_lista', 'nombre', 'mision', 'calificacion', 'aciertos', 'errores', 'tiempo_agotado', 'total_preguntas', 'registrado_en'
+      ], '#7c3aed');
+      shOrto.appendRow([
+        payload.date || new Date().toLocaleDateString('es-MX'),
+        payload.time || new Date().toLocaleTimeString('es-MX'),
+        String(payload.group || '').toUpperCase(),
+        payload.studentNo || '',
+        String(payload.studentName || ''),
+        String(payload.missionTitle || ''),
+        Number(payload.grade),
+        Number(payload.correctHits) || 0,
+        Number(payload.errorCount) || 0,
+        Number(payload.timeoutCount) || 0,
+        Number(payload.totalQuestions) || 20,
+        new Date().toISOString()
+      ]);
+      return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);
+    }
     if (!payload || payload.token !== TEACHER_TOKEN) {
       return ContentService
         .createTextOutput(JSON.stringify({ ok: false, error: 'No autorizado. Clave docente inválida.' }))

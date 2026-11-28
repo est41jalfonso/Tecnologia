@@ -13,6 +13,7 @@ var PRIMARIA_SHEETS = {
   UNIFICADO: 'HISTORIAL_UNIFICADO',
   OPERACIONES: 'HISTORIAL_OPERACIONES',
   FRACCIONES: 'HISTORIAL_FRACCIONES',
+  ORTOGRAFIA: 'HISTORIAL_ORTOGRAFIA',
   LOG: 'REGISTRO_LOG'
 };
 
@@ -38,6 +39,15 @@ var RESUMEN_HEADERS = [
   'fracciones_promedio',
   'fracciones_mejor_calif',
   'fracciones_historial',
+  'ortografia_misiones',
+  'ortografia_ultima_mision',
+  'ortografia_primera_calif',
+  'ortografia_ultima_calif',
+  'ortografia_mejora',
+  'ortografia_tendencia',
+  'ortografia_promedio',
+  'ortografia_mejor_calif',
+  'ortografia_historial',
   'promedio_general',
   'nivel_desempeno',
   'ultima_actividad'
@@ -245,6 +255,7 @@ function inicializarBaseDeDatosPrimaria() {
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.UNIFICADO, UNIFICADO_HEADERS, '#0f172a');
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.OPERACIONES, OPERACIONES_HEADERS, '#0284c7');
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.FRACCIONES, FRACCIONES_HEADERS, '#7c3aed');
+  ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.ORTOGRAFIA, FRACCIONES_HEADERS, '#be185d');
   ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.LOG, LOG_HEADERS, '#334155');
 
   if (shRes.getLastRow() <= 1) {
@@ -252,6 +263,7 @@ function inicializarBaseDeDatosPrimaria() {
     var rows = roster.map(function(st) {
       return [
         st.no, '3A', st.name,
+        0, '', '', '', '', '', '', '', '',
         0, '', '', '', '', '', '', '', '',
         0, '', '', '', '', '', '', '', '',
         '', '', ''
@@ -268,6 +280,7 @@ function actualizarResumenAlumno_(ss, studentNo, studentName) {
   var shRes = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.RESUMEN, RESUMEN_HEADERS, '#065f46');
   var shOp = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.OPERACIONES, OPERACIONES_HEADERS, '#0284c7');
   var shFr = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.FRACCIONES, FRACCIONES_HEADERS, '#7c3aed');
+  var shOr = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.ORTOGRAFIA, FRACCIONES_HEADERS, '#be185d');
 
   var targetNorm = normText_(studentName);
   var resVals = shRes.getDataRange().getValues();
@@ -283,6 +296,7 @@ function actualizarResumenAlumno_(ss, studentNo, studentName) {
   if (rowIdx === -1) {
     shRes.appendRow([
       studentNo || '', '3A', studentName,
+      0, '', '', '', '', '', '', '', '',
       0, '', '', '', '', '', '', '', '',
       0, '', '', '', '', '', '', '', '',
       '', '', ''
@@ -319,37 +333,35 @@ function actualizarResumenAlumno_(ss, studentNo, studentName) {
   }
   var frStats = computeProgressStats_(frGrades);
 
-  var bothAvgs = [];
-  if (opStats.avg !== '') bothAvgs.push(opStats.avg);
-  if (frStats.avg !== '') bothAvgs.push(frStats.avg);
-  var generalAvg = bothAvgs.length ? Math.round((bothAvgs.reduce(function(a, b) { return a + b; }, 0) / bothAvgs.length) * 10) / 10 : '';
+  var orVals = shOr.getDataRange().getValues();
+  var orGrades = [];
+  var orLastMission = '';
+  for (var ori = 1; ori < orVals.length; ori++) {
+    if (matchStudent_(orVals[ori][2], orVals[ori][3])) {
+      var og = Number(orVals[ori][5]);
+      if (isFinite(og)) orGrades.push(og);
+      orLastMission = String(orVals[ori][4] || '');
+    }
+  }
+  var orStats = computeProgressStats_(orGrades);
+
+  var allAvgs = [];
+  if (opStats.avg !== '') allAvgs.push(opStats.avg);
+  if (frStats.avg !== '') allAvgs.push(frStats.avg);
+  if (orStats.avg !== '') allAvgs.push(orStats.avg);
+  var generalAvg = allAvgs.length ? Math.round((allAvgs.reduce(function(a, b) { return a + b; }, 0) / allAvgs.length) * 10) / 10 : '';
   var nowStr = new Date().toLocaleString('es-MX');
 
-  shRes.getRange(rowIdx, 4, 1, 21).setValues([[
-    opStats.count,
-    opLastLevel,
-    opStats.first,
-    opStats.last,
-    opStats.delta,
-    opStats.trend,
-    opStats.avg,
-    opStats.best,
-    opStats.timeline,
-    frStats.count,
-    frLastMission,
-    frStats.first,
-    frStats.last,
-    frStats.delta,
-    frStats.trend,
-    frStats.avg,
-    frStats.best,
-    frStats.timeline,
+  shRes.getRange(rowIdx, 4, 1, 30).setValues([[
+    opStats.count, opLastLevel, opStats.first, opStats.last, opStats.delta, opStats.trend, opStats.avg, opStats.best, opStats.timeline,
+    frStats.count, frLastMission, frStats.first, frStats.last, frStats.delta, frStats.trend, frStats.avg, frStats.best, frStats.timeline,
+    orStats.count, orLastMission, orStats.first, orStats.last, orStats.delta, orStats.trend, orStats.avg, orStats.best, orStats.timeline,
     generalAvg,
     performanceLabel_(generalAvg),
     nowStr
   ]]);
 
-  return { opStats: opStats, frStats: frStats };
+  return { opStats: opStats, frStats: frStats, orStats: orStats };
 }
 
 function computePrevGradeTrend_(shUni, studentNo, studentName, area, newGrade) {
@@ -442,9 +454,10 @@ function doPost(e) {
     var stuNo = payload.studentNo || '';
     var stuName = String(payload.studentName || 'Invitado').trim();
     var isFracciones = payload.game === 'fracciones';
-    var areaLabel = isFracciones ? 'Fracciones' : 'Operaciones';
-    var misionLabel = isFracciones ? (payload.missionTitle || ('Misión ' + (payload.missionId || ''))) : (payload.levelReached || '');
-    var gradeNum = Number(isFracciones ? payload.grade : payload.overallGrade);
+    var isOrtografia = payload.game === 'ortografia';
+    var areaLabel = isFracciones ? 'Fracciones' : (isOrtografia ? 'Ortografía' : 'Operaciones');
+    var misionLabel = (isFracciones || isOrtografia) ? (payload.missionTitle || ('Misión ' + (payload.missionId || ''))) : (payload.levelReached || '');
+    var gradeNum = Number((isFracciones || isOrtografia) ? payload.grade : payload.overallGrade);
     var hitsNum = Number(payload.correctHits) || 0;
     var errsNum = Number(payload.errorCount) || 0;
 
@@ -462,24 +475,23 @@ function doPost(e) {
       hitsNum,
       errsNum,
       trendVsPrev,
-      isFracciones ? ('Tiempo agotado: ' + (Number(payload.timeoutCount) || 0)) : (payload.details || ''),
+      (isFracciones || isOrtografia) ? ('Tiempo agotado: ' + (Number(payload.timeoutCount) || 0)) : (payload.details || ''),
       nowIso
     ]);
 
     if (isFracciones) {
       var shFr = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.FRACCIONES, FRACCIONES_HEADERS, '#7c3aed');
       shFr.appendRow([
-        nowDate,
-        nowTime,
-        stuNo,
-        stuName,
-        misionLabel,
-        isFinite(gradeNum) ? gradeNum : '',
-        hitsNum,
-        errsNum,
-        Number(payload.timeoutCount) || 0,
-        Number(payload.totalQuestions) || 20,
-        nowIso
+        nowDate, nowTime, stuNo, stuName, misionLabel,
+        isFinite(gradeNum) ? gradeNum : '', hitsNum, errsNum,
+        Number(payload.timeoutCount) || 0, Number(payload.totalQuestions) || 20, nowIso
+      ]);
+    } else if (isOrtografia) {
+      var shOr = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.ORTOGRAFIA, FRACCIONES_HEADERS, '#be185d');
+      shOr.appendRow([
+        nowDate, nowTime, stuNo, stuName, misionLabel,
+        isFinite(gradeNum) ? gradeNum : '', hitsNum, errsNum,
+        Number(payload.timeoutCount) || 0, Number(payload.totalQuestions) || 20, nowIso
       ]);
     } else {
       var shOp = ensurePrimariaSheet_(ss, PRIMARIA_SHEETS.OPERACIONES, OPERACIONES_HEADERS, '#0284c7');
