@@ -943,19 +943,22 @@ async function syncLiveGroup(g,force=false){
 
   let weekCols=[];
   let faltasCol=-1;
+  const weekDateRe=/(\d{1,2}\s*(?:[a-z]{3}\s*)?[-–]\s*\d{1,2}\s+[a-z]{3})/i;
   const colLabels=(asistTbl.cols||[]).map(c=>(c.label||'').trim());
   for(let idx=2;idx<colLabels.length;idx++){
     const lbl=colLabels[idx];
-    if(/^\d{1,2}\s*[-–]\s*\d{1,2}|^\d{1,2}\s+[a-z]{3}/i.test(lbl)){
-      weekCols.push({startCol:idx,label:lbl.replace(/\s+/g,' ').trim()});
+    const mWeek=lbl.match(weekDateRe);
+    if(mWeek){
+      weekCols.push({startCol:idx,label:mWeek[1].replace(/\s+/g,' ').trim()});
     }else if(/faltas/i.test(lbl)){faltasCol=idx;}
   }
   if(!weekCols.length){
     for(const r of (asistTbl.rows||[]).slice(0,10)){
       for(let idx=2;idx<(r.c?.length||0);idx++){
         const lbl=String(gvizVal(r,idx)||'').trim();
-        if(/^\d{1,2}\s*[-–]\s*\d{1,2}|^\d{1,2}\s+[a-z]{3}/i.test(lbl)){
-          weekCols.push({startCol:idx,label:lbl.replace(/\s+/g,' ').trim()});
+        const mWeek=lbl.match(weekDateRe);
+        if(mWeek){
+          weekCols.push({startCol:idx,label:mWeek[1].replace(/\s+/g,' ').trim()});
         }else if(/faltas/i.test(lbl)){faltasCol=idx;}
       }
       if(weekCols.length)break;
