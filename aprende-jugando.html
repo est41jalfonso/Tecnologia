@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_standard" name="shell-type"/>
+  <title>Aprende Jugando — Secundaria Técnica N° 41 | Portal Educativo</title>
+  <meta name="description" content="Sección gamer educativa Aprende Jugando de la Escuela Secundaria Técnica N° 41: KeyStrike EST 41, retos de mecanografía, lógica por bloques y misiones XP."/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #F8FAFC;
+        color: #0F172A;
+        font-family: 'Lexend', sans-serif;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    .accessible-grid {
+      background-size: 24px 24px;
+      background-image: linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+    }
+    .voxel-pattern {
+      background-image: radial-gradient(rgba(2, 132, 199, 0.14) 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+    }
+    .keycap {
+      box-shadow: 0 3px 0 #CBD5E1;
+    }
+    .keycap-purple {
+      box-shadow: 0 3px 0 #6D28D9;
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              500: '#0284C7',
+              600: '#0369A1',
+              700: '#075985',
+              900: '#0C4A6E',
+            },
+            forms: {
+              purple: '#7C3AED',
+              purpleHover: '#6D28D9',
+              light: '#F5F3FF'
+            },
+            slateText: {
+              title: '#0F172A',
+              body: '#334155',
+              muted: '#475569'
+            }
+          },
+          fontFamily: {
+            sans: ['Lexend', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="./assets/portal.css"/>
+  <script src="./assets/portal.js" defer></script>
+</head>
+<body class="bg-[#F8FAFC] text-[#334155] min-h-screen selection:bg-sky-200 selection:text-sky-950 accessible-grid">
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+  <!-- TOP ACCESSIBLE NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 shadow-sm">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-3 shrink-0 group">
+        <div class="w-11 h-11 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/20 font-bold text-xl group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-[28px]">school</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-lg text-slate-900 tracking-tight">PORTAL EDUCATIVO</span>
+            <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-bold text-xs uppercase tracking-wider border border-sky-300">EST 41</span>
+          </div>
+          <span class="text-xs font-medium text-slate-600">Aguascalientes &amp; Pabellón de Arteaga • Accesibilidad AAA</span>
+        </div>
+      </a>
+
+      <nav aria-label="Navegación Principal" class="hidden xl:flex items-center gap-1.5">
+        <a class="px-3 py-2 rounded-lg font-semibold text-sm text-slate-700 hover:text-sky-700 hover:bg-slate-100 transition-colors" href="index.html">Inicio</a>
+        <a class="px-3 py-2 rounded-lg font-semibold text-sm text-slate-700 hover:text-sky-700 hover:bg-slate-100 transition-colors" href="secundaria-est41.html">Secundaria Técnica 41</a>
+        <a aria-current="page" class="px-3.5 py-2 rounded-lg font-bold text-sm bg-purple-600 text-white shadow-sm shadow-purple-600/30 flex items-center gap-1.5" href="aprende-jugando.html">
+          <span class="material-symbols-outlined text-[18px]">sports_esports</span>
+          Aprende Jugando
+        </a>
+        <a class="px-3 py-2 rounded-lg font-semibold text-sm text-slate-700 hover:text-sky-700 hover:bg-slate-100 transition-colors" href="primaria-teodoro-olivares.html">Primaria Teodoro Olivares</a>
+        <a class="px-3 py-2 rounded-lg font-bold text-sm text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 transition-colors flex items-center gap-1.5" href="materiales-docentes.html">
+          <span class="material-symbols-outlined text-emerald-700 text-[18px]">menu_book</span>
+          Materiales Docentes
+        </a>
+        <a class="px-3 py-2 rounded-lg font-semibold text-sm text-slate-700 hover:text-sky-700 hover:bg-slate-100 transition-colors" href="google-docentes.html">Google para Docentes</a>
+        <a class="px-3 py-2 rounded-lg font-semibold text-sm text-slate-700 hover:text-sky-700 hover:bg-slate-100 transition-colors" href="ia-docentes.html">IA para Docentes</a>
+      </nav>
+
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-1 bg-slate-100 border-2 border-slate-300 rounded-xl px-2.5 py-1.5 shadow-sm" title="Control de Tamaño de Texto Accesible">
+          <span class="material-symbols-outlined text-slate-700 text-[20px] mr-1">format_size</span>
+          <button aria-label="Disminuir texto" class="px-2 py-0.5 text-xs font-bold text-slate-800 hover:bg-white rounded border border-transparent hover:border-slate-300 transition-all">A-</button>
+          <span class="text-xs font-extrabold text-sky-800 bg-white px-2 py-0.5 rounded border border-slate-300 shadow-xs">100%</span>
+          <button aria-label="Aumentar texto" class="px-2 py-0.5 text-xs font-bold text-slate-800 hover:bg-white rounded border border-transparent hover:border-slate-300 transition-all">A+</button>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 bg-white border-2 border-purple-200 px-3 py-1.5 rounded-xl shadow-sm">
+          <span class="material-symbols-outlined text-purple-600 text-[20px]">bolt</span>
+          <div class="flex flex-col text-left leading-none">
+            <span class="text-xs font-bold text-slate-900">NIVEL 14</span>
+            <span class="text-[11px] font-extrabold text-emerald-700">2,450 XP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+
+    <!-- HERO BANNER GAMER EST 41 (TEMÁTICA JUVENIL 13-15 AÑOS EN COLORES DEL SITIO) -->
+    <section class="relative overflow-hidden rounded-3xl bg-white border-2 border-sky-200 shadow-md p-6 sm:p-10 voxel-pattern">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 font-extrabold text-xs uppercase tracking-wider">
+              <span class="material-symbols-outlined text-[16px]">sports_esports</span>
+              Aprende Jugando • EST 41
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-sky-900 border border-sky-300 font-bold text-xs">
+              <span class="material-symbols-outlined text-[15px]">deployed_code</span>
+              Bloques • Arena • Misiones XP
+            </span>
+          </div>
+
+          <h1 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-tight">
+            Sube de nivel tus habilidades digitales <span class="text-sky-600">jugando</span>.
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-700 font-medium leading-relaxed max-w-2xl">
+            Zona interactiva para estudiantes de <strong class="text-slate-900">13 a 15 años</strong> de la Secundaria Técnica N° 41. Combina mundos de bloques, duelos de velocidad en arena y misiones tácticas de Informática con mecánicas inspiradas en tus videojuegos favoritos.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="keystrike-mecanografia/index.html" class="px-6 py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-purple-600/25 transition-all flex items-center gap-2">
+              <span class="material-symbols-outlined text-[22px]">keyboard</span>
+              <span>Jugar KeyStrike EST 41</span>
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </a>
+            <a href="#modos-juego" class="px-5 py-3.5 rounded-2xl bg-white hover:bg-sky-50 text-sky-800 border-2 border-sky-300 font-bold text-sm sm:text-base transition-all flex items-center gap-2">
+              <span class="material-symbols-outlined text-[20px]">explore</span>
+              <span>Explorar Misiones</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- HUD STATS PANEL -->
+        <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+          <div class="bg-sky-50/90 border-2 border-sky-200 rounded-2xl p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-sky-900">Escuadrón</span>
+              <span class="material-symbols-outlined text-sky-600 text-[20px]">groups</span>
+            </div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">4 Grupos</div>
+            <p class="text-xs font-semibold text-slate-600 mt-1">1.° A, 1.° B, 2.° B y 3.° C</p>
+          </div>
+
+          <div class="bg-purple-50/90 border-2 border-purple-200 rounded-2xl p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-purple-900">Arena</span>
+              <span class="material-symbols-outlined text-purple-600 text-[20px]">speed</span>
+            </div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">KeyStrike</div>
+            <p class="text-xs font-semibold text-slate-600 mt-1">Mecanografía &amp; Ranking</p>
+          </div>
+
+          <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-900">Precisión</span>
+              <span class="material-symbols-outlined text-emerald-600 text-[20px]">verified</span>
+            </div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">98.4%</div>
+            <p class="text-xs font-semibold text-slate-600 mt-1">Meta de dominio en teclado</p>
+          </div>
+
+          <div class="bg-amber-50/90 border-2 border-amber-200 rounded-2xl p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-900">Temporada</span>
+              <span class="material-symbols-outlined text-amber-600 text-[20px]">emoji_events</span>
+            </div>
+            <div class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">Trim. II</div>
+            <p class="text-xs font-semibold text-slate-600 mt-1">TecnoTorneo EST 41</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TARJETA PRINCIPAL DESTACADA: VIDEOJUEGO KEYSTRIKE EST 41 -->
+    <section id="keystrike-destacado" class="bg-gradient-to-br from-white via-purple-50/40 to-sky-50/50 rounded-3xl border-2 border-purple-300 shadow-lg p-6 sm:p-8 lg:p-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="inline-flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-xs">
+              <span class="material-symbols-outlined text-[15px]">local_fire_department</span>
+              Juego Principal
+            </span>
+            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs">
+              Arena Competitiva
+            </span>
+            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs">
+              Práctica Libre
+            </span>
+            <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 border border-sky-300 font-bold text-xs">
+              Ranking por Grupo
+            </span>
+          </div>
+
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-slate-900 tracking-tight">
+            KeyStrike EST 41 — Mecanografía Gamer
+          </h2>
+
+          <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">
+            Domina el teclado en español como un pro-player: supera misiones progresivas estilo <strong class="text-slate-900">Battle Royale de velocidad</strong>, entrena sin presión en <strong class="text-slate-900">Práctica Libre</strong>, acumula rachas de aciertos y sube en la tabla de posiciones de tu grupo en la Secundaria Técnica N° 41.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="keystrike-mecanografia/index.html" class="px-7 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-base shadow-lg shadow-purple-600/25 keycap-purple transition-all flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[24px]">sports_esports</span>
+              <span>Jugar KeyStrike EST 41</span>
+              <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </a>
+            <a href="calificaciones-tiempo-real.html" class="px-5 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 border-2 border-slate-300 font-bold text-sm transition-all flex items-center gap-2">
+              <span class="material-symbols-outlined text-sky-600 text-[20px]">analytics</span>
+              <span>Ver mis Calificaciones</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- TELEMETRY & KEYBOARD PREVIEW HUD -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Telemetría de Partida
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold">Combo x45</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5 text-center">
+            <div class="rounded-xl bg-sky-50 border border-sky-200 p-2.5">
+              <div class="font-display font-extrabold text-xl text-sky-700">72</div>
+              <div class="text-[11px] font-bold text-slate-600 uppercase">PPM</div>
+            </div>
+            <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-2.5">
+              <div class="font-display font-extrabold text-xl text-emerald-700">99.2%</div>
+              <div class="text-[11px] font-bold text-slate-600 uppercase">Precisión</div>
+            </div>
+            <div class="rounded-xl bg-amber-50 border border-amber-200 p-2.5">
+              <div class="font-display font-extrabold text-xl text-amber-700">+350</div>
+              <div class="text-[11px] font-bold text-slate-600 uppercase">XP Arena</div>
+            </div>
+          </div>
+
+          <!-- GAMER KEYCAPS VISUALIZER -->
+          <div class="bg-slate-50 rounded-xl border border-slate-200 p-3.5 space-y-2.5">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Teclas de Movimiento &amp; Código</div>
+            <div class="flex flex-wrap items-center justify-center gap-2">
+              <span class="w-10 h-10 rounded-xl bg-white border-2 border-sky-300 text-sky-800 font-display font-extrabold flex items-center justify-center keycap">W</span>
+              <span class="w-10 h-10 rounded-xl bg-white border-2 border-sky-300 text-sky-800 font-display font-extrabold flex items-center justify-center keycap">A</span>
+              <span class="w-10 h-10 rounded-xl bg-white border-2 border-sky-300 text-sky-800 font-display font-extrabold flex items-center justify-center keycap">S</span>
+              <span class="w-10 h-10 rounded-xl bg-white border-2 border-sky-300 text-sky-800 font-display font-extrabold flex items-center justify-center keycap">D</span>
+              <span class="px-3 h-10 rounded-xl bg-purple-600 border-2 border-purple-700 text-white font-display font-extrabold text-sm flex items-center justify-center keycap-purple">&lt; / &gt;</span>
+              <span class="px-3 h-10 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white font-display font-extrabold text-sm flex items-center justify-center keycap">{ ; }</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEMÁTICAS Y VIDEOJUEGOS POR ASIGNATURA (13-15 AÑOS) -->
+    <section id="modos-juego" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 text-sky-700 font-bold text-sm uppercase tracking-wider mb-1">
+            <span class="material-symbols-outlined text-[20px]">stadia_controller</span>
+            Catálogo por Asignatura • Secundaria 13 a 15 años
+          </div>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
+            Videojuegos y Misiones por Materia
+          </h2>
+        </div>
+
+        <!-- FILTER CHIPS -->
+        <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar videojuegos por asignatura">
+          <button type="button" data-filter="all" class="mode-filter-btn px-4 py-2 rounded-full bg-sky-600 text-white font-bold text-xs shadow-xs transition-all cursor-pointer">Todas las Asignaturas</button>
+          <button type="button" data-filter="tecnologia" class="mode-filter-btn px-4 py-2 rounded-full bg-white text-slate-700 border border-slate-300 hover:border-purple-400 font-bold text-xs transition-all cursor-pointer">Tecnología e Informática</button>
+          <button type="button" data-filter="matematicas" class="mode-filter-btn px-4 py-2 rounded-full bg-white text-slate-700 border border-slate-300 hover:border-amber-400 font-bold text-xs transition-all cursor-pointer">Matemáticas</button>
+          <button type="button" data-filter="ciencias" class="mode-filter-btn px-4 py-2 rounded-full bg-white text-slate-700 border border-slate-300 hover:border-emerald-400 font-bold text-xs transition-all cursor-pointer">Ciencias y Universo</button>
+          <button type="button" data-filter="proximas" class="mode-filter-btn px-4 py-2 rounded-full bg-white text-slate-700 border border-slate-300 hover:border-sky-400 font-bold text-xs transition-all cursor-pointer">Próximas Materias</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gameCardsGrid">
+        <!-- CARD 1: TECNOLOGÍA / INFORMÁTICA - KEYSTRIKE -->
+        <article data-category="tecnologia" class="game-mode-card bg-white rounded-3xl border-2 border-purple-200 hover:border-purple-400 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 font-extrabold text-xs">
+                <span class="material-symbols-outlined text-[16px]">keyboard</span>
+                Tecnología • Informática
+              </span>
+              <span class="text-xs font-display font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">Activo</span>
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-slate-900">KeyStrike EST 41 (Arena &amp; Mecanografía)</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Estilo Arena competitiva: supera rondas cronometradas, domina el teclado en español, mantén tu racha sin errores y escala en el ranking de tu grupo.
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-xs font-bold text-slate-500">PPM • Precisión • Ranking</span>
+            <a href="keystrike-mecanografia/index.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition-colors">
+              <span>Jugar Ahora</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 2: MATEMÁTICAS - GUERRA GALÁCTICA -->
+        <article data-category="matematicas" class="game-mode-card bg-white rounded-3xl border-2 border-amber-200 hover:border-amber-400 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs">
+                <span class="material-symbols-outlined text-[16px]">calculate</span>
+                Matemáticas • Cálculo Mental
+              </span>
+              <span class="text-xs font-display font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">Activo</span>
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-slate-900">Guerra Galáctica: Reto Numérico</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Estilo Arcade espacial: defiende la base resolviendo operaciones a toda velocidad con combos, jefes de nivel y puntaje por tiempo de reacción.
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-xs font-bold text-slate-500">Agilidad Mental • Arcade</span>
+            <a href="guerra-galactica-tablas/index.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-colors">
+              <span>Jugar Ahora</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 3: TECNOLOGÍA - MUNDOS DE BLOQUES Y ALGORITMOS -->
+        <article data-category="tecnologia" class="game-mode-card bg-white rounded-3xl border-2 border-emerald-200 hover:border-emerald-400 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs">
+                <span class="material-symbols-outlined text-[16px]">view_in_ar</span>
+                Tecnología • Lógica Voxel
+              </span>
+              <span class="text-xs font-display font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">Misiones</span>
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-slate-900">Mundos de Bloques &amp; Algoritmos</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Inspirado en mundos sandbox de construcción: resuelve retos de bucles, condicionales y secuencias lógicas aplicadas al taller de Informática.
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-xs font-bold text-slate-500">Pensamiento Computacional</span>
+            <a href="secundaria-est41.html#misiones-taller" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors">
+              <span>Ver Misiones</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 4: TECNOLOGÍA - HARDWARE Y CIBERSEGURIDAD -->
+        <article data-category="tecnologia" class="game-mode-card bg-white rounded-3xl border-2 border-sky-200 hover:border-sky-400 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-sky-900 border border-sky-300 font-extrabold text-xs">
+                <span class="material-symbols-outlined text-[16px]">memory</span>
+                Tecnología • Hardware &amp; Ciber
+              </span>
+              <span class="text-xs font-display font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2.5 py-1 rounded-full">Interactivo</span>
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-slate-900">Dispositivos por Dentro &amp; Escudo 2FA</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Explora la arquitectura interna de computadoras y consolas (CPU, RAM, GPU) y supera misiones tácticas para proteger cuentas contra phishing.
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-xs font-bold text-slate-500">Hardware • Seguridad</span>
+            <a href="dispositivos-por-dentro.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors">
+              <span>Explorar</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 5: CIENCIAS - CONOCIENDO EL UNIVERSO -->
+        <article data-category="ciencias" class="game-mode-card bg-white rounded-3xl border-2 border-sky-200 hover:border-sky-400 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-sky-900 border border-sky-300 font-extrabold text-xs">
+                <span class="material-symbols-outlined text-[16px]">public</span>
+                Ciencias • Astronomía
+              </span>
+              <span class="text-xs font-display font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">Activo</span>
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-slate-900">Conociendo el Universo</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Misión de exploración espacial: recorre planetas, estrellas y fenómenos del cosmos con contenido interactivo diseñado para estudiantes de secundaria.
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-xs font-bold text-slate-500">Ciencias Naturales</span>
+            <a href="conociendo-el-universo.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors">
+              <span>Explorar Misión</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- CARD 6: PRÓXIMAS ASIGNATURAS (ESPAÑOL / HISTORIA / INGLÉS) -->
+        <article data-category="proximas" class="game-mode-card bg-slate-50/90 rounded-3xl border-2 border-dashed border-slate-300 p-6 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-extrabold text-xs">
+                <span class="material-symbols-outlined text-[16px]">add_circle</span>
+                Español • Historia • Inglés
+              </span>
+              <span class="text-xs font-display font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-full">Próximamente</span>
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-slate-900">Nuevos Videojuegos por Asignatura</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              Espacio reservado para incorporar nuevos juegos interactivos de Español, Historia, Inglés y Formación Cívica conforme avance el ciclo escolar.
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+            <span class="text-xs font-bold text-slate-500">En desarrollo • EST 41</span>
+            <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-xs">
+              <span>Próxima Temporada</span>
+            </span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- BANNER DE REGRESO Y CONEXIÓN CON SECUNDARIA EST 41 -->
+    <section class="bg-sky-50 border-2 border-sky-200 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-1.5">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-sky-800">Taller de Informática • Mtro. José Alfonso Ruvalcaba Andrade</span>
+        <h3 class="font-display font-extrabold text-xl sm:text-2xl text-slate-900">¿Buscas tus formularios, prácticas o calificaciones del trimestre?</h3>
+        <p class="text-sm text-slate-700 font-medium">Regresa al panel principal de la Secundaria Técnica N° 41 o consulta tu boleta en tiempo real.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 shrink-0">
+        <a href="secundaria-est41.html" class="px-5 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 font-bold text-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          <span>Secundaria EST 41</span>
+        </a>
+        <a href="calificaciones-tiempo-real.html" class="px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">analytics</span>
+          <span>Calificaciones en Tiempo Real</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ACCESSIBLE LIGHT FOOTER -->
+  <footer class="w-full bg-white border-t-2 border-slate-200 py-12 mt-10">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-200">
+        <div class="md:col-span-5 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-lg text-slate-900">PORTAL EDUCATIVO</span>
+            <span class="px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold border border-sky-300">2026</span>
+          </div>
+          <p class="text-sm text-slate-600 max-w-md leading-relaxed">
+            Plataforma inclusiva diseñada con estándares de accesibilidad visual AAA para el fortalecimiento del pensamiento tecnológico en la Nueva Escuela Mexicana.
+          </p>
+        </div>
+        <div class="md:col-span-4 space-y-2">
+          <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider block">Planteles Vinculados</span>
+          <ul class="text-sm text-slate-700 space-y-1.5 font-medium">
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-sky-700 text-[18px]">domain</span>
+              Escuela Secundaria Técnica N° 41 (Villas de Nuestra Señora, Ags.)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-700 text-[18px]">school</span>
+              Escuela Primaria Teodoro Olivares (Pabellón de Arteaga, Ags.)
+            </li>
+          </ul>
+        </div>
+        <div class="md:col-span-3 space-y-2 md:text-right">
+          <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider block">Contacto y Asistencia</span>
+          <p class="text-sm text-slate-600 font-medium">Taller de Informática y Robótica Educativa</p>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            Aprende Jugando Activo
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-600">
+        <p>© 2026 PORTAL EDUCATIVO • Aguascalientes &amp; Pabellón de Arteaga. Todos los derechos reservados.</p>
+        <div class="flex items-center gap-3">
+          <span class="text-sky-800 font-bold">Cumple norma WCAG 2.1 AAA</span>
+          <span>•</span>
+          <span>NEM Digital v2.4</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const btns = document.querySelectorAll('.mode-filter-btn');
+      const cards = document.querySelectorAll('.game-mode-card');
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter');
+          btns.forEach(b => {
+            b.classList.remove('bg-sky-600', 'text-white', 'shadow-xs');
+            b.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+          });
+          btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+          btn.classList.add('bg-sky-600', 'text-white', 'shadow-xs');
+          cards.forEach(card => {
+            const cat = card.getAttribute('data-category');
+            card.style.display = (filter === 'all' || cat === filter) ? '' : 'none';
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

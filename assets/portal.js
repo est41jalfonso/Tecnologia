@@ -8,6 +8,7 @@
   const NAV_ITEMS = [
     { href: 'index.html', label: 'Inicio', icon: 'home' },
     { href: 'secundaria-est41.html', label: 'Secundaria Técnica 41', icon: 'precision_manufacturing' },
+    { href: 'aprende-jugando.html', label: 'Aprende Jugando', icon: 'sports_esports' },
     { href: 'primaria-teodoro-olivares.html', label: 'Primaria Teodoro Olivares', icon: 'school' },
     {
       id: 'ciencia-contigo',
