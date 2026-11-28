@@ -1,0 +1,66 @@
+/* OrtografiaQuest - Tema Claro de Alto Contraste (Primaria & Secundaria) */
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #F8FAFC;
+    color: #0F172A;
+    overscroll-behavior: none;
+  }
+}
+
+.accessible-grid-bg {
+  background-color: #F8FAFC;
+  background-size: 24px 24px;
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.14) 1px, transparent 1px);
+}
+
+.pastel-letters-bg {
+  background-color: #F8FAFC;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg opacity='0.38' font-family='sans-serif' font-weight='bold'%3E%3Ctext x='24' y='52' font-size='28' fill='%23BAE6FD'%3E%C2%BF%3F%3C/text%3E%3Ctext x='145' y='64' font-size='26' fill='%23DDD6FE'%3E%C2%A1!%3C/text%3E%3Ctext x='92' y='128' font-size='30' fill='%23BBF7D0'%3EAa%3C/text%3E%3Ctext x='32' y='182' font-size='26' fill='%23FDE68A'%3E, . ;%3C/text%3E%3Ctext x='152' y='184' font-size='22' fill='%23CBD5E1'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/g%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #1D4ED8 !important;
+  outline-offset: 2px !important;
+}
+
+.blank-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding: 0.1rem 0.55rem;
+  margin: 0 0.15rem;
+  border-radius: 0.5rem;
+  background: #FEF3C7;
+  border: 2px dashed #D97706;
+  color: #92400E;
+  font-weight: 800;
+}
+
+.blank-pill.is-filled-ok {
+  background: #DCFCE7;
+  border: 2px solid #16A34A;
+  color: #14532D;
+}
+
+.blank-pill.is-filled-err {
+  background: #FEE2E2;
+  border: 2px solid #DC2626;
+  color: #7F1D1D;
+}
+
+.scene-svg svg {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  display: block;
+}

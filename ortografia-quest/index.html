@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrtografíaQuest • Mayúsculas, Puntuación y Ortografía • Portal Educativo</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { background: '#F8FAFC', 'on-surface': '#0F172A' },
+          fontFamily: { sans: ['Lexend', 'Space Grotesk', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css?v=1" />
+</head>
+<body class="bg-background font-sans text-on-surface antialiased selection:bg-sky-200 selection:text-sky-950 min-h-screen flex flex-col accessible-grid-bg">
+
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 shadow-sm">
+    <div class="min-h-[72px] w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-11 h-11 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-md shadow-purple-600/20">
+          <span class="material-symbols-outlined text-[26px]">edit_note</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-lg text-slate-900 tracking-tight">ORTOGRAFÍA QUEST</span>
+            <span id="headerLevelBadge" class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 font-bold text-xs uppercase tracking-wider border border-purple-300">PRIMARIA 3.º</span>
+          </div>
+          <span class="text-xs font-medium text-slate-600">Mayúsculas • Signos de Puntuación • ¿ ? ¡ ! • Ortografía</span>
+        </div>
+      </div>
+
+      <nav aria-label="Navegación del videojuego" class="flex flex-wrap items-center gap-1.5">
+        <button data-tab="welcome" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all bg-purple-600 text-white shadow-sm cursor-pointer">
+          INICIO
+        </button>
+        <button data-tab="practice" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-emerald-700 hover:bg-slate-100 cursor-pointer">
+          SECCIÓN DE PRUEBA
+        </button>
+        <button data-tab="missions" class="nav-tab px-3.5 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-300 cursor-pointer">
+          MISIONES CONTRARRELOJ
+        </button>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <div class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-900 text-xs font-extrabold">
+          <span class="material-symbols-outlined text-[16px]">person</span>
+          <span id="headerStudentName">Sin alumno</span>
+        </div>
+        <a id="backPortalLink" href="../primaria-teodoro-olivares.html" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-purple-700 text-white text-xs font-extrabold tracking-wide shadow-sm transition-colors">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Regresar al Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- PANTALLA DE BIENVENIDA -->
+    <section id="tabWelcome" class="space-y-6 py-2">
+      <div class="bg-white rounded-3xl border-2 border-purple-200 shadow-md p-6 sm:p-8 text-center space-y-4">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 text-xs font-extrabold uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[16px]">menu_book</span>
+          Campo Formativo: Lenguajes • Nueva Escuela Mexicana
+        </span>
+        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+          Completa los Textos Ilustrados
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto">
+          Elige tu grado escolar y decide si deseas practicar primero en la <strong class="text-emerald-700">Sección de Prueba</strong> o ir directo a las <strong class="text-purple-800">Misiones Contrarreloj</strong> (20 preguntas por misión).
+        </p>
+
+        <!-- SELECTOR DE GRADO (PRIMARIA 3° VS SECUNDARIA 1°) -->
+        <div class="inline-flex flex-wrap items-center justify-center gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-300">
+          <button type="button" data-grade="primaria" class="grade-btn px-5 py-2.5 rounded-xl font-extrabold text-sm bg-emerald-600 text-white shadow-sm cursor-pointer">
+            Primaria 3.º Grado (Proyecto Ajolote y NEM)
+          </button>
+          <button type="button" data-grade="secundaria" class="grade-btn px-5 py-2.5 rounded-xl font-extrabold text-sm text-slate-700 hover:bg-white cursor-pointer">
+            Secundaria 1.º Grado (Lenguajes Ximhai)
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- OPCIÓN 1: SECCIÓN DE PRUEBA -->
+        <article class="bg-gradient-to-br from-white via-emerald-50/40 to-sky-50/30 rounded-3xl border-2 border-emerald-300 shadow-md p-6 sm:p-8 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">Sin reloj • Con explicación</span>
+            <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">1. Sección de Prueba (Práctica)</h2>
+            <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">
+              Observa cada escena ilustrada, completa las mayúsculas, comas, puntos y signos <strong>¿ ? ¡ !</strong> a tu ritmo y lee la regla ortográfica de cada respuesta.
+            </p>
+          </div>
+          <button id="goPracticeBtn" type="button" class="w-full px-6 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base shadow-lg shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[22px]">play_circle</span>
+            <span>Entrar a Sección de Prueba</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
+        </article>
+
+        <!-- OPCIÓN 2: MISIONES CONTRARRELOJ -->
+        <article class="bg-gradient-to-br from-white via-purple-50/40 to-sky-50/30 rounded-3xl border-2 border-purple-300 shadow-md p-6 sm:p-8 flex flex-col justify-between gap-5">
+          <div class="space-y-3">
+            <span class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold uppercase tracking-wider">4 Misiones • 20 Preguntas c/u • Contrarreloj</span>
+            <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">2. Misiones Contrarreloj (Con Calificación)</h2>
+            <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">
+              Un solo intento por pregunta antes de que termine el reloj. <strong class="text-slate-900">Identifícate</strong> para generar tu reporte de calificación con aciertos y errores.
+            </p>
+
+            <!-- SELECTOR PRIMARIA -->
+            <div id="primariaStudentBox" class="bg-white rounded-2xl border-2 border-purple-200 p-4 space-y-2">
+              <label for="welcomeStudentSelect" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900">Alumno(a) Primaria 3.º A:</label>
+              <select id="welcomeStudentSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-bold text-slate-900">
+                <option value="">-- Elige tu nombre --</option>
+              </select>
+            </div>
+
+            <!-- INPUT SECUNDARIA -->
+            <div id="secundariaStudentBox" class="hidden bg-white rounded-2xl border-2 border-purple-200 p-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div class="sm:col-span-2">
+                <label for="secNameInput" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900 mb-1">Tu nombre completo:</label>
+                <input id="secNameInput" type="text" placeholder="Ej. Sofía Martínez" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900" />
+              </div>
+              <div>
+                <label for="secGroupSelect" class="block text-xs font-extrabold uppercase tracking-wider text-purple-900 mb-1">Grupo:</label>
+                <select id="secGroupSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900">
+                  <option value="1A">1.º A</option>
+                  <option value="1B">1.º B</option>
+                  <option value="1C">1.º C</option>
+                  <option value="2B">2.º B</option>
+                  <option value="3C">3.º C</option>
+                </select>
+              </div>
+            </div>
+            <p id="welcomeStudentErr" class="hidden text-xs font-bold text-rose-700">Por favor, selecciona o escribe tu nombre antes de entrar a las misiones.</p>
+          </div>
+
+          <button id="goMissionsBtn" type="button" class="w-full px-6 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-base shadow-lg shadow-purple-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-[22px]">military_tech</span>
+            <span>Ir a Misiones Contrarreloj</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <!-- TAB: SECCIÓN DE PRUEBA -->
+    <section id="tabPractice" class="hidden space-y-5">
+      <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <label for="practiceTopicSelect" class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Tema:</label>
+          <select id="practiceTopicSelect" class="rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2 text-sm font-bold text-slate-900">
+            <option value="all">Todos los temas</option>
+            <option value="1">Misión 1 · Mayúsculas</option>
+            <option value="2">Misión 2 · Punto y Coma</option>
+            <option value="3">Misión 3 · Interrogación (¿ ?) y Admiración (¡ !)</option>
+            <option value="4">Misión 4 · Ortografía Esencial</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-3 text-sm font-bold">
+          <span class="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900">Aciertos: <span id="pStatHits">0</span></span>
+          <button id="pNextBtn" type="button" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs cursor-pointer">Siguiente Texto →</button>
+        </div>
+      </div>
+
+      <div id="practicePlayArea" class="pastel-letters-bg rounded-3xl border-2 border-emerald-200 shadow-md p-6 sm:p-8 max-w-4xl mx-auto space-y-6">
+        <div class="bg-white/95 rounded-3xl border-2 border-slate-200 p-6 shadow-sm flex flex-col md:flex-row items-center gap-6">
+          <div id="pSceneBox" class="scene-svg shrink-0"></div>
+          <div class="space-y-2 text-center md:text-left">
+            <span id="pProjectBadge" class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider"></span>
+            <p id="pSentenceBox" class="text-xl sm:text-2xl font-bold text-slate-900 leading-relaxed"></p>
+          </div>
+        </div>
+        <div id="pOptionsBox" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+        <div id="pFeedbackBox" class="hidden rounded-2xl px-4 py-3 text-sm font-bold"></div>
+      </div>
+    </section>
+
+    <!-- TAB: MISIONES CONTRARRELOJ -->
+    <section id="tabMissions" class="hidden space-y-5">
+      <div id="missionSelectPanel" class="bg-white rounded-3xl border-2 border-purple-200 shadow-sm p-6 space-y-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 border border-purple-300 text-xs font-extrabold uppercase tracking-wider mb-1">
+            <span class="material-symbols-outlined text-[15px]">timer</span>
+            20 Preguntas por Misión • Un solo intento
+          </span>
+          <h2 id="missionsHeading" class="font-display font-extrabold text-2xl text-slate-900">Misiones de Ortografía y Puntuación</h2>
+          <p class="text-sm text-slate-600 font-medium">Completa el texto ilustrado antes de que termine el reloj. Si cometes un error, se cuenta como error y pasa a la siguiente pregunta.</p>
+        </div>
+        <div id="missionsCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+      </div>
+
+      <div id="missionPlayArea" class="hidden pastel-letters-bg rounded-3xl border-2 border-purple-200 shadow-md p-5 sm:p-8 space-y-6">
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div class="bg-white/95 rounded-2xl border-2 border-purple-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-purple-800">Pregunta</div>
+            <div id="mStatProgress" class="font-display font-extrabold text-xl text-slate-900 mt-0.5">1 / 20</div>
+          </div>
+          <div class="bg-white/95 rounded-2xl border-2 border-amber-300 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">Reloj</div>
+            <div id="mStatClock" class="font-display font-extrabold text-xl text-amber-700 mt-0.5">25 s</div>
+          </div>
+          <div class="bg-white/95 rounded-2xl border-2 border-emerald-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">Aciertos</div>
+            <div id="mStatHits" class="font-display font-extrabold text-xl text-emerald-700 mt-0.5">0</div>
+          </div>
+          <div class="bg-white/95 rounded-2xl border-2 border-rose-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-rose-800">Errores</div>
+            <div id="mStatErrors" class="font-display font-extrabold text-xl text-rose-700 mt-0.5">0</div>
+          </div>
+          <div class="col-span-2 sm:col-span-1 bg-white/95 rounded-2xl border-2 border-sky-200 p-3 shadow-xs">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-sky-800">Calificación</div>
+            <div id="mStatGrade" class="font-display font-extrabold text-xl text-sky-700 mt-0.5">0.0 / 10</div>
+          </div>
+        </div>
+
+        <div class="w-full h-3 bg-white/90 rounded-full border border-slate-200 overflow-hidden">
+          <div id="mTimeBar" class="h-full bg-emerald-500 transition-all duration-300" style="width:100%"></div>
+        </div>
+
+        <div class="bg-white/95 rounded-3xl border-2 border-slate-200 p-6 shadow-sm flex flex-col md:flex-row items-center gap-6">
+          <div id="mSceneBox" class="scene-svg shrink-0"></div>
+          <div class="space-y-2 text-center md:text-left">
+            <span id="mProjectBadge" class="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-extrabold uppercase tracking-wider"></span>
+            <p id="mSentenceBox" class="text-xl sm:text-2xl font-bold text-slate-900 leading-relaxed"></p>
+          </div>
+        </div>
+
+        <div id="mOptionsBox" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+        <div id="mFeedbackBox" class="hidden rounded-2xl px-4 py-3 text-sm font-bold"></div>
+      </div>
+
+      <!-- REPORTE FINAL -->
+      <div id="missionResultBox" class="hidden bg-white rounded-3xl border-2 border-emerald-300 shadow-lg p-6 sm:p-8 text-center space-y-5 max-w-xl mx-auto">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-[40px]">military_tech</span>
+        </div>
+        <div class="space-y-2">
+          <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold uppercase tracking-wider">Reporte de Calificación • Lenguajes</span>
+          <div id="mResultStudent" class="text-base sm:text-lg font-extrabold text-sky-900 bg-sky-50 border border-sky-200 rounded-xl px-4 py-2"></div>
+          <h2 id="mResultTitle" class="font-display font-extrabold text-3xl text-slate-900">Calificación: 10.0 / 10</h2>
+          <p id="mResultDetail" class="text-sm text-slate-600 font-medium"></p>
+          <p id="mResultDate" class="text-xs text-slate-500 font-semibold"></p>
+          <p id="mSyncStatus" class="hidden text-xs font-bold rounded-xl px-3 py-2"></p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <button id="mPrintBtn" type="button" class="px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm shadow-md cursor-pointer">Imprimir / Guardar</button>
+          <button id="mRetryBtn" type="button" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-md cursor-pointer">Repetir Misión</button>
+          <button id="mBackListBtn" type="button" class="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm cursor-pointer">Ver todas las misiones</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="bank.js?v=1"></script>
+  <script src="game.js?v=1"></script>
+</body>
+</html>
