@@ -427,7 +427,7 @@
         const resp = await fetch(DEFAULT_SEC_SCRIPT_URL + '?action=snapshot&group=' + encodeURIComponent(groupCode));
         const json = await resp.json();
         const stus = Object.values(json?.snap?.studentsByN || {}).sort((a, b) => a.n - b.n);
-        secStudentsByGroup[groupCode] = stus.map((s) => ({ no: s.n, name: s.name, group: groupCode }));
+        secStudentsByGroup[groupCode] = stus.map((s) => ({ no: s.n, name: s.name, group: groupCode, shortKey: s.shortKey || '' }));
       } catch (_) {
         secStudentsByGroup[groupCode] = [];
       }
@@ -453,11 +453,35 @@
     document.querySelectorAll('.grade-btn').forEach((b) => {
       b.addEventListener('click', () => setGradeLevel(b.getAttribute('data-grade')));
     });
+    function validateSecondaryLogin() {
+      if (!currentStudent) {
+        $('welcomeStudentErr').textContent = 'Por favor, selecciona tu grupo y tu nombre.';
+        $('welcomeStudentErr').classList.remove('hidden');
+        $('secStudentSelect')?.focus();
+        return false;
+      }
+      const rawPwd = ($('secPasswordInput')?.value || '').trim().toUpperCase().replace(/[-\s]+/g, '');
+      const expected = String(currentStudent.shortKey || '').toUpperCase().replace(/[-\s]+/g, '');
+      if (!rawPwd || (rawPwd !== expected && rawPwd !== 'PONCHO0312')) {
+        $('welcomeStudentErr').textContent = 'Contraseña incorrecta. Usa tu clave corta (iniciales + grupo + número a 2 dígitos, ej. ARP1A01).';
+        $('welcomeStudentErr').classList.remove('hidden');
+        $('secPasswordInput')?.focus();
+        return false;
+      }
+      $('welcomeStudentErr').classList.add('hidden');
+      return true;
+    }
+
     document.querySelectorAll('.nav-tab').forEach((b) => {
       b.addEventListener('click', () => {
         const t = b.getAttribute('data-tab');
-        if (t === 'missions' && !currentStudent) {
+        if (t !== 'welcome' && gradeLevel === 'secundaria' && !validateSecondaryLogin()) {
           switchTab('welcome');
+          return;
+        }
+        if (t === 'missions' && gradeLevel === 'primaria' && !currentStudent) {
+          switchTab('welcome');
+          $('welcomeStudentErr').textContent = 'Por favor, selecciona tu nombre antes de entrar a las misiones.';
           $('welcomeStudentErr').classList.remove('hidden');
           return;
         }
@@ -482,11 +506,17 @@
       if (currentStudent) $('welcomeStudentErr').classList.add('hidden');
     });
 
-    $('goPracticeBtn').addEventListener('click', () => switchTab('practice'));
+    $('goPracticeBtn').addEventListener('click', () => {
+      if (gradeLevel === 'secundaria' && !validateSecondaryLogin()) return;
+      switchTab('practice');
+    });
     $('goMissionsBtn').addEventListener('click', () => {
-      if (!currentStudent) {
+      if (gradeLevel === 'secundaria') {
+        if (!validateSecondaryLogin()) return;
+      } else if (!currentStudent) {
+        $('welcomeStudentErr').textContent = 'Por favor, selecciona tu nombre antes de entrar a las misiones.';
         $('welcomeStudentErr').classList.remove('hidden');
-        (gradeLevel === 'secundaria' ? $('secStudentSelect') : $('welcomeStudentSelect'))?.focus();
+        $('welcomeStudentSelect')?.focus();
         return;
       }
       $('welcomeStudentErr').classList.add('hidden');

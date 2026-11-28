@@ -58,6 +58,10 @@
       </nav>
 
       <div class="flex items-center gap-2">
+        <div class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-900 text-xs font-extrabold">
+          <span class="material-symbols-outlined text-[16px]">person</span>
+          <span id="headerStudentName">Sin alumno</span>
+        </div>
         <button id="soundToggleBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 text-xs font-bold cursor-pointer" title="Activar o silenciar sonido">
           <span id="soundIcon" class="material-symbols-outlined text-[18px]">volume_up</span>
           <span class="hidden sm:inline" id="soundLabel">Sonido</span>
@@ -72,8 +76,46 @@
 
   <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 space-y-6">
 
+    <!-- ACCESO DE ALUMNO EST 41 (GRUPO + NOMBRE + CONTRASEÑA) -->
+    <section id="loginGate" class="max-w-2xl mx-auto bg-white rounded-3xl border-2 border-sky-200 shadow-lg p-6 sm:p-8 space-y-5 my-4">
+      <div class="space-y-1.5 text-center">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 text-sky-900 border border-sky-300 text-xs font-extrabold uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[16px]">lock_open</span>
+          Acceso Alumnos • Secundaria Técnica N° 41
+        </span>
+        <h1 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900">Ingresa para jugar TechPairs EST 41</h1>
+        <p class="text-sm text-slate-600 font-medium">Selecciona tu grupo, elige tu nombre de la lista y escribe tu contraseña (clave corta).</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label for="loginGroupSelect" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">1. Grupo Escolar</label>
+          <select id="loginGroupSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-bold text-slate-900">
+            <option value="1A">1.º A</option>
+            <option value="1B">1.º B</option>
+            <option value="2B">2.º B</option>
+            <option value="3C">3.º C</option>
+          </select>
+        </div>
+        <div>
+          <label for="loginStudentSelect" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">2. Nombre del Alumno</label>
+          <select id="loginStudentSelect" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-bold text-slate-900">
+            <option value="">Cargando alumnos…</option>
+          </select>
+        </div>
+        <div>
+          <label for="loginPasswordInput" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">3. Contraseña (Clave Corta)</label>
+          <input id="loginPasswordInput" type="password" autocomplete="off" placeholder="Ej. ARP1A01" class="w-full rounded-xl border-2 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-mono font-bold uppercase text-slate-900" />
+        </div>
+        <p id="loginErrorMsg" class="hidden text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2"></p>
+        <button id="loginEnterBtn" type="button" class="w-full px-6 py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-base shadow-md transition-all cursor-pointer">
+          Entrar al Videojuego →
+        </button>
+      </div>
+    </section>
+
     <!-- TAB: JUGAR PARES -->
-    <section id="tabPlay" class="space-y-5">
+    <section id="tabPlay" class="hidden space-y-5">
       <!-- CONTROLES DE PARTIDA -->
       <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-4 sm:p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
         <div class="md:col-span-4">
@@ -184,7 +226,7 @@
     </div>
   </div>
 
-  <script src="concepts.js"></script>
-  <script src="game.js"></script>
+  <script src="concepts.js?v=2"></script>
+  <script src="game.js?v=2"></script>
 </body>
 </html>

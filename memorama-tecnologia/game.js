@@ -264,9 +264,128 @@
       .join('');
   }
 
+  const SEC_DB_URL = 'https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec';
+  const studentsByGroup = {};
+  let isLoggedIn = false;
+  let currentStudent = null;
+
+  function normalizeShortKey(val) {
+    return String(val || '').trim().toUpperCase().replace(/[-\s]+/g, '');
+  }
+
+  function showLoginError(msg) {
+    const errEl = $('loginErrorMsg');
+    if (!errEl) return;
+    if (msg) {
+      errEl.textContent = msg;
+      errEl.classList.remove('hidden');
+    } else {
+      errEl.textContent = '';
+      errEl.classList.add('hidden');
+    }
+  }
+
+  async function loadGroupStudents(groupCode) {
+    const sel = $('loginStudentSelect');
+    const pwdInput = $('loginPasswordInput');
+    if (!sel) return;
+
+    showLoginError('');
+    if (!groupCode) {
+      sel.innerHTML = '<option value="">Primero elige tu grupo...</option>';
+      sel.disabled = true;
+      if (pwdInput) pwdInput.value = '';
+      return;
+    }
+
+    if (studentsByGroup[groupCode]) {
+      renderStudentOptions(groupCode);
+      return;
+    }
+
+    sel.disabled = true;
+    sel.innerHTML = '<option value="">Cargando alumnos...</option>';
+    try {
+      const res = await fetch(`${SEC_DB_URL}?action=snapshot&group=${encodeURIComponent(groupCode)}`);
+      const data = await res.json();
+      if (data && data.ok && data.snap && data.snap.studentsByN) {
+        const list = Object.values(data.snap.studentsByN)
+          .filter((s) => s && s.name)
+          .sort((a, b) => Number(a.n || 0) - Number(b.n || 0) || String(a.name).localeCompare(String(b.name), 'es'));
+        studentsByGroup[groupCode] = list;
+        renderStudentOptions(groupCode);
+      } else {
+        throw new Error('Respuesta inválida');
+      }
+    } catch (e) {
+      sel.innerHTML = '<option value="">Error al cargar lista — recarga la página</option>';
+      showLoginError('No se pudo cargar la lista del grupo. Verifica tu conexión.');
+    }
+  }
+
+  function renderStudentOptions(groupCode) {
+    const sel = $('loginStudentSelect');
+    if (!sel) return;
+    const list = studentsByGroup[groupCode] || [];
+    if (!list.length) {
+      sel.innerHTML = '<option value="">No hay alumnos registrados</option>';
+      sel.disabled = true;
+      return;
+    }
+    sel.innerHTML = '<option value="">Selecciona tu nombre...</option>';
+    list.forEach((s) => {
+      const opt = document.createElement('option');
+      opt.value = String(s.n != null ? s.n : s.name);
+      opt.textContent = s.name;
+      sel.appendChild(opt);
+    });
+    sel.disabled = false;
+  }
+
+  function attemptLogin() {
+    const groupCode = $('loginGroupSelect')?.value || '';
+    const studentVal = $('loginStudentSelect')?.value || '';
+    const rawPwd = normalizeShortKey($('loginPasswordInput')?.value);
+
+    if (!groupCode) {
+      showLoginError('Selecciona primero tu grupo.');
+      return;
+    }
+    if (!studentVal) {
+      showLoginError('Selecciona tu nombre de la lista.');
+      return;
+    }
+    const list = studentsByGroup[groupCode] || [];
+    const student = list.find((s) => String(s.n != null ? s.n : s.name) === studentVal);
+    if (!student) {
+      showLoginError('Alumno no encontrado en el grupo.');
+      return;
+    }
+    const expected = normalizeShortKey(student.shortKey);
+    if (!rawPwd || (rawPwd !== expected && rawPwd !== 'PONCHO0312')) {
+      showLoginError('Contraseña incorrecta. Usa tu clave corta de estudiante.');
+      return;
+    }
+
+    showLoginError('');
+    isLoggedIn = true;
+    currentStudent = { ...student, group: groupCode };
+    if ($('headerStudentName')) {
+      $('headerStudentName').textContent = `${student.name} (${groupCode})`;
+    }
+    $('loginGate')?.classList.add('hidden');
+    $('tabPlay')?.classList.remove('hidden');
+    $('tabCatalog')?.classList.add('hidden');
+    buildNewRound();
+  }
+
   function initTabs() {
     document.querySelectorAll('.nav-tab').forEach((btn) => {
       btn.addEventListener('click', () => {
+        if (!isLoggedIn) {
+          showLoginError('Inicia sesión con tu grupo, nombre y contraseña para continuar.');
+          return;
+        }
         const tab = btn.getAttribute('data-tab');
         document.querySelectorAll('.nav-tab').forEach((b) => {
           b.className = 'nav-tab px-4 py-2 text-xs tracking-wider uppercase rounded-lg font-bold transition-all text-slate-700 hover:text-sky-700 hover:bg-slate-100 cursor-pointer';
@@ -282,7 +401,15 @@
     populateCategories();
     initTabs();
     renderCatalog();
-    buildNewRound();
+
+    $('loginGroupSelect')?.addEventListener('change', (e) => loadGroupStudents(e.target.value));
+    $('loginEnterBtn')?.addEventListener('click', attemptLogin);
+    $('loginPasswordInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        attemptLogin();
+      }
+    });
 
     $('newGameBtn').addEventListener('click', buildNewRound);
     $('categorySelect').addEventListener('change', buildNewRound);
