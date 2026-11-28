@@ -1962,6 +1962,65 @@ function svgToPngDataUrl(svgMarkup,width,height){
   });
 }
 
+function renderTraitBarPng(barW,avgPos){
+  try{
+    const W=280,H=22,scale=2;
+    const c=document.createElement('canvas');
+    c.width=W*scale;c.height=H*scale;
+    const ctx=c.getContext('2d');
+    ctx.scale(scale,scale);
+    ctx.fillStyle='#FFFFFF';
+    ctx.fillRect(0,0,W,H);
+    const ty=6,th=10,r=5;
+    ctx.fillStyle='#E2E8F0';
+    ctx.beginPath();ctx.roundRect(0,ty,W,th,r);ctx.fill();
+    const fw=Math.max(0,Math.min(W,(barW/100)*W));
+    if(fw>0){
+      ctx.fillStyle='#0284C7';
+      ctx.beginPath();ctx.roundRect(0,ty,Math.max(fw,th),th,r);ctx.fill();
+    }
+    if(avgPos!=null){
+      const ax=Math.max(1,Math.min(W-3,(avgPos/100)*W));
+      ctx.fillStyle='#0F172A';
+      ctx.fillRect(ax,3,2.5,16);
+    }
+    return c.toDataURL('image/png');
+  }catch(_){return null;}
+}
+
+function renderBinsPng(bins,labels,stuBin){
+  try{
+    const W=660,H=116,scale=2;
+    const c=document.createElement('canvas');
+    c.width=W*scale;c.height=H*scale;
+    const ctx=c.getContext('2d');
+    ctx.scale(scale,scale);
+    ctx.fillStyle='#F8FAFC';
+    ctx.beginPath();ctx.roundRect(0,0,W,H,8);ctx.fill();
+    ctx.strokeStyle='#E2E8F0';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(1,1,W-2,H-2,8);ctx.stroke();
+    const maxBin=Math.max(1,...bins);
+    const colW=W/bins.length;
+    bins.forEach((n,i)=>{
+      const isStu=i===stuBin;
+      const cx=i*colW+colW/2;
+      const barW=Math.round(colW*0.58);
+      const barH=Math.max(6,Math.round((n/maxBin)*56));
+      const bx=cx-barW/2,by=88-barH;
+      ctx.fillStyle=isStu?'#0284C7':'#CBD5E1';
+      ctx.beginPath();ctx.roundRect(bx,by,barW,barH,[4,4,0,0]);ctx.fill();
+      ctx.font=(isStu?'bold ':'bold ')+'15px Georgia,serif';
+      ctx.fillStyle=isStu?'#0369A1':'#334155';
+      ctx.textAlign='center';
+      ctx.fillText(String(n),cx,by-6);
+      ctx.font=(isStu?'bold ':'')+'14px Georgia,serif';
+      ctx.fillStyle=isStu?'#0369A1':'#475569';
+      ctx.fillText(String(labels[i]||''),cx,106);
+    });
+    return c.toDataURL('image/png');
+  }catch(_){return null;}
+}
+
 async function buildStandalonePrintHtml(g,r,stu){
   let body=renderPrintSheetFor(g,r,stu);
   const svgMatch=body.match(/<svg class="ps-att-svg"[\s\S]*?<\/svg>/);
@@ -1971,6 +2030,37 @@ async function buildStandalonePrintHtml(g,r,stu){
       body=body.replace(svgMatch[0],'<img src="'+pngUrl+'" style="width:100%;height:auto;display:block;" alt="Comportamiento semanal de asistencia"/>');
     }
   }
+  const standing=classify(studentComposite(r,g),g);
+  const badgeBg=standing.cls==='above'?'#D1FAE5':standing.cls==='below'?'#FEF3C7':'#DBEAFE';
+  const badgeFg=standing.cls==='above'?'#065F46':standing.cls==='below'?'#92400E':'#1E40AF';
+  body=body.replace(
+    /<div class="ps-student-bar">[\s\S]*?<\/span><\/div>/,
+    '<table bgcolor="#0F172A" style="width:100%;border-collapse:collapse;background-color:#0F172A;margin-bottom:6px;"><tr>'+
+      '<td bgcolor="#0F172A" style="background-color:#0F172A;padding:7px 10px;vertical-align:middle;">'+
+        '<div style="font-size:13px;font-weight:700;color:#FFFFFF;">'+esc(stu.name)+'</div>'+
+        '<div style="font-size:9px;color:#CBD5E1;margin-top:1px;">Grupo: '+esc(g.label)+' · No. de lista: '+stu.n+' · Turno: '+esc(g.shift)+'</div>'+
+      '</td>'+
+      '<td bgcolor="#0F172A" style="background-color:#0F172A;padding:7px 10px;text-align:right;vertical-align:middle;width:190px;">'+
+        '<span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:9px;font-weight:700;background-color:'+badgeBg+';color:'+badgeFg+';">'+esc(standing.label)+'</span>'+
+      '</td>'+
+    '</tr></table>'
+  );
+  let traitIdx=0;
+  body=body.replace(/<div class="ps-bar-track"><div class="ps-bar-fill"[^>]*><\/div>(?:<span class="ps-bar-avg"[^>]*><\/span>)?<\/div>/g,m=>{
+    const t=g.traits[traitIdx++];
+    if(!t)return m;
+    const own=selectedTrait(r,t.key,g),mean=t.average;
+    const barW=Math.max(0,Math.min(100,(own??0)*10));
+    const avgPos=mean==null?null:Math.max(0,Math.min(100,mean*10));
+    const png=renderTraitBarPng(barW,avgPos);
+    return png?'<img src="'+png+'" style="width:100%;height:11px;display:block;" alt="Comparativa"/>':m;
+  });
+  const stuBin=getBinIndex(studentComposite(r,g));
+  const binsPng=renderBinsPng(g.distribution.bins,g.distribution.labels,stuBin);
+  if(binsPng){
+    body=body.replace(/<div class="ps-bins">[\s\S]*?<\/div><p/, '<img src="'+binsPng+'" style="width:100%;height:auto;display:block;" alt="Distribución del grupo"/><p');
+  }
+  body=body.replace(/<i class="ps-att-swatch"[^>]*><\/i>/,'<span style="color:#059669;font-weight:700;font-size:11px;margin-right:4px;">▬</span>');
   return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'+
     '<style>'+
       '@page{size:letter portrait;margin:7mm 9mm;}'+
