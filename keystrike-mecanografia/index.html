@@ -129,7 +129,7 @@
             </div>
             <div>
               <div class="text-[11px] text-sky-700 font-bold uppercase tracking-widest leading-none">REGISTRO DE DESARROLLO • EST 41</div>
-              <div class="text-xs text-slate-700 font-medium mt-0.5">Paso 1: Elige tu grupo • Paso 2: Elige tu nombre para iniciar tu evaluación</div>
+              <div class="text-xs text-slate-700 font-medium mt-0.5">Paso 1: Elige tu grupo • Paso 2: Elige tu nombre • Paso 3: Escribe tu contraseña</div>
             </div>
           </div>
 
@@ -144,19 +144,30 @@
           <!-- Selector de Grupo -->
           <div class="flex items-center gap-2 bg-sky-50 border-2 border-sky-500 rounded-lg px-3 py-2 shrink-0 shadow-sm">
             <span class="text-[11px] text-sky-900 font-extrabold uppercase tracking-wider">1. GRUPO:</span>
-            <select id="selectGroup" class="bg-transparent text-sm font-extrabold text-sky-900 outline-none cursor-pointer min-w-[175px]">
+            <select id="selectGroup" class="bg-transparent text-sm font-extrabold text-sky-900 outline-none cursor-pointer min-w-[155px]">
               <option value="" class="bg-white text-slate-700">-- Selecciona grupo --</option>
               <option value="1A" class="bg-white text-slate-900">1° A</option>
               <option value="1B" class="bg-white text-slate-900">1° B</option>
+              <option value="2B" class="bg-white text-slate-900">2° B</option>
+              <option value="3C" class="bg-white text-slate-900">3° C</option>
             </select>
           </div>
 
           <!-- Selector de Alumno -->
-          <div id="studentSelectWrapper" class="flex items-center gap-2 bg-slate-50 border-2 border-slate-300 rounded-lg px-3 py-2 flex-1 min-w-[240px]">
+          <div id="studentSelectWrapper" class="flex items-center gap-2 bg-slate-50 border-2 border-slate-300 rounded-lg px-3 py-2 flex-1 min-w-[220px]">
             <span class="text-[11px] text-slate-700 font-extrabold uppercase tracking-wider shrink-0">2. ALUMNO:</span>
             <select id="selectStudent" disabled class="bg-transparent text-xs sm:text-sm font-bold text-slate-900 outline-none cursor-pointer w-full truncate disabled:opacity-70 disabled:cursor-not-allowed">
               <option value="" class="bg-white text-slate-600">Primero selecciona tu grupo...</option>
             </select>
+          </div>
+
+          <!-- Contraseña del Alumno -->
+          <div id="studentPasswordWrapper" class="flex items-center gap-2 bg-slate-50 border-2 border-slate-300 rounded-lg px-3 py-2 shrink-0">
+            <span class="text-[11px] text-slate-700 font-extrabold uppercase tracking-wider shrink-0">3. CLAVE:</span>
+            <input id="inputStudentPassword" type="password" disabled placeholder="Tu clave corta" autocomplete="off" class="bg-transparent text-xs sm:text-sm font-bold text-slate-900 outline-none w-32 sm:w-36 uppercase disabled:opacity-60 disabled:cursor-not-allowed" />
+            <button id="btnVerifyStudent" type="button" disabled class="px-2.5 py-1 rounded-md bg-sky-600 hover:bg-sky-700 disabled:bg-slate-300 text-white text-[11px] font-extrabold uppercase tracking-wider cursor-pointer disabled:cursor-not-allowed transition-colors">
+              Entrar
+            </button>
           </div>
 
           <!-- Récord del alumno seleccionado -->
@@ -165,6 +176,7 @@
             <span id="studentRecordText">Esperando alumno...</span>
           </div>
         </div>
+        <div id="studentAuthError" class="hidden text-xs font-bold text-red-700 bg-red-50 border border-red-300 rounded-lg px-3 py-1.5"></div>
       </section>
 
       <!-- ========================================================= -->
@@ -760,6 +772,6 @@
   <script src="audio.js?v=12"></script>
   <script src="students.js?v=12"></script>
   <script src="missions.js?v=12"></script>
-  <script src="game.js?v=12"></script>
+  <script src="game.js?v=13"></script>
 </body>
 </html>

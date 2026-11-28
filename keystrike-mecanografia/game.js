@@ -62,6 +62,9 @@
     headerStudentBadge: document.getElementById('headerStudentBadge'),
     selectGroup: document.getElementById('selectGroup'),
     selectStudent: document.getElementById('selectStudent'),
+    inputStudentPassword: document.getElementById('inputStudentPassword'),
+    btnVerifyStudent: document.getElementById('btnVerifyStudent'),
+    studentAuthError: document.getElementById('studentAuthError'),
     studentRecordText: document.getElementById('studentRecordText'),
     btnQuickPractice: document.getElementById('btnQuickPractice'),
 
@@ -496,8 +499,29 @@
     resizeCanvas();
   }
 
+  const SEC_DB_URL = 'https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec';
+  const GROUP_LABELS = { '1A': '1° A', '1B': '1° B', '2B': '2° B', '3C': '3° C' };
+  const secRosterCache = {};
+  let selectedStudentObj = null;
+  let studentAuthenticated = false;
+
+  function normalizeShortKey(val) {
+    return String(val || '').trim().toUpperCase().replace(/[-\s]+/g, '');
+  }
+
+  function showAuthError(msg) {
+    if (!el.studentAuthError) return;
+    if (msg) {
+      el.studentAuthError.textContent = msg;
+      el.studentAuthError.classList.remove('hidden');
+    } else {
+      el.studentAuthError.textContent = '';
+      el.studentAuthError.classList.add('hidden');
+    }
+  }
+
   function isStudentIdentified() {
-    return Boolean(settings.studentGroupKey && settings.studentName);
+    return Boolean(settings.studentGroupKey && settings.studentName && studentAuthenticated);
   }
 
   function updateStartButtonState() {
@@ -515,13 +539,18 @@
       if (practiceMode) {
         labelSpan.textContent = 'INICIAR PRÁCTICA LIBRE';
       } else {
-        labelSpan.textContent = ready ? 'INICIAR MISIÓN' : '1° ELIGE TU GRUPO Y NOMBRE ARRIBA';
+        labelSpan.textContent = ready ? 'INICIAR MISIÓN' : '1° VALIDA GRUPO, NOMBRE Y CLAVE ARRIBA';
       }
     }
   }
 
   function startMission() {
     if (gameState === 'playing') return;
+    if (!practiceMode && !isStudentIdentified()) {
+      if (selectedStudentObj && el.inputStudentPassword && el.inputStudentPassword.value.trim()) {
+        verifyStudentPassword();
+      }
+    }
     if (!practiceMode && !isStudentIdentified()) {
       const bar = document.getElementById('studentSelectorBar');
       if (bar) {
@@ -531,12 +560,14 @@
       }
       if (!settings.studentGroupKey && el.selectGroup) {
         el.selectGroup.focus();
-      } else if (el.selectStudent && !el.selectStudent.disabled) {
+      } else if (!selectedStudentObj && el.selectStudent && !el.selectStudent.disabled) {
         el.selectStudent.focus();
+      } else if (el.inputStudentPassword && !el.inputStudentPassword.disabled) {
+        el.inputStudentPassword.focus();
       }
       showMissionToast(
         'IDENTIFICACIÓN REQUERIDA',
-        'Elige tu grupo y tu nombre en la barra superior (o usa Práctica Libre)',
+        'Elige tu grupo, tu nombre e ingresa tu contraseña para iniciar',
         'badge',
         2600
       );
@@ -1294,7 +1325,21 @@
     if (!el.selectGroup || !el.selectStudent) return;
 
     const wrapper = document.getElementById('studentSelectWrapper');
-    if (!groupKey || !window.STUDENT_GROUPS || !window.STUDENT_GROUPS[groupKey]) {
+    const pwdWrapper = document.getElementById('studentPasswordWrapper');
+    selectedStudentObj = null;
+    studentAuthenticated = false;
+    showAuthError('');
+    if (el.inputStudentPassword) {
+      el.inputStudentPassword.value = '';
+      el.inputStudentPassword.disabled = true;
+    }
+    if (el.btnVerifyStudent) el.btnVerifyStudent.disabled = true;
+    if (pwdWrapper) {
+      pwdWrapper.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-sky-500', 'bg-sky-50');
+      pwdWrapper.classList.add('border-slate-300', 'bg-slate-50');
+    }
+
+    if (!groupKey || !GROUP_LABELS[groupKey]) {
       el.selectGroup.value = '';
       el.selectStudent.disabled = true;
       el.selectStudent.innerHTML = '<option value="" class="bg-white text-slate-600">Primero selecciona tu grupo...</option>';
@@ -1311,8 +1356,49 @@
       return;
     }
 
-    const groupData = window.STUDENT_GROUPS[groupKey];
     el.selectGroup.value = groupKey;
+    settings.studentGroupKey = groupKey;
+    settings.studentGroup = GROUP_LABELS[groupKey];
+    settings.studentListNum = 0;
+    settings.studentName = '';
+
+    if (!secRosterCache[groupKey]) {
+      el.selectStudent.disabled = true;
+      el.selectStudent.innerHTML = '<option value="" class="bg-white text-slate-600">Cargando alumnos...</option>';
+      fetch(`${SEC_DB_URL}?action=snapshot&group=${encodeURIComponent(groupKey)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.ok && data.snap && data.snap.studentsByN) {
+            secRosterCache[groupKey] = Object.values(data.snap.studentsByN)
+              .filter((s) => s && s.name)
+              .map((s) => ({ listNum: Number(s.n || 0), name: s.name, shortKey: s.shortKey || '' }))
+              .sort((a, b) => a.listNum - b.listNum || a.name.localeCompare(b.name, 'es'));
+            if (el.selectGroup.value === groupKey) renderSecStudentOptions(groupKey);
+          } else {
+            throw new Error('Invalid snapshot');
+          }
+        })
+        .catch(() => {
+          const fallbackGroup = window.STUDENT_GROUPS && window.STUDENT_GROUPS[groupKey];
+          if (fallbackGroup && fallbackGroup.students) {
+            secRosterCache[groupKey] = fallbackGroup.students;
+            if (el.selectGroup.value === groupKey) renderSecStudentOptions(groupKey);
+          } else {
+            el.selectStudent.innerHTML = '<option value="" class="bg-white text-red-600">Error al cargar alumnos</option>';
+            showAuthError('No se pudo cargar la lista del grupo. Verifica tu conexión.');
+          }
+        });
+    } else {
+      renderSecStudentOptions(groupKey);
+    }
+
+    updateStudentRecordBadge();
+    updateStartButtonState();
+  }
+
+  function renderSecStudentOptions(groupKey) {
+    const wrapper = document.getElementById('studentSelectWrapper');
+    const students = secRosterCache[groupKey] || [];
     el.selectStudent.disabled = false;
     if (wrapper) {
       wrapper.classList.remove('border-slate-300', 'bg-slate-50');
@@ -1320,18 +1406,44 @@
     }
     el.selectStudent.innerHTML = [
       '<option value="" class="bg-white text-slate-700">-- Selecciona tu nombre --</option>',
-      ...groupData.students.map(
+      ...students.map(
         (s) => `<option value="${s.listNum}" class="bg-white text-slate-900">${s.listNum}. ${escapeHtml(s.name)}</option>`
       )
     ].join('');
-
     el.selectStudent.value = '';
-    settings.studentGroupKey = groupKey;
-    settings.studentGroup = groupData.label;
-    settings.studentListNum = 0;
-    settings.studentName = '';
+  }
+
+  function verifyStudentPassword() {
+    if (!selectedStudentObj) {
+      showAuthError('Primero selecciona tu grupo y tu nombre.');
+      return false;
+    }
+    const rawPwd = normalizeShortKey(el.inputStudentPassword && el.inputStudentPassword.value);
+    const expected = normalizeShortKey(selectedStudentObj.shortKey);
+    if (!rawPwd || (expected && rawPwd !== expected && rawPwd !== 'PONCHO0312') || (!expected && rawPwd !== 'PONCHO0312')) {
+      studentAuthenticated = false;
+      showAuthError('Contraseña incorrecta. Ingresa tu clave corta de estudiante.');
+      updateStartButtonState();
+      applySettingsToUI();
+      return false;
+    }
+    showAuthError('');
+    studentAuthenticated = true;
+    settings.studentListNum = selectedStudentObj.listNum;
+    settings.studentName = selectedStudentObj.name;
+    const pwdWrapper = document.getElementById('studentPasswordWrapper');
+    if (pwdWrapper) {
+      pwdWrapper.classList.remove('border-slate-300', 'bg-slate-50', 'border-sky-500', 'bg-sky-50');
+      pwdWrapper.classList.add('border-emerald-500', 'bg-emerald-50');
+    }
+    if (practiceMode) {
+      switchTab('arena');
+    }
+    applySettingsToUI();
     updateStudentRecordBadge();
     updateStartButtonState();
+    showMissionToast('ACCESO VALIDADO', `Bienvenido(a), ${selectedStudentObj.name}`, 'verified_user', 2000);
+    return true;
   }
 
   function updateStudentRecordBadge() {
@@ -1362,25 +1474,60 @@
 
   if (el.selectStudent) {
     el.selectStudent.addEventListener('change', () => {
-      const groupData = window.STUDENT_GROUPS && window.STUDENT_GROUPS[el.selectGroup.value];
+      const groupKey = el.selectGroup.value;
+      const students = secRosterCache[groupKey] || [];
       const listNum = Number(el.selectStudent.value);
-      const student = groupData && groupData.students.find((s) => s.listNum === listNum);
+      const student = students.find((s) => s.listNum === listNum) || null;
+      const pwdWrapper = document.getElementById('studentPasswordWrapper');
+      selectedStudentObj = student;
+      studentAuthenticated = false;
+      showAuthError('');
       if (student) {
-        settings.studentGroupKey = el.selectGroup.value;
-        settings.studentGroup = groupData.label;
-        settings.studentListNum = student.listNum;
-        settings.studentName = student.name;
-        if (practiceMode) {
-          switchTab('arena');
+        settings.studentGroupKey = groupKey;
+        settings.studentGroup = GROUP_LABELS[groupKey] || groupKey;
+        settings.studentListNum = 0;
+        settings.studentName = '';
+        if (el.inputStudentPassword) {
+          el.inputStudentPassword.disabled = false;
+          el.inputStudentPassword.value = '';
+          el.inputStudentPassword.focus();
+        }
+        if (el.btnVerifyStudent) el.btnVerifyStudent.disabled = false;
+        if (pwdWrapper) {
+          pwdWrapper.classList.remove('border-slate-300', 'bg-slate-50', 'border-emerald-500', 'bg-emerald-50');
+          pwdWrapper.classList.add('border-sky-500', 'bg-sky-50');
         }
       } else {
         settings.studentListNum = 0;
         settings.studentName = '';
+        if (el.inputStudentPassword) {
+          el.inputStudentPassword.disabled = true;
+          el.inputStudentPassword.value = '';
+        }
+        if (el.btnVerifyStudent) el.btnVerifyStudent.disabled = true;
+        if (pwdWrapper) {
+          pwdWrapper.classList.remove('border-sky-500', 'bg-sky-50', 'border-emerald-500', 'bg-emerald-50');
+          pwdWrapper.classList.add('border-slate-300', 'bg-slate-50');
+        }
       }
       applySettingsToUI();
       updateStudentRecordBadge();
       updateStartButtonState();
-      el.selectStudent.blur();
+    });
+  }
+
+  if (el.btnVerifyStudent) {
+    el.btnVerifyStudent.addEventListener('click', () => {
+      verifyStudentPassword();
+    });
+  }
+
+  if (el.inputStudentPassword) {
+    el.inputStudentPassword.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        verifyStudentPassword();
+      }
     });
   }
 

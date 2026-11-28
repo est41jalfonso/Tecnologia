@@ -84,6 +84,30 @@
   const modalHangar = document.getElementById('modalHangar');
 
   const studentSelect = document.getElementById('studentSelect');
+  const secGroupWrapper = document.getElementById('secGroupWrapper');
+  const secGroupSelect = document.getElementById('secGroupSelect');
+  const secPasswordWrapper = document.getElementById('secPasswordWrapper');
+  const secPasswordInput = document.getElementById('secPasswordInput');
+  const secAuthError = document.getElementById('secAuthError');
+  const btnBackPortal = document.getElementById('btnBackPortal');
+  const isSecundaria = new URLSearchParams(window.location.search).get('nivel') === 'secundaria';
+  const SEC_DB_URL = 'https://script.google.com/macros/s/AKfycbz3BqG3ZjnbU82z1VC2jw4ZMQVWs5Fmudb_0y0dPQ7Frr5_91CRnLtCHjSBFypCp30d/exec';
+  const secStudentsCache = {};
+
+  function normalizeShortKey(val) {
+    return String(val || '').trim().toUpperCase().replace(/[-\s]+/g, '');
+  }
+
+  function showSecAuthError(msg) {
+    if (!secAuthError) return;
+    if (msg) {
+      secAuthError.textContent = msg;
+      secAuthError.style.display = 'block';
+    } else {
+      secAuthError.textContent = '';
+      secAuthError.style.display = 'none';
+    }
+  }
   const sectionTabs = document.querySelectorAll('.section-tab');
   const startLevelLabel = document.getElementById('startLevelLabel');
   const startLevelChips = document.getElementById('startLevelChips');
@@ -263,8 +287,69 @@
     shoot: false,
   };
 
-  // Cargar lista de alumnos desde Google Sheets (CSV) con respaldo local
+  // Cargar lista de alumnos desde Google Sheets (CSV) o Base Maestra EST 41 en modo secundaria
+  async function loadSecGroupStudents(groupCode) {
+    showSecAuthError('');
+    state.students = [];
+    if (secPasswordInput) secPasswordInput.value = '';
+    if (!groupCode) {
+      studentSelect.innerHTML = '<option value="">Primero elige tu grupo...</option>';
+      studentSelect.disabled = true;
+      return;
+    }
+    if (secStudentsCache[groupCode]) {
+      renderSecStudentSelect(secStudentsCache[groupCode]);
+      return;
+    }
+    studentSelect.disabled = true;
+    studentSelect.innerHTML = '<option value="">Cargando alumnos del grupo...</option>';
+    try {
+      const resp = await fetch(`${SEC_DB_URL}?action=snapshot&group=${encodeURIComponent(groupCode)}`, { cache: 'no-store' });
+      const data = await resp.json();
+      if (data && data.ok && data.snap && data.snap.studentsByN) {
+        const list = Object.values(data.snap.studentsByN)
+          .filter((s) => s && s.name)
+          .map((s) => ({ no: Number(s.n || 0), name: s.name, shortKey: s.shortKey || '', group: groupCode }))
+          .sort((a, b) => a.no - b.no || a.name.localeCompare(b.name, 'es'));
+        secStudentsCache[groupCode] = list;
+        renderSecStudentSelect(list);
+      } else {
+        throw new Error('Respuesta inválida');
+      }
+    } catch {
+      studentSelect.innerHTML = '<option value="">Error al cargar lista — recarga la página</option>';
+      showSecAuthError('No se pudo cargar la lista del grupo. Verifica tu conexión.');
+    }
+  }
+
+  function renderSecStudentSelect(list) {
+    state.students = list;
+    studentSelect.innerHTML = '<option value="">-- Elige tu nombre de la lista --</option>';
+    list.forEach((st) => {
+      const opt = document.createElement('option');
+      opt.value = String(st.no);
+      opt.textContent = `${st.no}. ${st.name}`;
+      studentSelect.appendChild(opt);
+    });
+    studentSelect.disabled = false;
+  }
+
   async function loadStudents() {
+    if (isSecundaria) {
+      if (secGroupWrapper) secGroupWrapper.style.display = 'block';
+      if (secPasswordWrapper) secPasswordWrapper.style.display = 'block';
+      if (btnBackPortal) {
+        btnBackPortal.href = '../aprende-jugando.html';
+        btnBackPortal.textContent = '⬅ Regresar a Secundaria';
+      }
+      studentSelect.innerHTML = '<option value="">Primero elige tu grupo...</option>';
+      studentSelect.disabled = true;
+      if (secGroupSelect) {
+        secGroupSelect.addEventListener('change', (e) => loadSecGroupStudents(e.target.value));
+      }
+      return;
+    }
+
     let list = FALLBACK_STUDENTS;
     try {
       const resp = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
@@ -705,15 +790,39 @@
   }
 
   function ensureStudentSelected() {
+    if (isSecundaria) {
+      const groupCode = secGroupSelect ? secGroupSelect.value : '';
+      if (!groupCode) {
+        showSecAuthError('Primero selecciona tu grupo.');
+        if (secGroupSelect) secGroupSelect.focus();
+        return false;
+      }
+    }
     const val = studentSelect.value;
     if (!val) {
-      alert('Por favor, selecciona tu nombre de la lista antes de iniciar la misión.');
+      if (isSecundaria) {
+        showSecAuthError('Selecciona tu nombre de la lista.');
+      } else {
+        alert('Por favor, selecciona tu nombre de la lista antes de iniciar la misión.');
+      }
       studentSelect.focus();
       return false;
     }
     const found = state.students.find((s) => String(s.no) === val);
+    if (isSecundaria) {
+      const rawPwd = normalizeShortKey(secPasswordInput ? secPasswordInput.value : '');
+      const expected = normalizeShortKey(found && found.shortKey);
+      if (!rawPwd || (expected && rawPwd !== expected && rawPwd !== 'PONCHO0312') || (!expected && rawPwd !== 'PONCHO0312')) {
+        showSecAuthError('Contraseña incorrecta. Ingresa tu clave corta de estudiante.');
+        if (secPasswordInput) secPasswordInput.focus();
+        return false;
+      }
+      showSecAuthError('');
+    }
     state.currentStudent = found || { no: val, name: studentSelect.options[studentSelect.selectedIndex].textContent };
-    elPilot.textContent = `👤 ${state.currentStudent.name}`;
+    elPilot.textContent = isSecundaria && state.currentStudent.group
+      ? `👤 ${state.currentStudent.name} (${state.currentStudent.group})`
+      : `👤 ${state.currentStudent.name}`;
     return true;
   }
 

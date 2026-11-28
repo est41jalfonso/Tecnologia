@@ -108,10 +108,25 @@
         </p>
 
         <div class="student-picker-box">
+          <div id="secGroupWrapper" style="display:none; margin-bottom:0.65rem;">
+            <label for="secGroupSelect" class="telemetry-label">1. SELECCIONA TU GRUPO (EST 41)</label>
+            <select id="secGroupSelect" class="student-select">
+              <option value="">-- Elige tu grupo --</option>
+              <option value="1A">1° A</option>
+              <option value="1B">1° B</option>
+              <option value="2B">2° B</option>
+              <option value="3C">3° C</option>
+            </select>
+          </div>
           <label for="studentSelect" class="telemetry-label">SELECCIONA TU NOMBRE (LISTA DE ASISTENCIA)</label>
           <select id="studentSelect" class="student-select">
             <option value="">Cargando lista de alumnos...</option>
           </select>
+          <div id="secPasswordWrapper" style="display:none; margin-top:0.65rem;">
+            <label for="secPasswordInput" class="telemetry-label">3. CONTRASEÑA (TU CLAVE CORTA)</label>
+            <input id="secPasswordInput" type="password" class="student-select" placeholder="Ej. ARP1A01" autocomplete="off" style="text-transform:uppercase;" />
+            <div id="secAuthError" style="display:none; color:#fca5a5; font-size:0.78rem; font-weight:700; margin-top:0.35rem;"></div>
+          </div>
         </div>
 
         <div class="rules-grid">
@@ -145,7 +160,7 @@
           <button id="btnStartFullscreen" class="btn-secondary-sci" type="button">⛶ Pantalla Completa</button>
           <button id="btnOpenHangar" class="hud-btn" type="button">🛸 Hangar (Naves y Fondo)</button>
           <button id="btnConfigSheet" class="hud-btn" type="button" title="Configurar conexión con Google Sheets">⚙ Configurar Hoja</button>
-          <a href="../primaria-teodoro-olivares.html" class="hud-btn" style="text-decoration:none;display:inline-flex;align-items:center;">⬅ Regresar a Primaria</a>
+          <a id="btnBackPortal" href="../primaria-teodoro-olivares.html" class="hud-btn" style="text-decoration:none;display:inline-flex;align-items:center;">⬅ Regresar a Primaria</a>
         </div>
       </div>
     </section>
@@ -291,6 +306,6 @@
   </div>
 
   <script src="audio.js"></script>
-  <script src="game.js"></script>
+  <script src="game.js?v=2"></script>
 </body>
 </html>
