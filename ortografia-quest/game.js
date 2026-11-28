@@ -104,6 +104,12 @@
     }
     loadPracticeQuestion();
     renderMissionsList();
+    window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+      scope: gradeLevel,
+      gameId: 'ortografia',
+      gameName: 'OrtografíaQuest',
+      theme: 'light'
+    });
   }
 
   function switchTab(tab) {
@@ -331,6 +337,21 @@
 
     const syncEl = $('mSyncStatus');
     if (currentStudent) {
+      window.PortalLeaderboard?.recordAchievement({
+        scope: gradeLevel,
+        gameId: 'ortografia',
+        gameName: 'OrtografíaQuest',
+        studentName: currentStudent.name,
+        group: gradeLevel === 'secundaria' ? ($('secGroupSelect')?.value || '') : '3A',
+        grade: Number(finalGrade),
+        score: mState.hits * 100
+      });
+      window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+        scope: gradeLevel,
+        gameId: 'ortografia',
+        gameName: 'OrtografíaQuest',
+        theme: 'light'
+      });
       syncEl.classList.remove('hidden');
       syncEl.className = 'text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200 rounded-xl px-3 py-2';
       syncEl.textContent = '📡 Guardando calificación en Base de Datos Maestra...';

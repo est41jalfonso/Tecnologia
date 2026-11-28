@@ -335,6 +335,12 @@
   }
 
   async function loadStudents() {
+    window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+      scope: isSecundaria ? 'secundaria' : 'primaria',
+      gameId: 'guerra-galactica',
+      gameName: 'Guerra Galáctica',
+      theme: 'dark'
+    });
     if (isSecundaria) {
       if (secGroupWrapper) secGroupWrapper.style.display = 'block';
       if (secPasswordWrapper) secPasswordWrapper.style.display = 'block';
@@ -1425,6 +1431,23 @@
       const syncEl = document.getElementById('goSyncStatus');
       if (syncEl) syncEl.textContent = '🧪 Modo Prueba: esta partida no se registra en la base de datos.';
     } else {
+      if (state.currentStudent) {
+        window.PortalLeaderboard?.recordAchievement({
+          scope: isSecundaria ? 'secundaria' : 'primaria',
+          gameId: 'guerra-galactica',
+          gameName: 'Guerra Galáctica',
+          studentName: state.currentStudent.name,
+          group: isSecundaria ? (state.currentStudent.group || '') : '3A',
+          grade: overallGrade,
+          score: state.score
+        });
+        window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+          scope: isSecundaria ? 'secundaria' : 'primaria',
+          gameId: 'guerra-galactica',
+          gameName: 'Guerra Galáctica',
+          theme: 'dark'
+        });
+      }
       sendReportToSheet(report);
     }
   }

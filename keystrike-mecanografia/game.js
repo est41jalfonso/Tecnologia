@@ -1118,6 +1118,21 @@
     const hasActivity = !practiceMode && percentCompleted > 0;
     if (hasActivity) {
       historyLog.unshift(record);
+      window.PortalLeaderboard?.recordAchievement({
+        scope: 'secundaria',
+        gameId: 'keystrike',
+        gameName: 'KeyStrike EST 41',
+        studentName: settings.studentName,
+        group: settings.studentGroupKey || '',
+        grade: Number(gradeStr),
+        score: finalScore
+      });
+      window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+        scope: 'secundaria',
+        gameId: 'keystrike',
+        gameName: 'KeyStrike EST 41',
+        theme: 'light'
+      });
       if (historyLog.length > 200) historyLog.pop();
       localStorage.setItem(STORAGE_HISTORY, JSON.stringify(historyLog));
       updateStudentRecordBadge();
@@ -1637,4 +1652,10 @@
   populateStudentDropdown('');
   applySettingsToUI();
   prepareMission();
+  window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+    scope: 'secundaria',
+    gameId: 'keystrike',
+    gameName: 'KeyStrike EST 41',
+    theme: 'light'
+  });
 })();

@@ -799,6 +799,23 @@
     if ($('mResultDate')) {
       $('mResultDate').textContent = 'Fecha de evaluación: ' + now.toLocaleString('es-MX');
     }
+    if (currentStudent) {
+      window.PortalLeaderboard?.recordAchievement({
+        scope: 'primaria',
+        gameId: 'fracciones',
+        gameName: 'Fracciones Pares',
+        studentName: currentStudent.name,
+        group: '3A',
+        grade: Number(finalGrade),
+        score: mState.firstTryCount * 100
+      });
+      window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+        scope: 'primaria',
+        gameId: 'fracciones',
+        gameName: 'Fracciones Pares',
+        theme: 'light'
+      });
+    }
     sendFractionResultToMasterDb({
       game: 'fracciones',
       date: now.toLocaleDateString('es-MX'),
@@ -976,6 +993,12 @@
     renderDecimalsExplorer();
     renderMissionsList();
     buildNewRound();
+    window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+      scope: 'primaria',
+      gameId: 'fracciones',
+      gameName: 'Fracciones Pares',
+      theme: 'light'
+    });
 
     $('welcomeStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));
     $('missionStudentSelect')?.addEventListener('change', (e) => syncStudentSelection(e.target.value));

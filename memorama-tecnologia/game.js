@@ -214,6 +214,24 @@
       if (matchedIds.size === totalPairs) {
         stopTimer();
         const acc = Math.round((matchedIds.size / attempts) * 100);
+        if (!isPracticeMode && currentStudent) {
+          const calcGrade = Math.min(10, Math.max(0, Math.round((acc / 10) * 10) / 10));
+          window.PortalLeaderboard?.recordAchievement({
+            scope: 'secundaria',
+            gameId: 'techpairs',
+            gameName: 'TechPairs EST 41',
+            studentName: currentStudent.name,
+            group: currentStudent.group || '',
+            grade: calcGrade,
+            score: xp
+          });
+          window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+            scope: 'secundaria',
+            gameId: 'techpairs',
+            gameName: 'TechPairs EST 41',
+            theme: 'light'
+          });
+        }
         $('winSummary').textContent = `Completaste ${totalPairs} pares en ${attempts} intentos (${acc}% de precisión) y un tiempo de ${formatTime(timerSeconds)}.`;
         setTimeout(() => $('winModal').classList.remove('hidden'), 350);
       }
@@ -417,6 +435,12 @@
     populateCategories();
     initTabs();
     renderCatalog();
+    window.PortalLeaderboard?.renderTop5Panel('top5LeaderboardPanel', {
+      scope: 'secundaria',
+      gameId: 'techpairs',
+      gameName: 'TechPairs EST 41',
+      theme: 'light'
+    });
 
     $('loginGroupSelect')?.addEventListener('change', (e) => loadGroupStudents(e.target.value));
     $('loginEnterBtn')?.addEventListener('click', attemptLogin);
